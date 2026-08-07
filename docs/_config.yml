@@ -1,0 +1,40 @@
+# Jekyll configuration for the documentation site.
+#
+# The site is built and deployed by .github/workflows/jekyll-gh-pages.yml,
+# which runs actions/jekyll-build-pages with `source: docs`. For that workflow
+# to publish, Settings → Pages → Source must be set to "GitHub Actions"
+# (not "Deploy from a branch").
+#
+# No Gemfile is kept here on purpose: the build action supplies its own
+# github-pages bundle, and a Gemfile in this folder can shadow it. To preview
+# locally: gem install jekyll kramdown-parser-gfm && jekyll build --source .
+
+title: BuildGuard
+description: Design and architecture documentation for the BuildGuard construction management platform.
+url: https://buildguard.vastama.com
+baseurl: ""
+lang: en
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    # Unknown languages (notably ```mermaid) fall back to plain text instead of
+    # being tokenised into <span>s, which would corrupt the diagram source.
+    default_lang: text
+
+# Applies the layout to every page so documents only need a title in their
+# front matter. Note that a markdown file with NO front matter at all is
+# copied verbatim by Jekyll and never rendered to HTML.
+defaults:
+  - scope:
+      path: ""
+      type: pages
+    values:
+      layout: default
+
+exclude:
+  - vendor
+  - .bundle

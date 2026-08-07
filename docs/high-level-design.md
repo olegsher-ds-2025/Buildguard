@@ -1,3 +1,8 @@
+---
+title: High Level Design
+description: Architecture, domain decomposition and phased roadmap for the BuildGuard platform.
+---
+
 # BuildGuard — High Level Design
 
 | | |
