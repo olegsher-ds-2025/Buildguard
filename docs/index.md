@@ -15,6 +15,12 @@ core differentiators.
   architecture, data model, AI layer, non-functional requirements, phased roadmap,
   risks and open decisions.
 
+## Prototype
+
+- [MVP demo]({{ '/demo/' | relative_url }}) — an interactive prototype of the phase 1
+  scope (progress, phase timeline, budget with burn-rate alerting) plus the AI Vision
+  Inspector review loop. Static page, mock data, no backend.
+
 ---
 
 <p style="color: var(--muted); font-size: .875rem;">

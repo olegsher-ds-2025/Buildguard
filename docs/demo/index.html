@@ -1,0 +1,488 @@
+<!doctype html>
+<!--
+  BuildGuard — MVP demo.
+
+  A self-contained, static prototype of the Phase 1 "Transparency" scope from
+  the high level design, plus a preview of the AI Vision Inspector review loop.
+  All data below is mock data held in JS; there is no backend.
+
+  No YAML front matter on purpose: Jekyll copies front-matter-less files
+  through verbatim, so this page is served exactly as written.
+-->
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Villa Sharon · BuildGuard</title>
+<meta name="description" content="Interactive MVP prototype of the BuildGuard construction management platform.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='13'>🏗️</text></svg>">
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --panel: #ffffff;
+    --fg: #17202a;
+    --muted: #66717e;
+    --border: #e1e5ea;
+    --accent: #1f6feb;
+    --ok: #1a7f4b;
+    --warn: #b26a00;
+    --danger: #c0362c;
+    --track: #eceff3;
+    --radius: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117;
+      --panel: #161b22;
+      --fg: #e6edf3;
+      --muted: #9198a1;
+      --border: #2c333b;
+      --accent: #4493f8;
+      --ok: #3fb950;
+      --warn: #d29922;
+      --danger: #f85149;
+      --track: #21262d;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Hebrew", Arial, sans-serif;
+  }
+  .wrap { max-width: 68rem; margin: 0 auto; padding: 1.5rem 1rem 5rem; }
+
+  .topbar {
+    display: flex; align-items: center; gap: .6rem; flex-wrap: wrap;
+    border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.5rem;
+  }
+  .logo { font-weight: 700; letter-spacing: -.01em; }
+  .logo span { color: var(--accent); }
+  .topbar .spacer { flex: 1; }
+  .demo-tag {
+    font-size: .7rem; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--warn); border: 1px solid var(--warn); border-radius: 999px; padding: .1rem .5rem;
+  }
+  .who { font-size: .8rem; color: var(--muted); }
+
+  h1 { font-size: 1.5rem; margin: 0 0 .2rem; }
+  .sub { color: var(--muted); font-size: .875rem; margin: 0 0 1.5rem; }
+  h2 { font-size: 1.05rem; margin: 0 0 .15rem; }
+  .section { margin-top: 2.25rem; }
+  .section > .hint { color: var(--muted); font-size: .8rem; margin: 0 0 .75rem; }
+
+  .grid { display: grid; gap: .75rem; }
+  .kpis { grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); }
+  .card {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1rem;
+  }
+  .kpi .label { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+  .kpi .value { font-size: 1.75rem; font-weight: 650; line-height: 1.2; margin-top: .2rem; }
+  .kpi .note { font-size: .78rem; color: var(--muted); margin-top: .1rem; }
+  .kpi .note.warn { color: var(--warn); }
+  .kpi .note.danger { color: var(--danger); }
+
+  .bar { height: 7px; background: var(--track); border-radius: 999px; overflow: hidden; }
+  .bar > i { display: block; height: 100%; background: var(--accent); border-radius: 999px; }
+  .bar > i.ok { background: var(--ok); }
+  .bar > i.warn { background: var(--warn); }
+  .bar > i.danger { background: var(--danger); }
+
+  .phase { display: grid; grid-template-columns: 15rem 1fr 4.5rem; gap: .9rem; align-items: center; padding: .55rem 0; }
+  .phase + .phase { border-top: 1px solid var(--border); }
+  .phase .name { font-weight: 550; }
+  .phase .name em { display: block; font-style: normal; font-size: .75rem; color: var(--muted); font-weight: 400; }
+  .phase .pct { text-align: end; font-variant-numeric: tabular-nums; color: var(--muted); font-size: .875rem; }
+
+  table { border-collapse: collapse; width: 100%; font-size: .875rem; }
+  th, td { padding: .55rem .5rem; text-align: start; border-bottom: 1px solid var(--border); }
+  th { font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); font-weight: 600; }
+  td.num, th.num { text-align: end; font-variant-numeric: tabular-nums; }
+  tfoot td { font-weight: 650; border-bottom: 0; }
+  .over { color: var(--danger); }
+  .table-scroll { overflow-x: auto; }
+
+  .alert {
+    display: flex; gap: .6rem; align-items: flex-start;
+    border: 1px solid var(--warn); background: color-mix(in srgb, var(--warn) 9%, transparent);
+    border-radius: var(--radius); padding: .75rem .9rem; margin-bottom: 1rem; font-size: .875rem;
+  }
+  .alert strong { color: var(--warn); }
+
+  .finding { display: flex; gap: .9rem; align-items: flex-start; padding: .9rem 0; }
+  .finding + .finding { border-top: 1px solid var(--border); }
+  .finding .thumb {
+    width: 3.25rem; height: 3.25rem; flex: none; border-radius: 8px;
+    background: var(--track); display: grid; place-items: center; font-size: 1.4rem;
+  }
+  .finding .body { flex: 1; min-width: 0; }
+  .finding .title { font-weight: 600; }
+  .finding .meta { font-size: .8rem; color: var(--muted); margin-top: .1rem; }
+  .finding .acts { display: flex; gap: .4rem; margin-top: .55rem; flex-wrap: wrap; }
+
+  .sev { font-size: .7rem; font-weight: 700; padding: .1rem .45rem; border-radius: 999px; border: 1px solid; }
+  .sev.low { color: var(--muted); border-color: var(--border); }
+  .sev.med { color: var(--warn); border-color: var(--warn); }
+  .sev.high { color: var(--danger); border-color: var(--danger); }
+
+  button {
+    font: inherit; font-size: .8rem; padding: .3rem .7rem; border-radius: 7px;
+    border: 1px solid var(--border); background: var(--panel); color: var(--fg); cursor: pointer;
+  }
+  button:hover { border-color: var(--accent); color: var(--accent); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.primary:hover { opacity: .9; color: #fff; }
+  button[disabled] { opacity: .55; cursor: default; }
+  button[disabled]:hover { border-color: var(--border); color: var(--fg); }
+
+  .resolved { font-size: .8rem; font-weight: 600; }
+  .resolved.approved { color: var(--ok); }
+  .resolved.dismissed { color: var(--muted); }
+
+  .trust { width: 100%; }
+  .trust summary {
+    cursor: pointer; list-style: none; padding: .7rem 0;
+    display: grid; grid-template-columns: 1fr auto auto; gap: .75rem; align-items: center;
+  }
+  .trust summary::-webkit-details-marker { display: none; }
+  .trust + .trust summary { border-top: 1px solid var(--border); }
+  .trust .co { font-weight: 550; }
+  .trust .co em { display: block; font-style: normal; font-size: .75rem; color: var(--muted); font-weight: 400; }
+  .score { font-size: 1.25rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .score.g { color: var(--ok); } .score.a { color: var(--warn); } .score.r { color: var(--danger); }
+  .chev { color: var(--muted); font-size: .75rem; }
+  .breakdown { padding: 0 0 .9rem; }
+  .comp { display: grid; grid-template-columns: 11rem 1fr 3.5rem; gap: .6rem; align-items: center; font-size: .8rem; padding: .2rem 0; }
+  .comp .w { color: var(--muted); font-size: .72rem; }
+  .comp .v { text-align: end; font-variant-numeric: tabular-nums; color: var(--muted); }
+
+  footer {
+    margin-top: 3.5rem; padding-top: 1rem; border-top: 1px solid var(--border);
+    color: var(--muted); font-size: .8rem;
+  }
+  footer a { color: var(--accent); }
+  @media (max-width: 34rem) {
+    .phase { grid-template-columns: 1fr 3.5rem; }
+    .phase .bar { grid-column: 1 / -1; }
+    .comp { grid-template-columns: 8rem 1fr 3rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="logo">Build<span>Guard</span></div>
+    <span class="demo-tag">Demo · mock data</span>
+    <div class="spacer"></div>
+    <div class="who">Signed in as <strong>D. Mizrahi</strong> · Owner</div>
+  </div>
+
+  <h1>Villa Sharon</h1>
+  <p class="sub">3 Ha'Zayit St, Kfar Saba · single-family · started Mar 2026 · target completion Feb 2027</p>
+
+  <div class="grid kpis">
+    <div class="card kpi">
+      <div class="label">Progress</div>
+      <div class="value" id="kpi-progress">—</div>
+      <div class="note">Phase: Structure</div>
+    </div>
+    <div class="card kpi">
+      <div class="label">Budget used</div>
+      <div class="value" id="kpi-spent">—</div>
+      <div class="note" id="kpi-spent-note">—</div>
+    </div>
+    <div class="card kpi">
+      <div class="label">Next milestone</div>
+      <div class="value">12<span style="font-size:1rem;font-weight:400;color:var(--muted)"> days</span></div>
+      <div class="note">Structure complete</div>
+    </div>
+    <div class="card kpi">
+      <div class="label">Open findings</div>
+      <div class="value" id="kpi-defects">—</div>
+      <div class="note" id="kpi-defects-note">awaiting your review</div>
+    </div>
+  </div>
+
+  <section class="section">
+    <h2>Phase timeline</h2>
+    <p class="hint">Progress blends task completion, verified milestones and the AI visual estimate.</p>
+    <div class="card" id="phases"></div>
+  </section>
+
+  <section class="section">
+    <h2>Budget</h2>
+    <p class="hint">Planned vs. actual by phase. Amounts in ILS.</p>
+    <div id="burn"></div>
+    <div class="card table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Line</th><th class="num">Planned</th><th class="num">Actual</th><th class="num">Used</th>
+          </tr>
+        </thead>
+        <tbody id="budget-rows"></tbody>
+        <tfoot id="budget-total"></tfoot>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>AI Vision Inspector</h2>
+    <p class="hint">
+      Findings are <strong>suggested</strong> only — nothing becomes a tracked defect without your approval.
+    </p>
+    <div class="card" id="findings"></div>
+  </section>
+
+  <section class="section">
+    <h2>Contractors</h2>
+    <p class="hint">Trust Score is computed from weighted components. Select a contractor to see the breakdown.</p>
+    <div class="card" id="contractors"></div>
+  </section>
+
+  <footer>
+    <p>
+      Prototype for the <a href="../high-level-design">BuildGuard high level design</a>.
+      All figures are fabricated sample data and describe no real project, property or company.
+      AI findings shown here are illustrative and are not an engineering assessment.
+    </p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var ILS = new Intl.NumberFormat("en-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
+
+  // `weight` is the phase's share of the planned budget. Overall progress is
+  // weighted by it — a straight average across phases would treat Finishing as
+  // equal in size to Structure and badly misreport where the project stands.
+  var phases = [
+    { name: "Foundations", note: "excavation, footings, raft", pct: 100, state: "verified", weight: 420000 },
+    { name: "Structure",   note: "columns, slabs, roof deck",  pct: 78,  state: "in progress", weight: 780000 },
+    { name: "Envelope",    note: "walls, windows, waterproofing", pct: 12, state: "in progress", weight: 390000 },
+    { name: "Systems",     note: "electrical, plumbing, HVAC", pct: 0,   state: "not started", weight: 460000 },
+    { name: "Finishing",   note: "plaster, tiling, fittings",  pct: 0,   state: "not started", weight: 300000 }
+  ];
+
+  var budget = [
+    { line: "Foundations & earthworks", planned: 420000, actual: 438200 },
+    { line: "Structure & concrete",     planned: 780000, actual: 651000 },
+    { line: "Envelope & roofing",       planned: 390000, actual: 47300 },
+    { line: "Systems",                  planned: 460000, actual: 92000 },
+    { line: "Finishing",                planned: 300000, actual: 0 },
+    { line: "Contingency",              planned: 100000, actual: 54900 }
+  ];
+
+  var findings = [
+    {
+      id: "f1", icon: "🧱", title: "Exposed reinforcement — column C-4",
+      area: "Structure · level 1", severity: 4, confidence: 0.91,
+      cost: [1800, 3200], age: "2 days ago", status: "open"
+    },
+    {
+      id: "f2", icon: "🦺", title: "Missing edge guardrail — level 2, south",
+      area: "Safety · level 2", severity: 5, confidence: 0.88,
+      cost: [400, 700], age: "2 days ago", status: "open", safety: true
+    },
+    {
+      id: "f3", icon: "💧", title: "Damp patch — north wall, ground floor",
+      area: "Envelope · ground floor", severity: 3, confidence: 0.76,
+      cost: [900, 2400], age: "5 days ago", status: "open"
+    }
+  ];
+
+  // Weights are the ones defined in §6.3 of the design document.
+  var WEIGHTS = [
+    { key: "schedule", label: "Schedule adherence", w: 0.20 },
+    { key: "quality",  label: "Execution quality",  w: 0.25 },
+    { key: "finance",  label: "Financial transparency", w: 0.20 },
+    { key: "disputes", label: "Disputes",           w: 0.15 },
+    { key: "service",  label: "Service",            w: 0.10 },
+    { key: "tenure",   label: "Tenure & experience", w: 0.10 }
+  ];
+
+  var contractors = [
+    { name: "Sharon Earthworks", trade: "Foundations · completed",
+      c: { schedule: 92, quality: 93, finance: 88, disputes: 96, service: 85, tenure: 90 } },
+    { name: "Amir Cohen Construction", trade: "Structure · active",
+      c: { schedule: 82, quality: 90, finance: 85, disputes: 95, service: 80, tenure: 88 } },
+    { name: "Levi Plumbing & Systems", trade: "Systems · contracted",
+      c: { schedule: 65, quality: 74, finance: 70, disputes: 80, service: 68, tenure: 75 } }
+  ];
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  function bar(pct, tone) {
+    var b = el("div", "bar"), i = el("i", tone || "");
+    i.style.width = Math.max(0, Math.min(100, pct)) + "%";
+    b.appendChild(i);
+    return b;
+  }
+
+  function trustScore(c) {
+    return WEIGHTS.reduce(function (sum, w) { return sum + w.w * c[w.key]; }, 0);
+  }
+
+  /* ---- phases ---- */
+  var phaseWeight = phases.reduce(function (s, p) { return s + p.weight; }, 0);
+  var overall = Math.round(
+    phases.reduce(function (s, p) { return s + p.pct * p.weight; }, 0) / phaseWeight
+  );
+
+  var host = document.getElementById("phases");
+  phases.forEach(function (p) {
+    var row = el("div", "phase");
+    var name = el("div", "name", p.name);
+    name.appendChild(el("em", null,
+      p.note + " · " + p.state + " · " + Math.round(p.weight / phaseWeight * 100) + "% of budget"));
+    row.appendChild(name);
+    row.appendChild(bar(p.pct, p.pct === 100 ? "ok" : ""));
+    row.appendChild(el("div", "pct", p.pct + "%"));
+    host.appendChild(row);
+  });
+  document.getElementById("kpi-progress").textContent = overall + "%";
+
+  /* ---- budget ---- */
+  var planned = budget.reduce(function (s, b) { return s + b.planned; }, 0);
+  var actual = budget.reduce(function (s, b) { return s + b.actual; }, 0);
+  var usedPct = actual / planned * 100;
+
+  var tbody = document.getElementById("budget-rows");
+  budget.forEach(function (b) {
+    var pct = b.planned ? b.actual / b.planned * 100 : 0;
+    var tr = el("tr");
+    tr.appendChild(el("td", null, b.line));
+    tr.appendChild(el("td", "num", ILS.format(b.planned)));
+    var a = el("td", "num" + (b.actual > b.planned ? " over" : ""), ILS.format(b.actual));
+    tr.appendChild(a);
+    tr.appendChild(el("td", "num" + (pct > 100 ? " over" : ""), Math.round(pct) + "%"));
+    tbody.appendChild(tr);
+  });
+  var tf = el("tr");
+  tf.appendChild(el("td", null, "Total"));
+  tf.appendChild(el("td", "num", ILS.format(planned)));
+  tf.appendChild(el("td", "num", ILS.format(actual)));
+  tf.appendChild(el("td", "num", Math.round(usedPct) + "%"));
+  document.getElementById("budget-total").appendChild(tf);
+
+  document.getElementById("kpi-spent").textContent = Math.round(usedPct) + "%";
+  document.getElementById("kpi-spent-note").textContent =
+    ILS.format(actual) + " of " + ILS.format(planned);
+
+  // Burn rate: spend rate relative to progress rate.
+  var burn = usedPct / overall;
+  if (burn > 1.05) {
+    var projected = planned * burn;
+    var a2 = el("div", "alert");
+    a2.appendChild(el("span", null, "⚠"));
+    var msg = el("div");
+    msg.appendChild(el("strong", null, "Burn rate " + burn.toFixed(2) + "× — "));
+    msg.appendChild(document.createTextNode(
+      Math.round(usedPct) + "% of budget spent at " + overall + "% progress. " +
+      "At this rate the project finishes around " + ILS.format(projected) +
+      ", about " + ILS.format(projected - planned) + " over."
+    ));
+    a2.appendChild(msg);
+    document.getElementById("burn").appendChild(a2);
+    document.getElementById("kpi-spent-note").className = "note warn";
+  }
+
+  /* ---- findings ---- */
+  var fhost = document.getElementById("findings");
+
+  function sevClass(s) { return s >= 4 ? "high" : s === 3 ? "med" : "low"; }
+
+  function renderFindings() {
+    fhost.textContent = "";
+    findings.forEach(function (f) {
+      var row = el("div", "finding");
+      row.appendChild(el("div", "thumb", f.icon));
+
+      var body = el("div", "body");
+      var title = el("div", "title", f.title);
+      body.appendChild(title);
+
+      var meta = el("div", "meta");
+      var sev = el("span", "sev " + sevClass(f.severity),
+        (f.safety ? "SAFETY · " : "") + "severity " + f.severity + "/5");
+      meta.appendChild(sev);
+      meta.appendChild(document.createTextNode(
+        " " + f.area + " · confidence " + Math.round(f.confidence * 100) + "% · " +
+        "est. " + ILS.format(f.cost[0]) + "–" + ILS.format(f.cost[1]) + " · " + f.age
+      ));
+      body.appendChild(meta);
+
+      if (f.status === "open") {
+        var acts = el("div", "acts");
+        var ok = el("button", "primary", "Approve as defect");
+        ok.addEventListener("click", function () { f.status = "approved"; renderFindings(); });
+        var no = el("button", null, "Dismiss");
+        no.addEventListener("click", function () { f.status = "dismissed"; renderFindings(); });
+        var exp = el("button", null, "Send to inspector");
+        exp.disabled = true;
+        exp.title = "Marketplace arrives in phase 4";
+        acts.appendChild(ok); acts.appendChild(no); acts.appendChild(exp);
+        body.appendChild(acts);
+      } else {
+        var r = el("div", "acts");
+        r.appendChild(el("span", "resolved " + f.status,
+          f.status === "approved"
+            ? "✓ Tracked as a defect — assigned to Amir Cohen Construction"
+            : "✕ Dismissed — recorded as a false positive for retraining"));
+        body.appendChild(r);
+      }
+
+      row.appendChild(body);
+      fhost.appendChild(row);
+    });
+
+    var open = findings.filter(function (f) { return f.status === "open"; }).length;
+    var anySafety = findings.some(function (f) { return f.status === "open" && f.safety; });
+    document.getElementById("kpi-defects").textContent = String(open);
+    var note = document.getElementById("kpi-defects-note");
+    note.textContent = open === 0 ? "all reviewed" : (anySafety ? "includes a safety hazard" : "awaiting your review");
+    note.className = "note" + (anySafety ? " danger" : "");
+  }
+  renderFindings();
+
+  /* ---- contractors ---- */
+  var chost = document.getElementById("contractors");
+  contractors.forEach(function (c) {
+    var score = trustScore(c.c);
+    var d = el("details", "trust");
+    var s = el("summary");
+
+    var co = el("div", "co", c.name);
+    co.appendChild(el("em", null, c.trade));
+    s.appendChild(co);
+
+    var tone = score >= 85 ? "g" : score >= 70 ? "a" : "r";
+    s.appendChild(el("div", "score " + tone, score.toFixed(0)));
+    s.appendChild(el("div", "chev", "▾"));
+    d.appendChild(s);
+
+    var bd = el("div", "breakdown");
+    WEIGHTS.forEach(function (w) {
+      var line = el("div", "comp");
+      var lab = el("div", null, w.label);
+      lab.appendChild(el("div", "w", Math.round(w.w * 100) + "% weight"));
+      line.appendChild(lab);
+      line.appendChild(bar(c.c[w.key], c.c[w.key] >= 85 ? "ok" : c.c[w.key] >= 70 ? "" : "warn"));
+      line.appendChild(el("div", "v", c.c[w.key]));
+      bd.appendChild(line);
+    });
+    d.appendChild(bd);
+    chost.appendChild(d);
+  });
+})();
+</script>
+</body>
+</html>
