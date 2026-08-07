@@ -1,102 +1,103 @@
-# BuildGuard — מסמך תכנון ברמה גבוהה (High Level Design)
+# BuildGuard — High Level Design
 
 | | |
 |---|---|
-| **גרסה** | 0.1 (טיוטה ראשונה) |
-| **תאריך** | 2026-08-07 |
-| **סטטוס** | לסקירה |
-| **קהל יעד** | הנהלה, ארכיטקטורה, מוצר, פיתוח |
+| **Version** | 0.1 (first draft) |
+| **Date** | 2026-08-07 |
+| **Status** | For review |
+| **Audience** | Leadership, architecture, product, engineering |
 
 ---
 
-## 1. תקציר מנהלים
+## 1. Executive Summary
 
-BuildGuard היא פלטפורמת SaaS לניהול ופיקוח על פרויקטי בנייה למגורים. המערכת מחברת שלושה צדדים —
-**בעלי בתים/יזמים פרטיים**, **קבלנים ובעלי מקצוע**, ו**מפקחים ויועצים מוסמכים** — סביב פרויקט בנייה יחיד
-המשמש כישות המרכזית במערכת.
+BuildGuard is a SaaS platform for managing and supervising residential construction projects. It connects
+three parties — **homeowners / private developers**, **contractors and tradespeople**, and **licensed
+inspectors and consultants** — around a single construction project, which is the central entity in the system.
 
-הבידול המרכזי הוא **שכבת ה-AI**: "מפקח ממוחשב" מבוסס ראייה ממוחשבת שמשווה תמונות מהשטח מול התוכניות
-האדריכליות, מזהה ליקויים, סטיות ומפגעי בטיחות, ומפיק דוח עם דירוג חומרה ואומדן עלות תיקון. לצדו פועל
-צ'אטבוט RAG שעונה על שאלות מתוך המסמכים של הפרויקט הספציפי (חוזים, תוכניות, חשבוניות).
+The core differentiator is the **AI layer**: a computer-vision "virtual inspector" that compares field photos
+against architectural plans, detects defects, deviations and safety hazards, and produces a report with
+severity ranking and an estimated repair cost. Alongside it, a RAG chatbot answers questions grounded in the
+documents of that specific project (contracts, plans, invoices).
 
-המסמך מגדיר את פירוק הדומיינים, הארכיטקטורה הלוגית והפיזית, מודל הנתונים, זרימות המפתח,
-הדרישות הלא-פונקציונליות, ומפת דרכים בשלבים.
+This document defines the domain decomposition, the logical and physical architecture, the data model,
+the key flows, the non-functional requirements, and a phased roadmap.
 
 ---
 
-## 2. מטרות ולא-מטרות
+## 2. Goals and Non-Goals
 
-### 2.1 מטרות מוצריות
+### 2.1 Product Goals
 
-| # | מטרה | מדד הצלחה (KPI) |
+| # | Goal | Success Metric (KPI) |
 |---|---|---|
-| G1 | לתת לבעל הבית שליטה אמיתית בתקציב ובלו"ז ללא ידע מקצועי | ירידה בחריגת תקציב ממוצעת בפרויקט |
-| G2 | להחליף "המלצות מפה לאוזן" בבחירת קבלן מבוססת נתונים | % פרויקטים שבהם הקבלן נבחר דרך המכרז במערכת |
-| G3 | לספק פיקוח רציף בעלות נמוכה | מס' ליקויים שזוהו ע"י AI ואומתו ע"י מפקח אנושי |
-| G4 | לייצר אמון שקשה לזייף | % ביקורות מאומתות (חוזה + אבן דרך) מתוך סך הביקורות |
-| G5 | ליצור שוק שירותים דו-צדדי רווחי | GMV ב-Marketplace, take-rate |
+| G1 | Give the homeowner real control over budget and schedule without professional expertise | Reduction in average project budget overrun |
+| G2 | Replace word-of-mouth referrals with data-driven contractor selection | % of projects where the contractor was selected through the platform tender |
+| G3 | Provide continuous supervision at low cost | # of AI-detected defects confirmed by a human inspector |
+| G4 | Produce trust that is hard to fake | % of verified reviews (contract + milestone) out of all reviews |
+| G5 | Build a profitable two-sided service marketplace | Marketplace GMV, take-rate |
 
-### 2.2 מטרות טכניות
+### 2.2 Technical Goals
 
-* **Multi-tenant** מאובטח — בידוד נתונים ברמת הפרויקט והארגון.
-* **Modular monolith → Services**: התחלה כמונוליט מודולרי עם גבולות דומיין חדים, המאפשר חילוץ שירותים בהמשך.
-* **AI כשירות מבודד** — יכולת להחליף מודלים/ספקים ללא שינוי בליבה העסקית.
-* **Mobile-first לשטח** — העלאת תמונות ועבודה offline-tolerant מהאתר.
-* **RTL-first** — עברית כשפת ברירת מחדל, עם תשתית i18n מלאה.
+* **Multi-tenant** and secure — data isolation at the project and organization level.
+* **Modular monolith → services**: start as a modular monolith with sharp domain boundaries, allowing services to be extracted later.
+* **AI as an isolated service** — ability to swap models/vendors without touching the business core.
+* **Mobile-first for the field** — photo upload and offline-tolerant operation from the site.
+* **RTL-first** — Hebrew as the default language, on a full i18n foundation.
 
-### 2.3 לא-מטרות (בשלב זה)
+### 2.3 Non-Goals (for now)
 
-* אין ניהול שכר/נוכחות עובדים של הקבלן.
-* אין תכנון/עריכת CAD — צפייה, מדידה והערות בלבד.
-* אין החלפת אישור קונסטרוקטור חוקי — פלט ה-AI הוא **המלצה**, לא אישור הנדסי.
-* אין תמיכה בפרויקטים תעשייתיים/תשתיות בגרסה הראשונה (מגורים בלבד).
+* No payroll or workforce attendance management for contractors.
+* No CAD authoring/editing — viewing, measuring and annotating only.
+* No replacement for a legally binding structural engineer sign-off — AI output is a **recommendation**, not an engineering approval.
+* No support for industrial or infrastructure projects in v1 (residential only).
 
 ---
 
-## 3. משתמשים ותרחישי מפתח
+## 3. Users and Key Scenarios
 
-### 3.1 פרסונות
+### 3.1 Personas
 
-| פרסונה | מוטיבציה | כאב עיקרי | תדירות שימוש |
+| Persona | Motivation | Primary pain | Usage frequency |
 |---|---|---|---|
-| **בעל בית / יזם פרטי** | לבנות בתקציב ובזמן | חוסר ידע מקצועי, חוסר שקיפות | יומי |
-| **קבלן / בעל מקצוע** | להשיג עבודות איכותיות | תחרות על מחיר בלבד, תזרים | יומי בזמן ביצוע |
-| **מפקח / מהנדס** | להשלים הכנסה בייעוץ ממוקד | נסיעות מיותרות לאתר | לפי דרישה |
-| **מנהל פלטפורמה** | איכות השוק, מניעת הונאות | ביקורות מזויפות, סכסוכים | יומי |
+| **Homeowner / private developer** | Build on budget and on time | Lack of expertise, lack of transparency | Daily |
+| **Contractor / tradesperson** | Win quality jobs | Competing on price alone, cash flow | Daily during execution |
+| **Inspector / engineer** | Monetize expertise in focused consultations | Wasted trips to site | On demand |
+| **Platform operator** | Marketplace quality, fraud prevention | Fake reviews, disputes | Daily |
 
-### 3.2 תרחישי מפתח (User Journeys)
+### 3.2 Key User Journeys
 
-1. **הקמת פרויקט**: בעל בית מגדיר פרויקט → מעלה תוכניות → המערכת מציעה ציר זמן שלבי ותקציב בסיס לפי סוג/גודל.
-2. **מכרז ובחירה**: פרסום חבילת עבודה → התאמה אלגוריתמית לקבלנים → הצעות → השוואה → חוזה → Escrow.
-3. **פיקוח שוטף**: הקבלן/בעל הבית מעלה תמונות מהשטח → Vision Inspector מנתח → ליקוי נפתח כ-Issue → הקצאה ומעקב עד סגירה.
-4. **שאלה פיננסית**: בעל הבית שואל בצ'אט "כמה רזרבה נשארה אם האינסטלטור חורג ב-12%?" → RAG שולף מהחוזה, מהחשבוניות ומהתקציב → תשובה עם ציטוט מקורות.
-5. **ייעוץ לפי דרישה**: הזמנת מפקח מה-Marketplace → שיחת וידאו עם סימון על מסך → דוח חתום → תשלום משוחרר מה-Escrow.
-6. **סגירת אבן דרך**: אישור אבן דרך מאומתת → שחרור תשלום → נפתח חלון לביקורת מאומתת → עדכון Trust Score.
+1. **Project setup**: homeowner defines a project → uploads plans → system proposes a phased timeline and a baseline budget based on type/size.
+2. **Tender and selection**: publish a work package → algorithmic matching to contractors → bids → comparison → contract → escrow.
+3. **Ongoing supervision**: contractor/homeowner uploads field photos → Vision Inspector analyzes → defect opened as an issue → assigned and tracked to closure.
+4. **Financial question**: homeowner asks in chat "how much contingency is left if the plumber overruns by 12%?" → RAG pulls from the contract, invoices and budget → answer with cited sources.
+5. **On-demand consultation**: book an inspector from the Marketplace → video call with on-screen markup → signed report → payment released from escrow.
+6. **Milestone closure**: verified milestone approved → payment released → a window opens for a verified review → Trust Score updated.
 
 ---
 
-## 4. פירוק לדומיינים (Domain Decomposition)
+## 4. Domain Decomposition
 
-המערכת מפורקת ל-8 דומיינים עסקיים + 4 דומיינים תומכים. כל דומיין הוא **Bounded Context** בעל
-מודל נתונים משלו, API משלו ואירועים (events) שהוא מפרסם.
+The system is decomposed into 8 business domains plus 4 supporting domains. Each domain is a
+**bounded context** with its own data model, its own API, and the events it publishes.
 
 ```mermaid
 graph TB
-    subgraph Core["דומייני ליבה"]
+    subgraph Core["Core domains"]
         PM[Project Management]
         TND[Tenders & Contractors]
         TS[Trust Score]
         FIN[Finance]
         DOC[Documents & Plans]
     end
-    subgraph AI["דומייני AI"]
+    subgraph AI["AI domains"]
         VIS[AI Vision Inspector]
         RAG[RAG Assistant]
     end
-    subgraph Market["שוק"]
+    subgraph Market["Marketplace"]
         MKT[Experts Marketplace]
     end
-    subgraph Support["דומיינים תומכים"]
+    subgraph Support["Supporting domains"]
         IAM[Identity & Access]
         NOTIF[Notifications]
         PAY[Payments & Escrow]
@@ -116,28 +117,28 @@ graph TB
     TS --> AUD
 ```
 
-### 4.1 טבלת דומיינים
+### 4.1 Domain Table
 
-| דומיין | אחריות | ישויות מרכזיות | אירועים שמפורסמים |
+| Domain | Responsibility | Key entities | Published events |
 |---|---|---|---|
-| **Project Management** | ציר זמן שלבי (יסודות → שלד → גמר), % התקדמות, גאנט עם נתיב קריטי, אבני דרך | `Project`, `Phase`, `Task`, `Milestone`, `Dependency` | `MilestoneCompleted`, `TaskDelayed`, `PhaseStarted` |
-| **Tenders & Contractors** | קטגוריות עבודה, התאמה גיאוגרפית-אלגוריתמית, פרופילים מאומתים, הצעות מחיר | `Tender`, `Bid`, `WorkCategory`, `ContractorProfile`, `Contract` | `TenderPublished`, `BidSubmitted`, `ContractSigned` |
-| **Trust Score** | חישוב ציון משוקלל, זיהוי ביקורות מזויפות, שקיפות רכיבי הציון | `TrustScore`, `ScoreComponent`, `Review`, `Dispute` | `ScoreRecalculated`, `ReviewFlagged` |
-| **Finance** | תקציב רב-מטבעי, תחזית תזרים, התראות Burn-Rate, ספר חשבוניות | `Budget`, `BudgetLine`, `Invoice`, `Payment`, `CashflowForecast` | `BudgetThresholdBreached`, `InvoiceApproved` |
-| **Documents & Plans** | צפייה ב-CAD/PDF בדפדפן, מדידות על התוכנית, שכבות, השוואת גרסאות | `Document`, `PlanVersion`, `Layer`, `Annotation`, `Measurement` | `PlanVersionUploaded`, `AnnotationAdded` |
-| **AI Vision Inspector** | תמונה → זיהוי ליקוי → השוואה לתוכנית → דוח חומרה + אומדן עלות | `SiteCapture`, `Detection`, `Defect`, `InspectionReport` | `DefectDetected`, `SafetyHazardDetected` |
-| **RAG Assistant** | Q&A מעוגן במסמכי הפרויקט הספציפי | `KnowledgeChunk`, `Embedding`, `Conversation`, `Citation` | `AnswerGenerated` |
-| **Experts Marketplace** | הזמנת מפקח/מהנדס, וידאו WebRTC עם סימון מסך, סליקה + Escrow | `ExpertProfile`, `ServiceOffering`, `Booking`, `VideoSession` | `BookingConfirmed`, `SessionCompleted` |
-| **Identity & Access** | הרשמה, אימות זהות/רישיון, תפקידים והרשאות ברמת פרויקט | `User`, `Organization`, `Membership`, `Role`, `Verification` | `UserVerified` |
-| **Notifications** | Push/Email/SMS/WhatsApp, העדפות, digest | `NotificationTemplate`, `Subscription`, `Delivery` | — |
-| **Payments & Escrow** | Stripe Connect, נאמנות, שחרור מותנה אבן דרך, החזרים | `EscrowAccount`, `Payout`, `Refund` | `FundsReleased`, `PayoutFailed` |
-| **Audit & Compliance** | לוג בלתי-ניתן-לשינוי לפעולות רגישות, שמירת ראיות לסכסוכים | `AuditEntry`, `EvidenceBundle` | — |
+| **Project Management** | Phased timeline (foundations → structure → finishing), % progress, Gantt with critical path, milestones | `Project`, `Phase`, `Task`, `Milestone`, `Dependency` | `MilestoneCompleted`, `TaskDelayed`, `PhaseStarted` |
+| **Tenders & Contractors** | Work categories, geo-algorithmic matching, verified profiles, bids | `Tender`, `Bid`, `WorkCategory`, `ContractorProfile`, `Contract` | `TenderPublished`, `BidSubmitted`, `ContractSigned` |
+| **Trust Score** | Weighted score computation, fake-review detection, score component transparency | `TrustScore`, `ScoreComponent`, `Review`, `Dispute` | `ScoreRecalculated`, `ReviewFlagged` |
+| **Finance** | Multi-currency budget, cash-flow forecast, burn-rate alerts, invoice ledger | `Budget`, `BudgetLine`, `Invoice`, `Payment`, `CashflowForecast` | `BudgetThresholdBreached`, `InvoiceApproved` |
+| **Documents & Plans** | In-browser CAD/PDF viewing, on-plan measurements, layers, visual version comparison | `Document`, `PlanVersion`, `Layer`, `Annotation`, `Measurement` | `PlanVersionUploaded`, `AnnotationAdded` |
+| **AI Vision Inspector** | Photo → defect detection → plan comparison → severity report + cost estimate | `SiteCapture`, `Detection`, `Defect`, `InspectionReport` | `DefectDetected`, `SafetyHazardDetected` |
+| **RAG Assistant** | Q&A grounded in the specific project's documents | `KnowledgeChunk`, `Embedding`, `Conversation`, `Citation` | `AnswerGenerated` |
+| **Experts Marketplace** | Booking inspectors/engineers, WebRTC video with on-screen markup, payments + escrow | `ExpertProfile`, `ServiceOffering`, `Booking`, `VideoSession` | `BookingConfirmed`, `SessionCompleted` |
+| **Identity & Access** | Registration, identity/license verification, project-level roles and permissions | `User`, `Organization`, `Membership`, `Role`, `Verification` | `UserVerified` |
+| **Notifications** | Push/Email/SMS/WhatsApp, preferences, digests | `NotificationTemplate`, `Subscription`, `Delivery` | — |
+| **Payments & Escrow** | Stripe Connect, escrow, milestone-conditioned release, refunds | `EscrowAccount`, `Payout`, `Refund` | `FundsReleased`, `PayoutFailed` |
+| **Audit & Compliance** | Immutable log of sensitive actions, evidence retention for disputes | `AuditEntry`, `EvidenceBundle` | — |
 
 ---
 
-## 5. ארכיטקטורה ברמה גבוהה
+## 5. High Level Architecture
 
-### 5.1 תרשים מערכת
+### 5.1 System Diagram
 
 ```mermaid
 graph TB
@@ -206,61 +207,61 @@ graph TB
     MIAM --> KYC
 ```
 
-### 5.2 עקרונות ארכיטקטוניים
+### 5.2 Architectural Principles
 
-1. **Modular Monolith תחילה.** גבולות דומיין נאכפים בקוד (מודולים, ללא import חוצה-דומיין מלבד דרך חוזי API/אירועים). שירותי ה-AI מופרדים מהיום הראשון בגלל פרופיל משאבים שונה (GPU, latency, scaling).
-2. **Event-Driven בין דומיינים.** דומיין לא קורא ישירות ל-DB של דומיין אחר. שינויים מתפרסמים כאירועים (Outbox Pattern) ומעודכנים ב-read models.
-3. **CQRS ממוקד.** גאנט, דשבורד ותחזית תזרים נבנים כ-read models מחושבים מראש, לא כשאילתות כבדות בזמן אמת.
-4. **AI כ-Advisory Layer.** פלט AI תמיד עובר לסטטוס `suggested` ודורש אישור אנושי לפני שהוא משנה מצב עסקי (פתיחת ליקוי רשמי, עצירת תשלום).
-5. **Storage-first למדיה.** תמונות ותוכניות עולות ישירות ל-Object Storage דרך presigned URL; ה-API מקבל metadata בלבד.
-6. **Idempotency בכל פעולה כספית.** מפתח אידמפוטנטיות חובה בכל קריאה שמזיזה כסף.
+1. **Modular monolith first.** Domain boundaries are enforced in code (modules, no cross-domain imports except through API contracts or events). AI services are split out from day one because of their different resource profile (GPU, latency, scaling).
+2. **Event-driven between domains.** A domain never reads another domain's database directly. Changes are published as events (outbox pattern) and projected into read models.
+3. **Targeted CQRS.** The Gantt, dashboard and cash-flow forecast are built as precomputed read models, not heavy on-demand queries.
+4. **AI as an advisory layer.** AI output always lands in a `suggested` state and requires human approval before it changes business state (opening a formal defect, holding a payment).
+5. **Storage-first for media.** Photos and plans upload directly to object storage via presigned URLs; the API receives metadata only.
+6. **Idempotency on every financial operation.** An idempotency key is mandatory on any call that moves money.
 
-### 5.3 מחסנית טכנולוגית מוצעת
+### 5.3 Proposed Technology Stack
 
-| שכבה | בחירה | נימוק |
+| Layer | Choice | Rationale |
 |---|---|---|
-| Frontend Web | React + TypeScript, Vite, TanStack Query | אקוסיסטם עשיר, תמיכת RTL טובה |
-| Mobile | React Native | שיתוף לוגיקה עם ה-Web, מצלמה + offline queue |
-| Backend | Node.js (NestJS) או Python (FastAPI) | NestJS למודולריות; Python אם צוות ה-AI דומיננטי |
-| DB ראשי | PostgreSQL 16 + PostGIS | עסקאות חזקות, גיאו להתאמת קבלנים |
-| Vector | pgvector (MVP) → Qdrant (scale) | פשטות תפעולית תחילה |
-| Object Storage | S3 / GCS | תוכניות ותמונות, lifecycle לארכיון |
-| Queue/Bus | SQS + SNS (MVP) → Kafka | עלות נמוכה בהתחלה |
-| Search | OpenSearch | חיפוש קבלנים, מסמכים, חשבוניות |
-| Video | LiveKit (SFU) | הקלטה, סימון על מסך, סקייל |
-| תשלומים | Stripe Connect + Escrow ידני | KYC ותשלומים לצד ג' |
-| AI Vision | מודל detection/segmentation מותאם + VLM | ראה §7 |
-| Observability | OpenTelemetry, Grafana, Sentry | traces חוצי-שירות |
+| Web frontend | React + TypeScript, Vite, TanStack Query | Rich ecosystem, good RTL support |
+| Mobile | React Native | Shares logic with web, camera + offline queue |
+| Backend | Node.js (NestJS) or Python (FastAPI) | NestJS for modularity; Python if the AI team dominates |
+| Primary DB | PostgreSQL 16 + PostGIS | Strong transactions, geo for contractor matching |
+| Vector | pgvector (MVP) → Qdrant (scale) | Operational simplicity first |
+| Object storage | S3 / GCS | Plans and photos, lifecycle to archive |
+| Queue/bus | SQS + SNS (MVP) → Kafka | Low initial cost |
+| Search | OpenSearch | Contractor, document and invoice search |
+| Video | LiveKit (SFU) | Recording, on-screen markup, scale |
+| Payments | Stripe Connect + escrow | KYC and third-party payouts |
+| AI Vision | Fine-tuned detection/segmentation model + VLM | See §7 |
+| Observability | OpenTelemetry, Grafana, Sentry | Cross-service traces |
 
 ---
 
-## 6. פירוט דומיינים מרכזיים
+## 6. Core Domain Detail
 
-### 6.1 ניהול פרויקט
+### 6.1 Project Management
 
-**מודל.** `Project` → `Phase[]` (יסודות, שלד, מעטפת, מערכות, גמר) → `Task[]` → `Milestone[]`.
-תלויות בין משימות (`FS`, `SS`, `FF`, `SF`) מאפשרות חישוב **נתיב קריטי (CPM)**.
+**Model.** `Project` → `Phase[]` (foundations, structure, envelope, systems, finishing) → `Task[]` → `Milestone[]`.
+Task dependencies (`FS`, `SS`, `FF`, `SF`) enable **critical path (CPM)** computation.
 
-**חישוב התקדמות.** % ההתקדמות אינו מוזן ידנית בלבד — הוא משוקלל משלושה מקורות:
+**Progress computation.** Progress % is not purely manually entered — it is a weighted blend of three sources:
 
 ```
 progress(phase) = 0.5 · weighted_task_completion
-                + 0.3 · verified_milestones_ratio      // אושרו ע"י אבן דרך מאומתת
-                + 0.2 · ai_visual_progress_estimate     // הערכת Vision Inspector
+                + 0.3 · verified_milestones_ratio      // confirmed via verified milestone
+                + 0.2 · ai_visual_progress_estimate     // Vision Inspector estimate
 ```
 
-הרכיב השלישי הוא **advisory** ומוצג בנפרד עם רמת ביטחון, כדי למנוע "ניפוח" התקדמות.
+The third component is **advisory** and is displayed separately with a confidence level, to prevent progress inflation.
 
-**נתיב קריטי.** מחושב ב-worker אסינכרוני בכל שינוי משימה, נשמר כ-read model
-(`gantt_snapshot`), ומשודר ל-UI ב-WebSocket. שינוי בנתיב הקריטי מייצר התראה
-לבעל הבית ולקבלן הרלוונטי.
+**Critical path.** Recomputed in an async worker on every task change, stored as a read model
+(`gantt_snapshot`), and pushed to the UI over WebSocket. A change to the critical path raises an alert
+to the homeowner and the relevant contractor.
 
-**Templates.** ספריית תבניות פרויקט לפי סוג (וילה חד-משפחתית, דו-משפחתי, תוספת בנייה)
-מייצרת ציר זמן ותקציב התחלתי — מוריד את חסם הכניסה למשתמש הלא-מקצועי.
+**Templates.** A library of project templates by type (single-family villa, duplex, home extension)
+generates an initial timeline and budget — this lowers the entry barrier for the non-professional user.
 
-### 6.2 מכרזים וקבלנים
+### 6.2 Tenders and Contractors
 
-**זרימה.**
+**Flow.**
 
 ```mermaid
 sequenceDiagram
@@ -270,18 +271,18 @@ sequenceDiagram
     participant C as Contractors
     participant P as Payments
 
-    O->>T: יצירת מכרז (קטגוריה, היקף, לו"ז, תקציב)
-    T->>M: בקשת התאמה
-    M->>M: סינון: גיאו, קטגוריה, זמינות, TrustScore, קיבולת
-    M-->>C: הזמנה למכרז (Top-N)
-    C->>T: הגשת הצעה (פירוט כמויות, לו"ז, תנאי תשלום)
-    T-->>O: השוואת הצעות מנורמלת
-    O->>T: בחירה + חוזה
-    T->>P: פתיחת Escrow לפי אבני דרך
-    T-->>M: משוב לאימון מחדש של ההתאמה
+    O->>T: Create tender (category, scope, schedule, budget)
+    T->>M: Request matches
+    M->>M: Filter: geo, category, availability, TrustScore, capacity
+    M-->>C: Tender invitation (Top-N)
+    C->>T: Submit bid (quantities, schedule, payment terms)
+    T-->>O: Normalized bid comparison
+    O->>T: Selection + contract
+    T->>P: Open escrow per milestone
+    T-->>M: Feedback for matching retraining
 ```
 
-**מנוע התאמה.** ניקוד מרובה-קריטריונים:
+**Matching engine.** Multi-criteria scoring:
 
 ```
 match_score = 0.30 · geo_proximity_decay(distance)
@@ -291,86 +292,87 @@ match_score = 0.30 · geo_proximity_decay(distance)
             + 0.10 · project_size_experience
 ```
 
-`geo_proximity_decay` הוא דעיכה אקספוננציאלית לפי זמן נסיעה (לא מרחק אווירי), מחושב ב-PostGIS
-עם isochrones. סף מינימלי של Trust Score נדרש כדי להופיע בכלל.
+`geo_proximity_decay` is an exponential decay over **travel time** (not straight-line distance), computed in
+PostGIS with isochrones. A minimum Trust Score threshold is required to appear at all.
 
-**פרופיל מאומת.** אימות רב-שכבתי: ח.פ./עוסק, רישיון קבלן (מול פנקס הקבלנים), ביטוח בתוקף
-(עם תאריך תפוגה ותזכורת), אימות זהות. פרופיל לא מאומת מסומן ויזואלית ומקבל תקרת חשיפה.
+**Verified profile.** Multi-layer verification: business registration, contractor license (against the
+contractors registry), valid insurance (with expiry date and reminder), and identity verification. An
+unverified profile is visually flagged and capped in exposure.
 
 ### 6.3 Trust Score
 
-**נוסחת הציון.**
+**Score formula.**
 
-| רכיב | משקל | מקור הנתונים |
+| Component | Weight | Data source |
 |---|---|---|
-| עמידה בזמנים | 20% | סטייה בפועל מול לו"ז חוזי, לפי אבני דרך מאומתות |
-| איכות ביצוע | 25% | ליקויים שאומתו (Vision + מפקח), שיעור תיקון חוזר |
-| שקיפות פיננסית | 20% | חשבוניות בזמן, סטייה מהצעת המחיר, תוספות לא מתועדות |
-| סכסוכים | 15% | מס' סכסוכים, חומרה, תוצאה |
-| שירות | 10% | זמן תגובה, ביקורות מאומתות |
-| ותק וניסיון | 10% | מס' פרויקטים שהושלמו, שנים, היקף |
+| Schedule adherence | 20% | Actual deviation from contractual schedule, per verified milestones |
+| Execution quality | 25% | Confirmed defects (Vision + inspector), rework rate |
+| Financial transparency | 20% | Invoices on time, deviation from quote, undocumented extras |
+| Disputes | 15% | Count, severity, outcome |
+| Service | 10% | Response time, verified reviews |
+| Tenure and experience | 10% | Completed projects, years, volume |
 
-**חישוב.**
+**Computation.**
 
 ```
 raw   = Σ (wᵢ · componentᵢ)
-score = raw · confidence(n)          // דעיכת בייס עבור מדגם קטן
-confidence(n) = n / (n + k)          // k ≈ 5 פרויקטים
+score = raw · confidence(n)          // Bayesian shrinkage for small samples
+confidence(n) = n / (n + k)          // k ≈ 5 projects
 ```
 
-* **Time decay:** משקל יורד אקספוננציאלית לפרויקטים ישנים (half-life ≈ 18 חודשים).
-* **מניעת פיצול:** זהות מקושרת לח.פ. + בעלים; פתיחת ישות חדשה לא מאפסת היסטוריה.
-* **שקיפות:** לקבלן מוצג פירוט מלא של הרכיבים ומה משפר כל אחד; ערעור אפשרי דרך תהליך Dispute.
+* **Time decay:** older projects lose weight exponentially (half-life ≈ 18 months).
+* **Anti–account-splitting:** identity is bound to business registration + owners; opening a new entity does not reset history.
+* **Transparency:** the contractor sees a full breakdown of components and what improves each one; appeals go through the dispute process.
 
-**זיהוי ביקורות מזויפות.** הגנה בשלוש שכבות:
+**Fake-review detection.** Three layers of defense:
 
-1. **חסם מבני (העיקרי):** ביקורת אפשרית **רק** ממשתמש שחתם חוזה במערכת **ו**סיים אבן דרך מאומתת. זה מייקר הונאה בעלות אמיתית.
-2. **זיהוי אנומליות:** גרף קשרים (מכשיר, IP, אמצעי תשלום, דפוסי עבודה) לאיתור טבעות; ניתוח התפלגות זמן/ציונים; פערים בין הביקורת לנתונים האובייקטיביים (למשל 5 כוכבים על פרויקט עם 40% חריגת לו"ז).
-3. **סקירה אנושית:** ביקורת שמסומנת מעל סף מגיעה ל-Trust & Safety לפני שהיא משפיעה על הציון.
+1. **Structural barrier (the primary one):** a review is possible **only** from a user who signed a contract in the system **and** completed a verified milestone. This puts a real cost on fraud.
+2. **Anomaly detection:** a relationship graph (device, IP, payment method, work patterns) to surface rings; time/rating distribution analysis; divergence between the review and objective data (e.g. 5 stars on a project with 40% schedule overrun).
+3. **Human review:** a review flagged above threshold goes to Trust & Safety before it affects the score.
 
-### 6.4 כספים
+### 6.4 Finance
 
-* **תקציב היררכי:** `Budget` → `BudgetLine` (לפי שלב/קטגוריה) → `Commitment` (חוזה) → `Actual` (חשבונית משולמת).
-* **רב-מטבעיות:** כל סכום נשמר כ-`(amount_minor, currency, fx_rate, fx_date)`. תצוגה במטבע הצגה נבחר; **חישובי אמת תמיד במטבע המקור**. אין עיגול ביניים — מספרים שלמים ביחידות מינור.
-* **תחזית תזרים:** מחושבת מהגאנט × תנאי התשלום בחוזים; מעודכנת בכל `TaskDelayed` / `InvoiceApproved`.
-* **התראות Burn-Rate:**
+* **Hierarchical budget:** `Budget` → `BudgetLine` (per phase/category) → `Commitment` (contract) → `Actual` (paid invoice).
+* **Multi-currency:** every amount is stored as `(amount_minor, currency, fx_rate, fx_date)`. Display uses a chosen presentation currency; **truth computations always happen in the source currency**. No intermediate rounding — integers in minor units.
+* **Cash-flow forecast:** derived from the Gantt × contractual payment terms; recomputed on every `TaskDelayed` / `InvoiceApproved`.
+* **Burn-rate alerts:**
 
 ```
 burn_rate = actual_spend / progress_percent
 alert if burn_rate > baseline · (1 + tolerance)
 ```
-עם התראה מדורגת (מידע → אזהרה → קריטית) וחיזוי "בקצב הזה תחרוג ב-X ש״ח עד סיום".
+with tiered alerting (info → warning → critical) and a projection: "at this rate you will overrun by X by completion".
 
-* **ספר חשבוניות:** OCR לחשבונית → הצעת שיוך לשורת תקציב → אישור → כתיבה לספר. כל רשומה בלתי ניתנת לעריכה (תיקון = רשומת נגד).
+* **Invoice ledger:** OCR on the invoice → suggested budget-line mapping → approval → written to the ledger. Every entry is immutable (a correction is a counter-entry).
 
-### 6.5 מסמכים ותוכניות
+### 6.5 Documents and Plans
 
-| יכולת | מימוש |
+| Capability | Implementation |
 |---|---|
-| צפייה ב-PDF | PDF.js בדפדפן |
-| צפייה ב-CAD (DWG/DXF/IFC) | המרה בצד השרת ל-tiles וקטוריים + מודל geometry; viewer מבוסס WebGL |
-| מדידות על התוכנית | כיול קנה מידה פר-תוכנית; מדידת אורך/שטח/זווית, נשמרת כישות `Measurement` |
-| שכבות | מיפוי layers מקוריים לקטגוריות (חשמל, אינסטלציה, קונסטרוקציה) עם toggle |
-| השוואת גרסאות | diff ויזואלי: overlay עם onion-skin + הדגשת אזורי שינוי (raster diff על ה-tiles, semantic diff על ה-geometry) |
+| PDF viewing | PDF.js in the browser |
+| CAD viewing (DWG/DXF/IFC) | Server-side conversion to vector tiles + geometry model; WebGL-based viewer |
+| On-plan measurement | Per-plan scale calibration; length/area/angle measurement, persisted as a `Measurement` entity |
+| Layers | Map source layers to categories (electrical, plumbing, structural) with toggles |
+| Version comparison | Visual diff: onion-skin overlay + change-region highlighting (raster diff on tiles, semantic diff on geometry) |
 
-**עיבוד אסינכרוני:** העלאה → תור → המרה/tiling/חילוץ טקסט → אינדוקס ל-RAG → פרסום `PlanVersionUploaded`.
-עד לסיום, המסמך במצב `processing` ב-UI.
+**Async processing:** upload → queue → conversion/tiling/text extraction → indexing into RAG → publish `PlanVersionUploaded`.
+Until complete, the document shows as `processing` in the UI.
 
-**גרסאות:** תוכניות הן append-only. כל גרסה שומרת מי העלה, מתי, ומה השתנה. ליקוי או מדידה
-תמיד מקושרים ל-**גרסה ספציפית**, כדי שדוח ישן יישאר קריא ונכון.
+**Versioning:** plans are append-only. Each version records who uploaded it, when, and what changed. A defect
+or measurement is always bound to a **specific version**, so an old report stays readable and correct.
 
-### 6.6 Marketplace מומחים
+### 6.6 Experts Marketplace
 
-* **פרופיל מומחה:** התמחות, רישיון (מאומת מול הרשם), אזורי שירות, תעריף, זמינות (יומן).
-* **הזמנה:** בחירת שירות (ייעוץ וידאו / ביקור באתר / בדיקת תוכניות) → slot → תשלום נכנס ל-Escrow.
-* **שיחת וידאו:** WebRTC דרך SFU. יכולות: שיתוף מצלמת טלפון מהשטח, **סימון על מסך בזמן אמת** (annotation layer משודר כאירועים, לא כווידאו), הקלטה בהסכמה, snapshot ישירות לתיק הליקויים.
-* **סליקה:** Stripe Connect — המומחה הוא Connected Account. הכספים משוחררים לאחר אישור סיום השיחה + חלון ערעור. עמלת פלטפורמה נגבית כ-application fee.
+* **Expert profile:** specialization, license (verified against the registry), service areas, rate, availability (calendar).
+* **Booking:** choose a service (video consultation / site visit / plan review) → slot → payment goes into escrow.
+* **Video call:** WebRTC via an SFU. Capabilities: sharing the phone camera from the field, **real-time on-screen markup** (annotation layer broadcast as events, not as video), consented recording, snapshot straight into the defect file.
+* **Payments:** Stripe Connect — the expert is a connected account. Funds release after session completion is confirmed plus an appeal window. The platform fee is collected as an application fee.
 
 ---
 
-## 7. שכבת ה-AI
+## 7. The AI Layer
 
-### 7.1 AI Vision Inspector — צינור עיבוד
+### 7.1 AI Vision Inspector — Processing Pipeline
 
 ```mermaid
 graph LR
@@ -385,61 +387,61 @@ graph LR
     I --> J["Defect issue<br/>tracked to closure"]
 ```
 
-**שלבים מרכזיים:**
+**Key stages:**
 
-| שלב | טכניקה | הערות |
+| Stage | Technique | Notes |
 |---|---|---|
-| Quality gate | מודל קל (blur/exposure), pHash לכפילויות | חוסך עלות GPU ומונע דוחות רועשים |
-| Localization | סריקת QR/תג חדר + גיאו + ניחוש VLM | קישור התמונה לאזור בתוכנית — **התנאי לכל השוואה** |
-| Detection | מודל detection/segmentation מאומן על דאטהסט בנייה (סדקים, רטיבות, ריתוך/זיון חשוף, אי-אנכיות, בטיחות: קסדה, מעקה, פיגום) | ensemble עם VLM לתיאור טקסטואלי |
-| Plan comparison | חילוץ מידות מהתמונה (עם reference scale) מול geometry מהתוכנית | מזהה: פתח חסר/עודף, מיקום שגוי, סטייה במידה מעבר לסבולת |
-| Severity | דירוג 1–5 לפי: סיכון בטיחותי, השפעה מבנית, עלות תיקון עתידית, דחיפות (שלב בנייה) | מפגע בטיחות = עוקף לדחיפות מיידית |
-| Cost estimate | טבלת מחירונים לפי סוג ליקוי × אזור × היקף, מוצג כטווח | תמיד טווח עם רמת ביטחון, לעולם לא מספר יחיד |
+| Quality gate | Lightweight model (blur/exposure), pHash for duplicates | Saves GPU cost and prevents noisy reports |
+| Localization | QR/room-tag scan + geo + VLM inference | Binding the photo to a plan region — **the precondition for any comparison** |
+| Detection | Detection/segmentation model trained on a construction dataset (cracks, damp, exposed rebar, out-of-plumb, safety: helmet, guardrail, scaffolding) | Ensembled with a VLM for textual description |
+| Plan comparison | Extract dimensions from the photo (with a reference scale) against plan geometry | Detects missing/extra openings, wrong placement, dimensional deviation beyond tolerance |
+| Severity | 1–5 rating from: safety risk, structural impact, future repair cost, urgency (construction phase) | A safety hazard bypasses straight to immediate urgency |
+| Cost estimate | Price-book lookup by defect type × region × extent, presented as a range | Always a range with a confidence level, never a single number |
 
-**עקרונות בטיחות ואמון:**
+**Safety and trust principles:**
 
-* פלט תמיד `suggested` — לא נפתח ליקוי רשמי ולא נעצר תשלום ללא אישור אנושי.
-* כל זיהוי מלווה ב-**רמת ביטחון** ובחיתוך התמונה (bounding box) לאימות ויזואלי מהיר.
-* מתחת לסף ביטחון → מוצע "לשלוח למפקח" (hook טבעי ל-Marketplace).
-* **Human-in-the-loop feedback**: כל אישור/דחייה נשמר כתווית לאימון מחדש. מודדים precision/recall לפי סוג ליקוי, עם דגש על **recall גבוה למפגעי בטיחות** (עדיף התראת שווא).
-* **הצהרה משפטית מפורשת:** אינו תחליף לבדיקה הנדסית מוסמכת.
+* Output is always `suggested` — no formal defect is opened and no payment is held without human approval.
+* Every detection carries a **confidence level** and an image crop (bounding box) for fast visual verification.
+* Below the confidence threshold → the UI offers "send to an inspector" (a natural hook into the Marketplace).
+* **Human-in-the-loop feedback**: every approval/rejection is stored as a label for retraining. Track precision/recall per defect type, with emphasis on **high recall for safety hazards** (false alarms are preferable).
+* **Explicit legal disclaimer:** this is not a substitute for a licensed engineering inspection.
 
-### 7.2 צ'אטבוט RAG
+### 7.2 RAG Chatbot
 
-**היקף הידע (per-project):** חוזים, כתבי כמויות, תוכניות (טקסט + metadata), חשבוניות וקבלות,
-דוחות ליקויים, יומן אתר, התכתבויות רלוונטיות, מצב תקציב וגאנט **חי**.
+**Knowledge scope (per project):** contracts, bills of quantities, plans (text + metadata), invoices and
+receipts, defect reports, site diary, relevant correspondence, and **live** budget and Gantt state.
 
-**ארכיטקטורה:**
+**Architecture:**
 
 ```mermaid
 graph LR
-    Q["שאלת משתמש"] --> RW["Query rewrite<br/>+ resolve context"]
+    Q["User question"] --> RW["Query rewrite<br/>+ resolve context"]
     RW --> RT["Hybrid retrieval<br/>BM25 + vector"]
     RT --> RR["Re-rank"]
     RR --> TL["Tool layer<br/>budget / gantt / trust APIs"]
     TL --> GEN["LLM generation<br/>with citations"]
     GEN --> GRD["Grounding check"]
-    GRD --> ANS["תשובה + מקורות"]
+    GRD --> ANS["Answer + sources"]
 ```
 
-**נקודות מפתח:**
+**Key points:**
 
-* **Retrieval היברידי** — שמות ומספרים (מק"ט, סעיף בחוזה) נמצאים ב-BM25, כוונה סמנטית ב-vector.
-* **Tool use ולא רק retrieval.** שאלה כמו *"כמה רזרבה נשארה אם האינסטלטור חורג ב-12%?"* אינה שאלת אחזור — היא **חישוב**. הצ'אטבוט קורא ל-API של Finance (`simulateOverrun(vendor, pct)`) ומחזיר מספר מחושב, לא מנוחש. זהו עיקרון מחייב: **מספרים באים מה-API, לא מה-LLM**.
-* **בידוד Tenant מוחלט.** ה-namespace ב-Vector DB הוא `project_id`, והסינון נאכף בשכבת השירות (לא בפרומפט). בנוסף, סינון לפי הרשאות המשתמש — קבלן לא רואה חוזים של קבלן אחר באותו פרויקט.
-* **ציטוטים חובה.** כל טענה עובדתית מקושרת למסמך ולעמוד/סעיף. ללא מקור → "אין לי מידע על כך בפרויקט".
-* **טריות:** אינדוקס מחדש מיידי (event-driven) על כל שינוי מסמך; נתונים חיים (תקציב, גאנט) תמיד דרך tools ולא דרך אינדקס.
+* **Hybrid retrieval** — names and numbers (SKU, contract clause) are found by BM25, semantic intent by vector search.
+* **Tool use, not just retrieval.** A question such as *"how much contingency is left if the plumber overruns by 12%?"* is not a retrieval question — it is a **calculation**. The chatbot calls the Finance API (`simulateOverrun(vendor, pct)`) and returns a computed number rather than a guessed one. This is a binding principle: **numbers come from the API, not from the LLM**.
+* **Strict tenant isolation.** The vector DB namespace is `project_id`, and filtering is enforced in the service layer (not in the prompt). On top of that, results are filtered by user permissions — a contractor does not see another contractor's contracts on the same project.
+* **Citations are mandatory.** Every factual claim links to a document and page/clause. No source → "I don't have information about that in this project".
+* **Freshness:** immediate event-driven reindexing on any document change; live data (budget, Gantt) always flows through tools, never through the index.
 
-### 7.3 עלות ובקרת AI
+### 7.3 AI Cost and Control
 
-* Cache על embeddings ועל תשובות חוזרות.
-* ניתוב מודלים: מודל קל למשימות פשוטות (סיווג, quality gate), מודל חזק להסקה מורכבת.
-* מכסות פר-tenant עם תצוגת שימוש, ותמחור מדורג לפי נפח ניתוחי Vision.
-* אבסטרקציית ספק (adapter) כדי לאפשר החלפת LLM/VLM ללא שינוי בליבה.
+* Cache embeddings and repeated answers.
+* Model routing: a light model for simple tasks (classification, quality gate), a strong model for complex reasoning.
+* Per-tenant quotas with usage display, and tiered pricing by Vision analysis volume.
+* A vendor abstraction (adapter) so the LLM/VLM can be swapped without touching the core.
 
 ---
 
-## 8. מודל נתונים — ישויות ליבה
+## 8. Data Model — Core Entities
 
 ```mermaid
 erDiagram
@@ -471,136 +473,140 @@ erDiagram
     BOOKING ||--o| VIDEO_SESSION : runs
 ```
 
-**החלטות מודל מרכזיות:**
+**Key modeling decisions:**
 
-* **`Project` הוא גבול הבידוד.** כל שאילתה נושאת `project_id`; נאכף ב-Row Level Security ב-Postgres כרשת ביטחון שנייה.
-* **`Detection` ≠ `Defect`.** Detection הוא פלט AI גולמי; Defect הוא ישות עסקית מאושרת עם אחריות ותאריך יעד. ההפרדה הזו היא הבסיס ל-human-in-the-loop.
-* **כסף כמספר שלם.** `amount_minor BIGINT` + `currency CHAR(3)`. לעולם לא float.
-* **Append-only לישויות רגישות.** חשבוניות, ביקורות, גרסאות תוכנית, אירועי ליקוי — תיקון הוא רשומה חדשה, לא UPDATE.
+* **`Project` is the isolation boundary.** Every query carries `project_id`; enforced by row-level security in Postgres as a second safety net.
+* **`Detection` ≠ `Defect`.** A detection is raw AI output; a defect is an approved business entity with an owner and a due date. This separation is the basis of the human-in-the-loop model.
+* **Money as integers.** `amount_minor BIGINT` + `currency CHAR(3)`. Never floats.
+* **Append-only for sensitive entities.** Invoices, reviews, plan versions and defect events — a correction is a new record, not an UPDATE.
 
 ---
 
-## 9. נושאים חוצי-מערכת
+## 9. Cross-Cutting Concerns
 
-### 9.1 הרשאות (AuthZ)
+### 9.1 Authorization
 
-מודל **RBAC ברמת פרויקט + ABAC לתנאים**:
+A model of **project-level RBAC + ABAC for conditions**:
 
-| תפקיד | תקציב | תוכניות | מכרזים | ליקויים |
+| Role | Budget | Plans | Tenders | Defects |
 |---|---|---|---|---|
-| Owner | מלא | מלא | מלא | מלא |
-| Project Manager | קריאה + הצעה | מלא | מלא | מלא |
-| Contractor | **רק החוזה שלו** | לפי הקצאה | הצעות שלו | שלו |
-| Inspector | קריאה | קריאה + הערות | — | יצירה + אימות |
-| Viewer (בן משפחה, בנק) | קריאה מוגבלת | קריאה | — | קריאה |
+| Owner | Full | Full | Full | Full |
+| Project Manager | Read + propose | Full | Full | Full |
+| Contractor | **Own contract only** | As assigned | Own bids | Own |
+| Inspector | Read | Read + annotate | — | Create + verify |
+| Viewer (family member, bank) | Limited read | Read | — | Read |
 
-הרשאה נבדקת בשכבת השירות (policy engine מרכזי, למשל OPA/Cedar), **לא ב-UI בלבד**.
+Permissions are checked in the service layer (a central policy engine such as OPA/Cedar), **not in the UI alone**.
 
-### 9.2 אבטחה ופרטיות
+### 9.2 Security and Privacy
 
-* הצפנה במנוחה ובתעבורה; מפתחות ב-KMS.
-* Presigned URLs קצרי-מועד לכל מדיה; אין bucket ציבורי.
-* PII ממופה ומסווג; מחיקה/ייצוא לפי GDPR ולפי חוק הגנת הפרטיות הישראלי.
-* תמונות שטח עשויות להכיל אנשים → טשטוש פנים אוטומטי כברירת מחדל בתמונות שמשותפות מחוץ לפרויקט.
-* Audit log בלתי-ניתן-לשינוי לפעולות כספיות, שינויי הרשאות, ואישור/דחיית ממצאי AI.
-* בדיקות חדירה ותוכנית תגובה לאירועים לפני GA.
+* Encryption at rest and in transit; keys in KMS.
+* Short-lived presigned URLs for all media; no public buckets.
+* PII mapped and classified; deletion/export per GDPR and Israel's Privacy Protection Law.
+* Field photos may contain people → automatic face blurring by default on photos shared outside the project.
+* Immutable audit log for financial operations, permission changes, and AI finding approvals/rejections.
+* Penetration testing and an incident response plan before GA.
 
-### 9.3 שפה ונגישות
+### 9.3 Language and Accessibility
 
-* **RTL-first**: לוגי CSS properties (`inline-start/end`), בדיקות snapshot ב-RTL וב-LTR.
-* i18n מלא: עברית (ברירת מחדל), ערבית, רוסית, אנגלית — קהלים ריאליים בשוק הבנייה הישראלי.
-* מונחים מקצועיים: מילון מונחים מנוהל, כדי שהצ'אטבוט וה-UI ידברו באותה שפה.
-* נגישות WCAG 2.1 AA — רלוונטי גם רגולטורית (תקן ישראלי 5568).
+* **RTL-first**: CSS logical properties (`inline-start/end`), snapshot tests in both RTL and LTR.
+* Full i18n: Hebrew (default), Arabic, Russian, English — realistic audiences in the Israeli construction market.
+* Professional terminology: a managed glossary, so the chatbot and the UI speak the same language.
+* WCAG 2.1 AA accessibility — also a regulatory concern (Israeli standard 5568).
 
-### 9.4 עבודה מהשטח (Offline)
+### 9.4 Field Work (Offline)
 
-אתרי בנייה = קליטה גרועה. האפליקציה הניידת:
-* מתעדת תמונות והערות ל-**תור מקומי** ומסנכרנת כשיש רשת.
-* שומרת תוכניות שהורדו ל-cache לצפייה offline.
-* פותרת קונפליקטים לפי last-write-wins על metadata, אך **לעולם לא מאבדת מדיה** (הכל נשמר, כפילויות מסומנות).
+Construction sites have poor connectivity. The mobile app:
+* Records photos and notes into a **local queue** and syncs when the network returns.
+* Caches downloaded plans for offline viewing.
+* Resolves conflicts with last-write-wins on metadata, but **never loses media** (everything is retained, duplicates are flagged).
 
-### 9.5 תצפיתיות (Observability)
+### 9.5 Observability
 
-* Traces חוצי-שירות (בקשה → AI → DB) עם OpenTelemetry.
-* מדדי מוצר: זמן-לתובנה, % ממצאי AI שאושרו, דיוק תחזית תקציב.
-* מדדי AI ייעודיים: precision/recall לפי סוג ליקוי, שיעור hallucination ב-RAG (מדגם מבוקר), latency P95.
-* Alerting על: תור עיבוד תמונות שנתקע, כשלי Stripe payout, ירידה בדיוק המודל.
+* Cross-service traces (request → AI → DB) with OpenTelemetry.
+* Product metrics: time-to-insight, % of AI findings approved, budget forecast accuracy.
+* Dedicated AI metrics: precision/recall per defect type, RAG hallucination rate (sampled audit), P95 latency.
+* Alerting on: stuck image-processing queue, Stripe payout failures, model accuracy regression.
 
 ---
 
-## 10. דרישות לא-פונקציונליות
+## 10. Non-Functional Requirements
 
-| קטגוריה | יעד |
+| Category | Target |
 |---|---|
-| זמינות | 99.9% לשירותי ליבה; 99.5% לשירותי AI |
-| Latency | API P95 < 300ms; טעינת תוכנית ראשונית < 3s; ניתוח תמונה < 60s (אסינכרוני) |
-| סקייל (שנה 1) | 5,000 פרויקטים פעילים, 50,000 משתמשים, 2M תמונות |
-| גודל מסמך | עד 500MB לקובץ CAD, עד 25MB לתמונה |
-| RPO / RTO | RPO 15 דקות, RTO 4 שעות |
-| שמירת נתונים | 7 שנים לרשומות פיננסיות וחוזיות (דרישה משפטית) |
-| ריבוי מכשירים | Web (Chrome/Safari/Edge), iOS 15+, Android 10+ |
+| Availability | 99.9% for core services; 99.5% for AI services |
+| Latency | API P95 < 300ms; initial plan load < 3s; image analysis < 60s (async) |
+| Scale (year 1) | 5,000 active projects, 50,000 users, 2M photos |
+| Document size | Up to 500MB per CAD file, up to 25MB per photo |
+| RPO / RTO | RPO 15 minutes, RTO 4 hours |
+| Data retention | 7 years for financial and contractual records (legal requirement) |
+| Device support | Web (Chrome/Safari/Edge), iOS 15+, Android 10+ |
 
 ---
 
-## 11. מפת דרכים בשלבים
+## 11. Phased Roadmap
 
-### שלב 1 — MVP (חודשים 0–4): "שקיפות"
-ניהול פרויקט (ציר זמן, אבני דרך, גאנט בסיסי) · תקציב וספר חשבוניות · העלאה וצפייה ב-PDF · הרשאות ותפקידים · אפליקציית שטח לתמונות · התראות.
-**מטרה:** בעל בית רואה את מצב הפרויקט האמיתי במקום אחד.
+### Phase 1 — MVP (months 0–4): "Transparency"
+Project management (timeline, milestones, basic Gantt) · budget and invoice ledger · PDF upload and viewing ·
+roles and permissions · field app for photos · notifications.
+**Goal:** the homeowner sees the real state of the project in one place.
 
-### שלב 2 — (חודשים 4–8): "אמון"
-מכרזים ומנוע התאמה · פרופילים מאומתים · Trust Score v1 · ביקורות מאומתות · חוזים ואבני דרך תשלום · Escrow ב-Stripe Connect.
-**מטרה:** אפשר למצוא ולסגור קבלן דרך הפלטפורמה בבטחה.
+### Phase 2 — (months 4–8): "Trust"
+Tenders and matching engine · verified profiles · Trust Score v1 · verified reviews · contracts and payment
+milestones · escrow via Stripe Connect.
+**Goal:** a contractor can be found and contracted through the platform safely.
 
-### שלב 3 — (חודשים 8–14): "אינטליגנציה"
-Vision Inspector v1 (בטיחות + ליקויים נפוצים) · צ'אטבוט RAG · viewer ל-CAD עם שכבות ומדידות · השוואת גרסאות · תחזית תזרים והתראות Burn-Rate.
-**מטרה:** הבידול המרכזי חי בידי משתמשים.
+### Phase 3 — (months 8–14): "Intelligence"
+Vision Inspector v1 (safety + common defects) · RAG chatbot · CAD viewer with layers and measurements ·
+version comparison · cash-flow forecast and burn-rate alerts.
+**Goal:** the core differentiator is live in users' hands.
 
-### שלב 4 — (חודשים 14+): "שוק"
-Marketplace מומחים · וידאו WebRTC עם סימון מסך · Vision v2 (השוואה מלאה לתוכנית + אומדני עלות) · Trust Score v2 עם זיהוי הונאות מתקדם · API לשותפים (בנקים, חברות ביטוח).
+### Phase 4 — (months 14+): "Marketplace"
+Experts marketplace · WebRTC video with on-screen markup · Vision v2 (full plan comparison + cost estimates) ·
+Trust Score v2 with advanced fraud detection · partner API (banks, insurers).
 
-**עקרון:** כל שלב חייב להיות בעל ערך עצמאי — לא לחכות לשלב 3 כדי לספק ערך.
+**Principle:** every phase must stand on its own value — do not wait for phase 3 to deliver something useful.
 
 ---
 
-## 12. סיכונים והנחות
+## 12. Risks and Assumptions
 
-| # | סיכון | השפעה | מיטיגציה |
+| # | Risk | Impact | Mitigation |
 |---|---|---|---|
-| R1 | **דאטה לאימון Vision** — אין דאטהסט ליקויי בנייה מתויג בקנה מידה | גבוהה | התחלה עם בטיחות (דאטה זמין יותר) + תיוג בשירות עצמי מהפרויקטים הראשונים + שותפות עם חברת פיקוח |
-| R2 | **Cold start דו-צדדי** — אין קבלנים בלי בעלי בתים ולהיפך | גבוהה | גיוס ידני של קבלנים אזוריים, שלב 1 כשימושי גם ללא קבלנים |
-| R3 | **חשיפה משפטית** מהמלצת AI שגויה | גבוהה | פלט advisory בלבד, אישור אנושי, הצהרות ברורות, ביטוח אחריות מקצועית |
-| R4 | **התנגדות קבלנים ל-Trust Score** | בינונית | שקיפות מלאה ברכיבים, מסלול ערעור, הצגת הציון כמנוע לידים ולא כענישה |
-| R5 | **מורכבות CAD** — פורמטים, גרסאות, קבצים כבדים | בינונית | להתחיל ב-PDF בלבד; CAD בשלב 3 עם ספריית המרה מסחרית |
-| R6 | **עלויות AI** לא צפויות | בינונית | quality gate לפני GPU, ניתוב מודלים, מכסות ותמחור מדורג |
-| R7 | **הונאת Escrow / סכסוכים** | בינונית | תהליך Dispute מוגדר, ראיות מתועדות (EvidenceBundle), בוררות צד ג' |
+| R1 | **Vision training data** — no labeled construction-defect dataset at scale | High | Start with safety (more available data) + in-house labeling from the first projects + partner with an inspection firm |
+| R2 | **Two-sided cold start** — no contractors without homeowners and vice versa | High | Manual recruitment of regional contractors; phase 1 is useful even with no contractors |
+| R3 | **Legal exposure** from an incorrect AI recommendation | High | Advisory-only output, human approval, clear disclaimers, professional liability insurance |
+| R4 | **Contractor resistance to Trust Score** | Medium | Full component transparency, an appeals path, positioning the score as a lead engine rather than punishment |
+| R5 | **CAD complexity** — formats, versions, heavy files | Medium | Start with PDF only; CAD in phase 3 using a commercial conversion library |
+| R6 | **Unpredictable AI costs** | Medium | Quality gate before GPU, model routing, quotas and tiered pricing |
+| R7 | **Escrow fraud / disputes** | Medium | Defined dispute process, documented evidence (`EvidenceBundle`), third-party arbitration |
 
-**הנחות פתוחות לאימות:**
-* השוק הישראלי — האם יש גישה תכנותית לפנקס הקבלנים לאימות רישיון?
-* האם בעלי בתים מוכנים לשלם subscription, או שהמודל צריך להיות take-rate על עסקאות?
-* רגולציה על החזקת כספי נאמנות — האם נדרש רישיון, או שספק הסליקה מכסה זאת?
-
----
-
-## 13. שאלות פתוחות להחלטה
-
-1. **מודל הכנסה:** מנוי לבעל בית / עמלה מהקבלן / take-rate ב-Marketplace / היברידי?
-2. **תמחור AI:** כלול במנוי או pay-per-inspection?
-3. **בעלות על הדאטה:** מי הבעלים של תמונות השטח והדוחות — בעל הבית, הקבלן, או משותף? (השלכות על אימון מודלים)
-4. **גבול גיאוגרפי לשנה 1** — ישראל בלבד או גם שוק נוסף? (משפיע על אימות רישיונות, מטבע, שפה)
-5. **בחירת שפת Backend** — NestJS מול FastAPI, לפי הרכב הצוות.
+**Open assumptions to validate:**
+* Israeli market — is there programmatic access to the contractors registry for license verification?
+* Are homeowners willing to pay a subscription, or does the model need to be a take-rate on transactions?
+* Regulation on holding escrow funds — is a license required, or does the payment provider cover it?
 
 ---
 
-## נספח א' — מילון מונחים
+## 13. Open Questions for Decision
 
-| מונח | הגדרה |
+1. **Revenue model:** homeowner subscription / contractor commission / marketplace take-rate / hybrid?
+2. **AI pricing:** bundled into the subscription or pay-per-inspection?
+3. **Data ownership:** who owns field photos and reports — the homeowner, the contractor, or shared? (Implications for model training.)
+4. **Geographic scope for year 1** — Israel only, or an additional market? (Affects license verification, currency, language.)
+5. **Backend language choice** — NestJS vs FastAPI, based on team composition.
+
+---
+
+## Appendix A — Glossary
+
+| Term | Definition |
 |---|---|
-| **אבן דרך מאומתת** | אבן דרך שאושרה בראיות (תמונות + אישור צד שני או מפקח), ומשמשת כטריגר לתשלום ולביקורת |
-| **Trust Score** | ציון 0–100 משוקלל המשקף אמינות קבלן, ראה §6.3 |
-| **Detection** | ממצא AI גולמי, לפני אישור אנושי |
-| **Defect (ליקוי)** | ממצא מאושר שהפך למשימה עם אחראי ותאריך יעד |
-| **Escrow** | כספים המוחזקים בנאמנות ומשוחררים באישור אבן דרך |
-| **Burn Rate** | קצב שריפת תקציב יחסית לקצב ההתקדמות |
-| **CPM** | Critical Path Method — חישוב הנתיב הקריטי בלו"ז |
-| **Grounding** | עיגון תשובת LLM במקורות מאומתים מהפרויקט |
+| **Verified milestone** | A milestone confirmed with evidence (photos + second-party or inspector approval), used as the trigger for payment and for reviews |
+| **Trust Score** | A 0–100 weighted score reflecting contractor reliability, see §6.3 |
+| **Detection** | A raw AI finding, before human approval |
+| **Defect** | An approved finding promoted to a task with an owner and a due date |
+| **Escrow** | Funds held in trust and released on milestone approval |
+| **Burn rate** | Rate of budget consumption relative to rate of progress |
+| **CPM** | Critical Path Method — computing the critical path through the schedule |
+| **Grounding** | Anchoring an LLM answer in verified sources from the project |
