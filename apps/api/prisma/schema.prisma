@@ -254,6 +254,14 @@ model BudgetLine {
 
 // Append-only: UPDATE/DELETE are revoked from the app role in migration
 // 0002_enforce_append_only. A correction is a new row via supersedesInvoiceId.
+//
+// supersedesInvoiceId and Payment.invoiceId below are plain columns, not
+// Prisma/Postgres foreign keys, for the same reason documented on
+// PlanVersion: a real FK enforced by Postgres requires a FOR KEY SHARE lock
+// on the referenced row, which requires UPDATE privilege on that table —
+// exactly what append-only enforcement revokes. Referential integrity here
+// is maintained by application code (FinanceService only ever writes a real
+// invoice id), not the database.
 model Invoice {
   id                   String        @id @default(uuid())
   budgetLineId         String        @map("budget_line_id")
@@ -269,9 +277,6 @@ model Invoice {
 
   budgetLine        BudgetLine @relation(fields: [budgetLineId], references: [id])
   approvedByUser    User?      @relation("InvoiceApprovedBy", fields: [approvedByUserId], references: [id])
-  supersedesInvoice Invoice?   @relation("InvoiceSupersedes", fields: [supersedesInvoiceId], references: [id])
-  supersededBy      Invoice?   @relation("InvoiceSupersedes")
-  payments          Payment[]
 
   @@map("invoices")
 }
@@ -286,8 +291,6 @@ model Payment {
   method       String
   createdAt    DateTime @default(now()) @map("created_at")
 
-  invoice Invoice @relation(fields: [invoiceId], references: [id])
-
   @@map("payments")
 }
 
@@ -295,23 +298,30 @@ model Payment {
 // Documents & Plans
 // ---------------------------------------------------------------------------
 
+// No stored "current version" pointer: a real FK into an append-only table
+// (see PlanVersion below) can't work in Postgres — enforcing a foreign key
+// requires a FOR KEY SHARE lock on the referenced row, and that lock itself
+// requires UPDATE privilege on the referenced table, which append-only
+// tables deliberately don't grant (verified directly against Postgres: the
+// role has SELECT but not UPDATE on plan_versions, and `SELECT ... FOR KEY
+// SHARE` still fails with permission denied). "Current version" is instead
+// derived by querying for the highest version_no — the same
+// compute-don't-sync approach already used for phase progress.
 model Document {
   id               String   @id @default(uuid())
   projectId        String   @map("project_id")
   kind             String
   title            String
-  currentVersionId String?  @unique @map("current_version_id")
   createdAt        DateTime @default(now()) @map("created_at")
 
   project        Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  versions       PlanVersion[] @relation("DocumentVersions")
-  currentVersion PlanVersion?  @relation("CurrentVersion", fields: [currentVersionId], references: [id])
+  versions       PlanVersion[]
   milestones     Milestone[]
 
   @@map("documents")
 }
 
-// Append-only.
+// Append-only. No inbound FK from `documents` — see the note above.
 model PlanVersion {
   id               String   @id @default(uuid())
   documentId       String   @map("document_id")
@@ -321,9 +331,8 @@ model PlanVersion {
   uploadedAt       DateTime @default(now()) @map("uploaded_at")
   status           String   @default("processing")
 
-  document       Document @relation("DocumentVersions", fields: [documentId], references: [id], onDelete: Cascade)
+  document       Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
   uploadedByUser User     @relation("PlanVersionUploadedBy", fields: [uploadedByUserId], references: [id])
-  currentForDocument Document? @relation("CurrentVersion")
 
   @@unique([documentId, versionNo])
   @@map("plan_versions")

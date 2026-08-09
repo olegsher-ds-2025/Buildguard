@@ -115,6 +115,17 @@ button[disabled] { opacity: .55; cursor: default; }
 }
 .project-list a span { color: var(--muted); font-size: .85rem; }
 
+.upload-card { display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; }
+.upload-card input[type=text] {
+  font: inherit; padding: .4rem .6rem; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--bg); color: var(--fg); flex: 1; min-width: 12rem;
+}
+.nav-tabs { display: flex; gap: .3rem; margin-bottom: 1.5rem; }
+.nav-tabs a {
+  padding: .4rem .8rem; border-radius: 7px; text-decoration: none; color: var(--muted); font-size: .875rem;
+}
+.nav-tabs a.active { background: var(--panel); color: var(--fg); border: 1px solid var(--border); }
+
 .page-loading, .page-error { padding: 3rem; text-align: center; color: var(--muted); }
 .page-error { color: var(--danger); }
 

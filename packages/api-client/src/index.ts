@@ -1,4 +1,9 @@
 import type {
+  ConfirmDocumentUploadRequest,
+  CreateDocumentUploadRequest,
+  CreateDocumentUploadResponse,
+  DocumentSummary,
+  DownloadUrlResponse,
   HealthResponse,
   LoginRequest,
   LoginResponse,
@@ -65,6 +70,24 @@ export function createApiClient({ baseUrl, getAccessToken }: ApiClientOptions) {
     listProjects: () => request<ProjectSummary[]>("/projects"),
     getProjectDashboard: (projectId: string) =>
       request<ProjectDashboardResponse>(`/projects/${projectId}/dashboard`),
+    listDocuments: (projectId: string) => request<DocumentSummary[]>(`/projects/${projectId}/documents`),
+    createDocumentUpload: (projectId: string, body: CreateDocumentUploadRequest) =>
+      request<CreateDocumentUploadResponse>(`/projects/${projectId}/documents`, {
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+    confirmDocumentUpload: (
+      projectId: string,
+      documentId: string,
+      versionId: string,
+      body: ConfirmDocumentUploadRequest,
+    ) =>
+      request<DocumentSummary>(`/projects/${projectId}/documents/${documentId}/versions/${versionId}/confirm`, {
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+    getDocumentDownloadUrl: (projectId: string, documentId: string) =>
+      request<DownloadUrlResponse>(`/projects/${projectId}/documents/${documentId}/download`),
   };
 }
 

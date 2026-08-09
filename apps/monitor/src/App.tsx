@@ -1,9 +1,11 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { useAuth } from "./auth";
 import { RequireAuth } from "./RequireAuth";
+import { ProjectNav } from "./ProjectNav";
 import { LoginPage } from "./pages/LoginPage";
 import { ProjectSwitcherPage } from "./pages/ProjectSwitcherPage";
 import { DashboardPage } from "./pages/DashboardPage";
+import { DocumentsPage } from "./pages/DocumentsPage";
 
 function TopBar() {
   const { user, logout } = useAuth();
@@ -17,6 +19,15 @@ function TopBar() {
       <div className="who">{user.displayName}</div>
       <button onClick={logout}>Sign out</button>
     </div>
+  );
+}
+
+function ProjectLayout() {
+  return (
+    <>
+      <ProjectNav />
+      <Outlet />
+    </>
   );
 }
 
@@ -38,10 +49,13 @@ export function App() {
           path="/projects/:projectId"
           element={
             <RequireAuth>
-              <DashboardPage />
+              <ProjectLayout />
             </RequireAuth>
           }
-        />
+        >
+          <Route index element={<DashboardPage />} />
+          <Route path="documents" element={<DocumentsPage />} />
+        </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>

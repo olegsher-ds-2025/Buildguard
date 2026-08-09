@@ -4,6 +4,7 @@ import { HealthModule } from "./health/health.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { IdentityModule } from "./modules/identity/identity.module";
 import { ProjectsModule } from "./modules/projects/projects.module";
+import { DocumentsModule } from "./modules/documents/documents.module";
 
 /**
  * Root module. Domain modules (identity, projects, finance, documents,
@@ -18,6 +19,7 @@ import { ProjectsModule } from "./modules/projects/projects.module";
     HealthModule,
     IdentityModule,
     ProjectsModule,
+    DocumentsModule,
   ],
 })
 export class AppModule {}

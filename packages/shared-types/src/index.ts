@@ -128,3 +128,43 @@ export interface ProjectDashboardResponse {
   nextMilestone: NextMilestoneSummary | null;
   openFindingsCount: number;
 }
+
+export type DocumentKind = "plan" | "contract" | "other";
+export type PlanVersionStatus = "processing" | "ready";
+
+export interface CreateDocumentUploadRequest {
+  title: string;
+  kind: DocumentKind;
+  filename: string;
+  contentType: string;
+}
+
+/** Storage-first: the client PUTs the file directly to uploadUrl, then calls the confirm endpoint. The API never sees file bytes. */
+export interface CreateDocumentUploadResponse {
+  documentId: string;
+  versionId: string;
+  uploadUrl: string;
+}
+
+export interface ConfirmDocumentUploadRequest {
+  title: string;
+  kind: DocumentKind;
+}
+
+export interface DocumentVersionSummary {
+  id: string;
+  versionNo: number;
+  status: PlanVersionStatus;
+  uploadedAt: string;
+}
+
+export interface DocumentSummary {
+  id: string;
+  title: string;
+  kind: DocumentKind;
+  currentVersion: DocumentVersionSummary | null;
+}
+
+export interface DownloadUrlResponse {
+  downloadUrl: string;
+}
