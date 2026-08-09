@@ -1,6 +1,10 @@
 import type {
+  AdminProjectSummary,
   ApproveFindingRequest,
+  AuditEntrySummary,
+  ClientSummary,
   ConfirmDocumentUploadRequest,
+  ContractorSummary,
   CreateDocumentUploadRequest,
   CreateDocumentUploadResponse,
   CreateSiteCaptureUploadRequest,
@@ -14,6 +18,7 @@ import type {
   MeResponse,
   ProjectDashboardResponse,
   ProjectSummary,
+  UserDirectoryEntry,
 } from "@buildguard/shared-types";
 
 export class ApiError extends Error {
@@ -110,6 +115,18 @@ export function createApiClient({ baseUrl, getAccessToken }: ApiClientOptions) {
         method: "POST",
         body: JSON.stringify({ phaseId }),
       }),
+    adminListContractors: () => request<ContractorSummary[]>("/admin/contractors"),
+    adminVerifyContractor: (contractorId: string) =>
+      request<ContractorSummary>(`/admin/contractors/${contractorId}/verify`, { method: "POST" }),
+    adminRejectContractor: (contractorId: string, reason?: string) =>
+      request<ContractorSummary>(`/admin/contractors/${contractorId}/reject`, {
+        method: "POST",
+        body: JSON.stringify({ reason }),
+      }),
+    adminListUsers: () => request<UserDirectoryEntry[]>("/admin/users"),
+    adminListClients: () => request<ClientSummary[]>("/admin/clients"),
+    adminListProjects: () => request<AdminProjectSummary[]>("/admin/projects"),
+    adminListAuditLog: () => request<AuditEntrySummary[]>("/admin/audit-log"),
   };
 }
 

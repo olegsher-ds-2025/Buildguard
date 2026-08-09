@@ -6,6 +6,7 @@ import { IdentityModule } from "./modules/identity/identity.module";
 import { ProjectsModule } from "./modules/projects/projects.module";
 import { DocumentsModule } from "./modules/documents/documents.module";
 import { AiVisionModule } from "./modules/ai-vision/ai-vision.module";
+import { AdminModule } from "./modules/admin/admin.module";
 
 /**
  * Root module. Domain modules (identity, projects, finance, documents,
@@ -22,6 +23,7 @@ import { AiVisionModule } from "./modules/ai-vision/ai-vision.module";
     ProjectsModule,
     DocumentsModule,
     AiVisionModule,
+    AdminModule,
   ],
 })
 export class AppModule {}

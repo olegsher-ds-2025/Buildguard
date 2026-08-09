@@ -1,0 +1,99 @@
+:root {
+  --bg: #f3f4f6;
+  --panel: #ffffff;
+  --fg: #14181f;
+  --muted: #666f7a;
+  --border: #dde1e6;
+  --accent: #5b3df5;
+  --ok: #1a7f4b;
+  --warn: #b26a00;
+  --danger: #c0362c;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b0d12;
+    --panel: #14171d;
+    --fg: #e6e9ee;
+    --muted: #8a929e;
+    --border: #262b33;
+    --accent: #8c7bff;
+    --ok: #3fb950;
+    --warn: #d29922;
+    --danger: #f85149;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+}
+.wrap { max-width: 72rem; margin: 0 auto; padding: 1.25rem 1rem 4rem; }
+
+.topbar {
+  display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  border-bottom: 1px solid var(--border); padding: .75rem 1.25rem; background: var(--panel);
+}
+.logo { font-weight: 700; letter-spacing: -.01em; white-space: nowrap; }
+.logo span { color: var(--accent); }
+.badge {
+  font-size: .65rem; font-weight: 600; color: var(--muted); border: 1px solid var(--border);
+  border-radius: 999px; padding: .05rem .5rem; text-transform: uppercase; letter-spacing: .04em;
+}
+.nav-tabs { display: flex; gap: .2rem; }
+.nav-tabs a { padding: .35rem .7rem; border-radius: 7px; text-decoration: none; color: var(--muted); font-size: .8rem; }
+.nav-tabs a.active { background: var(--bg); color: var(--fg); font-weight: 600; }
+.topbar .spacer { flex: 1; }
+.topbar .who { font-size: .78rem; color: var(--muted); }
+
+h1 { font-size: 1.35rem; margin: 1rem 0 .2rem; }
+.sub { color: var(--muted); font-size: .82rem; margin: 0 0 1.25rem; }
+h2 { font-size: .95rem; margin: 0 0 .5rem; }
+.section { margin-top: 1.75rem; }
+
+.card {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: .25rem 1rem;
+}
+.hint { color: var(--muted); font-size: .82rem; padding: .75rem 0; }
+
+table { border-collapse: collapse; width: 100%; font-size: .82rem; }
+th, td { padding: .5rem .4rem; text-align: start; border-bottom: 1px solid var(--border); }
+th { font-size: .68rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); font-weight: 600; }
+td.num, th.num { text-align: end; font-variant-numeric: tabular-nums; }
+tr:last-child td { border-bottom: 0; }
+
+.row-actions { display: flex; gap: .4rem; }
+
+.status-pill {
+  font-size: .68rem; font-weight: 700; padding: .1rem .5rem; border-radius: 999px;
+  text-transform: capitalize; border: 1px solid var(--border); color: var(--muted);
+}
+.status-pill.verified, .status-pill.customer { color: var(--ok); border-color: var(--ok); }
+.status-pill.rejected { color: var(--danger); border-color: var(--danger); }
+.status-pill.pending, .status-pill.unverified { color: var(--warn); border-color: var(--warn); }
+.status-pill.staff { color: var(--accent); border-color: var(--accent); }
+
+.auth-screen { min-height: 100vh; display: grid; place-items: center; padding: 1rem; }
+.auth-card {
+  background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 2rem; width: 100%; max-width: 22rem; display: flex; flex-direction: column; gap: .75rem;
+}
+.auth-card label { display: flex; flex-direction: column; gap: .3rem; font-size: .8rem; color: var(--muted); }
+.auth-card input {
+  font: inherit; padding: .5rem .6rem; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--bg); color: var(--fg);
+}
+.form-error { color: var(--danger); font-size: .82rem; margin: 0; }
+
+button {
+  font: inherit; font-size: .8rem; padding: .35rem .75rem; border-radius: 7px;
+  border: 1px solid var(--border); background: var(--panel); color: var(--fg); cursor: pointer;
+}
+button:hover { border-color: var(--accent); color: var(--accent); }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+button.primary:hover { opacity: .9; color: #fff; }
+button[disabled] { opacity: .55; cursor: default; }
+
+.page-loading, .page-error { padding: 3rem; text-align: center; color: var(--muted); }
+.page-error { color: var(--danger); }

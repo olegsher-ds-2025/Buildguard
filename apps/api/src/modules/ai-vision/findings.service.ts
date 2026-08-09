@@ -1,12 +1,16 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import type { FindingSummary } from "@buildguard/shared-types";
 import { PrismaService } from "../../prisma/prisma.service";
+import { AuditService } from "../audit/audit.service";
 import type { ApproveFindingDto } from "./dto/approve-finding.dto";
 import { toFindingSummary } from "./finding-summary";
 
 @Injectable()
 export class FindingsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly audit: AuditService,
+  ) {}
 
   async list(projectId: string): Promise<FindingSummary[]> {
     const detections = await this.prisma.detection.findMany({
@@ -60,6 +64,16 @@ export class FindingsService {
       },
     });
 
+    await this.audit.record({
+      actorUserId: reviewedByUserId,
+      actorType: "customer",
+      action: "detection_approved",
+      entityType: "defect",
+      entityId: defect.id,
+      projectId,
+      metadata: { detectionId },
+    });
+
     const updated = await this.prisma.detection.findUniqueOrThrow({ where: { id: detectionId } });
     return toFindingSummary(updated, defect.id);
   }
@@ -74,6 +88,16 @@ export class FindingsService {
       where: { id: detectionId },
       data: { status: "dismissed", reviewedByUserId, reviewedAt: new Date() },
     });
+
+    await this.audit.record({
+      actorUserId: reviewedByUserId,
+      actorType: "customer",
+      action: "detection_dismissed",
+      entityType: "detection",
+      entityId: detectionId,
+      projectId,
+    });
+
     return toFindingSummary(updated, null);
   }
 

@@ -206,3 +206,53 @@ export interface ApproveFindingRequest {
   title?: string;
   dueDate?: string;
 }
+
+// --- Admin console -----------------------------------------------------
+
+export interface ClientSummary {
+  id: string;
+  email: string;
+  displayName: string;
+  projectCount: number;
+}
+
+export interface UserDirectoryEntry {
+  id: string;
+  email: string;
+  displayName: string;
+  userType: UserType;
+  staffRole?: StaffRole;
+  status: string;
+}
+
+export interface ContractorSummary {
+  id: string;
+  companyName: string;
+  licenseNumber: string | null;
+  licenseExpiryDate: string | null;
+  insuranceExpiryDate: string | null;
+  verificationStatus: ContractorVerificationStatus;
+  verifiedAt: string | null;
+  userEmail: string | null;
+}
+
+export interface AdminProjectSummary {
+  id: string;
+  name: string;
+  address: string;
+  status: string;
+  ownerEmail: string;
+  createdAt: string;
+}
+
+export interface AuditEntrySummary {
+  id: string;
+  actorType: "customer" | "staff" | "system";
+  actorEmail: string | null;
+  action: string;
+  entityType: string;
+  entityId: string;
+  projectId: string | null;
+  metadata: Record<string, unknown>;
+  createdAt: string;
+}

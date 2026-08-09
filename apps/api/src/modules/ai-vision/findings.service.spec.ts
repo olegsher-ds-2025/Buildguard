@@ -1,6 +1,7 @@
 import { BadRequestException, NotFoundException } from "@nestjs/common";
 import { FindingsService } from "./findings.service";
 import type { PrismaService } from "../../prisma/prisma.service";
+import type { AuditService } from "../audit/audit.service";
 
 describe("FindingsService", () => {
   const baseDetection = {
@@ -32,11 +33,12 @@ describe("FindingsService", () => {
       },
       $transaction: jest.fn().mockImplementation(async (ops: Promise<unknown>[]) => Promise.all(ops)),
     } as unknown as PrismaService;
-    return { service: new FindingsService(prisma), prisma };
+    const audit = { record: jest.fn().mockResolvedValue(undefined) } as unknown as AuditService;
+    return { service: new FindingsService(prisma, audit), prisma, audit };
   }
 
   it("approving a suggested finding creates a Defect and a defect_events row, never mutating a Detection into a Defect directly", async () => {
-    const { service, prisma } = makeService();
+    const { service, prisma, audit } = makeService();
     const result = await service.approve("proj-1", "det-1", {}, "user-1");
 
     expect(prisma.defect.create).toHaveBeenCalledWith(
@@ -48,6 +50,9 @@ describe("FindingsService", () => {
       expect.objectContaining({
         data: expect.objectContaining({ defectId: "defect-1", eventType: "created", actorUserId: "user-1" }),
       }),
+    );
+    expect(audit.record).toHaveBeenCalledWith(
+      expect.objectContaining({ action: "detection_approved", actorType: "customer", entityId: "defect-1" }),
     );
     expect(result.defectId).toBe("defect-1");
   });

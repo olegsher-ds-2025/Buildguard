@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { StorageModule } from "../storage/storage.module";
 import { IdentityModule } from "../identity/identity.module";
+import { AuditModule } from "../audit/audit.module";
 import { AiVisionService } from "./ai-vision.interface";
 import { MockAiVisionService } from "./mock-ai-vision.service";
 import { SiteCapturesController } from "./site-captures.controller";
@@ -9,7 +10,7 @@ import { FindingsController } from "./findings.controller";
 import { FindingsService } from "./findings.service";
 
 @Module({
-  imports: [StorageModule, IdentityModule],
+  imports: [StorageModule, IdentityModule, AuditModule],
   controllers: [SiteCapturesController, FindingsController],
   providers: [
     // The seam: swap this one binding for a real out-of-process AI client
