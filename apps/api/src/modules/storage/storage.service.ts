@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { GetObjectCommand, HeadObjectCommand, NotFound as S3NotFound, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const UPLOAD_URL_TTL_SECONDS = 5 * 60;
@@ -37,5 +37,16 @@ export class StorageService {
   getDownloadUrl(objectKey: string): Promise<string> {
     const command = new GetObjectCommand({ Bucket: this.bucket, Key: objectKey });
     return getSignedUrl(this.client, command, { expiresIn: DOWNLOAD_URL_TTL_SECONDS });
+  }
+
+  /** Used by "confirm" endpoints to verify a claimed upload actually happened before persisting anything. */
+  async objectExists(objectKey: string): Promise<boolean> {
+    try {
+      await this.client.send(new HeadObjectCommand({ Bucket: this.bucket, Key: objectKey }));
+      return true;
+    } catch (err) {
+      if (err instanceof S3NotFound || (err as { name?: string }).name === "NotFound") return false;
+      throw err;
+    }
   }
 }

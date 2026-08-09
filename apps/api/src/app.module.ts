@@ -5,6 +5,7 @@ import { PrismaModule } from "./prisma/prisma.module";
 import { IdentityModule } from "./modules/identity/identity.module";
 import { ProjectsModule } from "./modules/projects/projects.module";
 import { DocumentsModule } from "./modules/documents/documents.module";
+import { AiVisionModule } from "./modules/ai-vision/ai-vision.module";
 
 /**
  * Root module. Domain modules (identity, projects, finance, documents,
@@ -20,6 +21,7 @@ import { DocumentsModule } from "./modules/documents/documents.module";
     IdentityModule,
     ProjectsModule,
     DocumentsModule,
+    AiVisionModule,
   ],
 })
 export class AppModule {}

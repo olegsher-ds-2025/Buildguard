@@ -168,3 +168,41 @@ export interface DocumentSummary {
 export interface DownloadUrlResponse {
   downloadUrl: string;
 }
+
+export interface CreateSiteCaptureUploadRequest {
+  filename: string;
+  contentType: string;
+  phaseId?: string;
+}
+
+export interface CreateSiteCaptureUploadResponse {
+  siteCaptureId: string;
+  uploadUrl: string;
+}
+
+export interface BoundingBox {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+export interface FindingSummary {
+  id: string;
+  kind: string;
+  severity: 1 | 2 | 3 | 4 | 5;
+  confidence: number;
+  boundingBox: BoundingBox;
+  description: string;
+  estimatedCostMinMinor: AmountMinorWire | null;
+  estimatedCostMaxMinor: AmountMinorWire | null;
+  currency: string | null;
+  status: DetectionStatus;
+  createdAt: string;
+  defectId: string | null;
+}
+
+export interface ApproveFindingRequest {
+  title?: string;
+  dueDate?: string;
+}

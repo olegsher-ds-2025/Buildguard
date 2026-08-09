@@ -1,9 +1,13 @@
 import type {
+  ApproveFindingRequest,
   ConfirmDocumentUploadRequest,
   CreateDocumentUploadRequest,
   CreateDocumentUploadResponse,
+  CreateSiteCaptureUploadRequest,
+  CreateSiteCaptureUploadResponse,
   DocumentSummary,
   DownloadUrlResponse,
+  FindingSummary,
   HealthResponse,
   LoginRequest,
   LoginResponse,
@@ -88,6 +92,24 @@ export function createApiClient({ baseUrl, getAccessToken }: ApiClientOptions) {
       }),
     getDocumentDownloadUrl: (projectId: string, documentId: string) =>
       request<DownloadUrlResponse>(`/projects/${projectId}/documents/${documentId}/download`),
+    listFindings: (projectId: string) => request<FindingSummary[]>(`/projects/${projectId}/findings`),
+    approveFinding: (projectId: string, detectionId: string, body: ApproveFindingRequest = {}) =>
+      request<FindingSummary>(`/projects/${projectId}/findings/${detectionId}/approve`, {
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+    dismissFinding: (projectId: string, detectionId: string) =>
+      request<FindingSummary>(`/projects/${projectId}/findings/${detectionId}/dismiss`, { method: "POST" }),
+    createSiteCaptureUpload: (projectId: string, body: CreateSiteCaptureUploadRequest) =>
+      request<CreateSiteCaptureUploadResponse>(`/projects/${projectId}/site-captures`, {
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+    confirmSiteCaptureUpload: (projectId: string, siteCaptureId: string, phaseId?: string) =>
+      request<FindingSummary[]>(`/projects/${projectId}/site-captures/${siteCaptureId}/confirm`, {
+        method: "POST",
+        body: JSON.stringify({ phaseId }),
+      }),
   };
 }
 

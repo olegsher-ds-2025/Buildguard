@@ -126,6 +126,19 @@ button[disabled] { opacity: .55; cursor: default; }
 }
 .nav-tabs a.active { background: var(--panel); color: var(--fg); border: 1px solid var(--border); }
 
+.finding { padding: .9rem 0; }
+.finding + .finding { border-top: 1px solid var(--border); }
+.finding-title { font-weight: 600; }
+.finding-meta { font-size: .8rem; color: var(--muted); margin-top: .1rem; }
+.finding-actions { display: flex; gap: .4rem; margin-top: .55rem; flex-wrap: wrap; }
+.sev { font-size: .7rem; font-weight: 700; padding: .1rem .45rem; border-radius: 999px; border: 1px solid; }
+.sev.low { color: var(--muted); border-color: var(--border); }
+.sev.med { color: var(--warn); border-color: var(--warn); }
+.sev.high { color: var(--danger); border-color: var(--danger); }
+.resolved { font-size: .8rem; font-weight: 600; margin-top: .4rem; }
+.resolved.approved { color: var(--ok); }
+.resolved.dismissed { color: var(--muted); }
+
 .page-loading, .page-error { padding: 3rem; text-align: center; color: var(--muted); }
 .page-error { color: var(--danger); }
 

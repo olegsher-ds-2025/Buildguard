@@ -1,7 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { randomUUID } from "node:crypto";
-import { HeadObjectCommand, NotFound as S3NotFound, S3Client } from "@aws-sdk/client-s3";
-import { ConfigService } from "@nestjs/config";
 import type {
   CreateDocumentUploadResponse,
   DocumentKind,
@@ -27,25 +25,10 @@ import type { ConfirmDocumentUploadDto } from "./dto/confirm-document-upload.dto
  */
 @Injectable()
 export class DocumentsService {
-  private readonly bucket: string;
-  private readonly headClient: S3Client;
-
   constructor(
     private readonly prisma: PrismaService,
     private readonly storage: StorageService,
-    config: ConfigService,
-  ) {
-    this.bucket = config.getOrThrow<string>("S3_BUCKET");
-    this.headClient = new S3Client({
-      endpoint: config.getOrThrow<string>("S3_ENDPOINT"),
-      region: "us-east-1",
-      forcePathStyle: true,
-      credentials: {
-        accessKeyId: config.getOrThrow<string>("S3_ACCESS_KEY"),
-        secretAccessKey: config.getOrThrow<string>("S3_SECRET_KEY"),
-      },
-    });
-  }
+  ) {}
 
   // Deterministic from path params alone — the confirm step recomputes this
   // rather than trusting a client-echoed key, so confirming only ever
@@ -74,7 +57,7 @@ export class DocumentsService {
   ): Promise<DocumentSummary> {
     const objectKey = this.objectKeyFor(projectId, documentId);
 
-    const exists = await this.objectExists(objectKey);
+    const exists = await this.storage.objectExists(objectKey);
     if (!exists) {
       throw new BadRequestException("No file was found at the expected storage location — upload it first.");
     }
@@ -117,16 +100,6 @@ export class DocumentsService {
 
     const downloadUrl = await this.storage.getDownloadUrl(currentVersion.objectKey);
     return { downloadUrl };
-  }
-
-  private async objectExists(objectKey: string): Promise<boolean> {
-    try {
-      await this.headClient.send(new HeadObjectCommand({ Bucket: this.bucket, Key: objectKey }));
-      return true;
-    } catch (err) {
-      if (err instanceof S3NotFound || (err as { name?: string }).name === "NotFound") return false;
-      throw err;
-    }
   }
 
   private toSummary(
