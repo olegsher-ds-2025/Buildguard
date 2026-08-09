@@ -33,3 +33,40 @@ jobs:
       - run: npm run typecheck
       - run: npm run build
       - run: npm test
+
+  e2e:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: buildguard
+          POSTGRES_PASSWORD: buildguard
+          POSTGRES_DB: buildguard_e2e
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://buildguard:buildguard@localhost:5432/buildguard_e2e
+      JWT_ACCESS_SECRET: ci-e2e-secret
+      JWT_REFRESH_SECRET: ci-e2e-secret
+      S3_ENDPOINT: http://localhost:9000
+      S3_BUCKET: buildguard-dev
+      S3_ACCESS_KEY: ci
+      S3_SECRET_KEY: ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - run: npm ci
+      - run: npm run build:packages
+      # Real HTTP requests against a real Postgres instance — see
+      # apps/api/test/app.e2e-spec.ts. The npm script runs migrate deploy +
+      # seed against DATABASE_URL before starting the suite.
+      - run: npm run test:e2e --workspace=@buildguard/api
