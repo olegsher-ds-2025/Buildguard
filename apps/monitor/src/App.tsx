@@ -7,6 +7,7 @@ import { ProjectSwitcherPage } from "./pages/ProjectSwitcherPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { DocumentsPage } from "./pages/DocumentsPage";
 import { FindingsPage } from "./pages/FindingsPage";
+import { TeamPage } from "./pages/TeamPage";
 
 function TopBar() {
   const { user, logout } = useAuth();
@@ -57,6 +58,7 @@ export function App() {
           <Route index element={<DashboardPage />} />
           <Route path="documents" element={<DocumentsPage />} />
           <Route path="findings" element={<FindingsPage />} />
+          <Route path="team" element={<TeamPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

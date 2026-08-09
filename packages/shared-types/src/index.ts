@@ -256,3 +256,24 @@ export interface AuditEntrySummary {
   metadata: Record<string, unknown>;
   createdAt: string;
 }
+
+// --- Team / roles --------------------------------------------------------
+
+export interface ProjectMemberSummary {
+  userId: string;
+  email: string;
+  displayName: string;
+  role: ProjectRole;
+  invitedAt: string;
+  acceptedAt: string | null;
+  isOwner: boolean;
+}
+
+export interface InviteMemberRequest {
+  email: string;
+  role: ProjectRole;
+}
+
+export interface ChangeMemberRoleRequest {
+  role: ProjectRole;
+}

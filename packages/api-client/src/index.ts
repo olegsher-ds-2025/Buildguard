@@ -2,6 +2,7 @@ import type {
   AdminProjectSummary,
   ApproveFindingRequest,
   AuditEntrySummary,
+  ChangeMemberRoleRequest,
   ClientSummary,
   ConfirmDocumentUploadRequest,
   ContractorSummary,
@@ -13,10 +14,12 @@ import type {
   DownloadUrlResponse,
   FindingSummary,
   HealthResponse,
+  InviteMemberRequest,
   LoginRequest,
   LoginResponse,
   MeResponse,
   ProjectDashboardResponse,
+  ProjectMemberSummary,
   ProjectSummary,
   UserDirectoryEntry,
 } from "@buildguard/shared-types";
@@ -127,6 +130,19 @@ export function createApiClient({ baseUrl, getAccessToken }: ApiClientOptions) {
     adminListClients: () => request<ClientSummary[]>("/admin/clients"),
     adminListProjects: () => request<AdminProjectSummary[]>("/admin/projects"),
     adminListAuditLog: () => request<AuditEntrySummary[]>("/admin/audit-log"),
+    listMembers: (projectId: string) => request<ProjectMemberSummary[]>(`/projects/${projectId}/members`),
+    inviteMember: (projectId: string, body: InviteMemberRequest) =>
+      request<ProjectMemberSummary>(`/projects/${projectId}/members`, {
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+    changeMemberRole: (projectId: string, userId: string, body: ChangeMemberRoleRequest) =>
+      request<ProjectMemberSummary>(`/projects/${projectId}/members/${userId}`, {
+        method: "PATCH",
+        body: JSON.stringify(body),
+      }),
+    removeMember: (projectId: string, userId: string) =>
+      request<void>(`/projects/${projectId}/members/${userId}`, { method: "DELETE" }),
   };
 }
 

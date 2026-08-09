@@ -120,6 +120,14 @@ button[disabled] { opacity: .55; cursor: default; }
   font: inherit; padding: .4rem .6rem; border-radius: 8px; border: 1px solid var(--border);
   background: var(--bg); color: var(--fg); flex: 1; min-width: 12rem;
 }
+.upload-card input[type=email] {
+  font: inherit; padding: .4rem .6rem; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--bg); color: var(--fg);
+}
+select {
+  font: inherit; padding: .35rem .5rem; border-radius: 7px; border: 1px solid var(--border);
+  background: var(--panel); color: var(--fg);
+}
 .nav-tabs { display: flex; gap: .3rem; margin-bottom: 1.5rem; }
 .nav-tabs a {
   padding: .4rem .8rem; border-radius: 7px; text-decoration: none; color: var(--muted); font-size: .875rem;
