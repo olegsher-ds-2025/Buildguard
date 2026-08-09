@@ -1,3 +1,15 @@
+# Node / TypeScript (apps/*, packages/*)
+node_modules/
+apps/*/dist/
+apps/*/build/
+packages/*/dist/
+apps/*/.env
+apps/*/.env.local
+.turbo/
+*.tsbuildinfo
+apps/api/generated/
+infra/.data/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
