@@ -9,9 +9,10 @@
     "node": ">=20"
   },
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
+    "build:packages": "npm run build --workspace=@buildguard/shared-types --workspace=@buildguard/api-client",
+    "build": "npm run build:packages && npm run build --workspace=@buildguard/api --workspace=@buildguard/monitor --workspace=@buildguard/admin",
     "lint": "npm run lint --workspaces --if-present",
-    "typecheck": "npm run typecheck --workspaces --if-present",
+    "typecheck": "npm run build:packages >/dev/null && npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "dev:api": "npm run dev --workspace apps/api",
     "dev:monitor": "npm run dev --workspace apps/monitor",

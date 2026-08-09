@@ -1,0 +1,490 @@
+// Phase-1 data model. See docs/high-level-design.md §8 for the full ERD this
+// is a scoped subset of, and the build plan for what's deliberately deferred.
+//
+// Naming: Prisma models are PascalCase / camelCase; @@map / @map pin the
+// actual Postgres identifiers to snake_case, matching the plan's SQL.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Identity & Access
+// ---------------------------------------------------------------------------
+
+enum UserType {
+  customer
+  staff
+
+  @@map("user_type")
+}
+
+enum StaffRole {
+  trust_safety_admin
+  ops_admin
+  super_admin
+
+  @@map("staff_role")
+}
+
+enum ProjectRole {
+  owner
+  project_manager
+  contractor
+  inspector
+  viewer
+
+  @@map("project_role")
+}
+
+enum ContractorVerificationStatus {
+  unverified
+  pending
+  verified
+  rejected
+
+  @@map("contractor_verification_status")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  displayName  String   @map("display_name")
+  phone        String?
+  userType     UserType @map("user_type")
+  status       String   @default("active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  staffProfile          StaffProfile?
+  contractorProfile     ContractorProfile? @relation("ContractorUser")
+  ownedProjects         Project[]          @relation("ProjectOwner")
+  projectMemberships    ProjectMember[]
+  verifiedContractors   ContractorProfile[] @relation("VerifiedBy")
+  verifiedMilestones     Milestone[]        @relation("MilestoneVerifiedBy")
+  uploadedPlanVersions  PlanVersion[]      @relation("PlanVersionUploadedBy")
+  approvedInvoices      Invoice[]          @relation("InvoiceApprovedBy")
+  uploadedSiteCaptures  SiteCapture[]      @relation("SiteCaptureUploadedBy")
+  reviewedDetections    Detection[]        @relation("DetectionReviewedBy")
+  assignedDefects       Defect[]           @relation("DefectAssignedTo")
+  defectEvents          DefectEvent[]      @relation("DefectEventActor")
+  notifications         Notification[]
+  auditEntries          AuditEntry[]       @relation("AuditActor")
+
+  @@map("users")
+}
+
+model StaffProfile {
+  userId    String    @id @map("user_id")
+  staffRole StaffRole @map("staff_role")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("staff_profiles")
+}
+
+model ContractorProfile {
+  id                   String                       @id @default(uuid())
+  userId               String?                      @unique @map("user_id")
+  companyName          String                       @map("company_name")
+  licenseNumber        String?                      @map("license_number")
+  licenseExpiryDate    DateTime?                    @map("license_expiry_date")
+  insuranceExpiryDate  DateTime?                    @map("insurance_expiry_date")
+  verificationStatus   ContractorVerificationStatus @default(unverified) @map("verification_status")
+  verifiedAt           DateTime?                    @map("verified_at")
+  verifiedByStaffUserId String?                     @map("verified_by_staff_user_id")
+  createdAt            DateTime                     @default(now()) @map("created_at")
+  updatedAt            DateTime                     @updatedAt @map("updated_at")
+
+  user           User? @relation("ContractorUser", fields: [userId], references: [id])
+  verifiedByStaff User? @relation("VerifiedBy", fields: [verifiedByStaffUserId], references: [id])
+
+  @@map("contractor_profiles")
+}
+
+// ---------------------------------------------------------------------------
+// Project Management
+// ---------------------------------------------------------------------------
+
+model Project {
+  id                     String    @id @default(uuid())
+  name                   String
+  address                String
+  projectType            String    @map("project_type")
+  ownerUserId            String    @map("owner_user_id")
+  status                 String    @default("active")
+  startDate              DateTime? @map("start_date")
+  targetCompletionDate   DateTime? @map("target_completion_date")
+  createdAt              DateTime  @default(now()) @map("created_at")
+  updatedAt              DateTime  @updatedAt @map("updated_at")
+
+  owner        User            @relation("ProjectOwner", fields: [ownerUserId], references: [id])
+  members      ProjectMember[]
+  phases       Phase[]
+  budget       Budget?
+  documents    Document[]
+  siteCaptures SiteCapture[]
+  defects      Defect[]
+  notifications Notification[]
+  auditEntries AuditEntry[]
+
+  @@map("projects")
+}
+
+model ProjectMember {
+  id         String      @id @default(uuid())
+  projectId  String      @map("project_id")
+  userId     String      @map("user_id")
+  role       ProjectRole
+  invitedAt  DateTime    @default(now()) @map("invited_at")
+  acceptedAt DateTime?   @map("accepted_at")
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, userId])
+  @@map("project_members")
+}
+
+model Phase {
+  id                 String   @id @default(uuid())
+  projectId          String   @map("project_id")
+  name               String
+  sequenceNo         Int      @map("sequence_no")
+  budgetPlannedMinor BigInt   @map("budget_planned_minor")
+  currency           String
+  status             String   @default("not_started")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  project     Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  tasks       Task[]
+  milestones  Milestone[]
+  budgetLines BudgetLine[]
+
+  @@map("phases")
+}
+
+model Task {
+  id               String    @id @default(uuid())
+  phaseId          String    @map("phase_id")
+  name             String
+  weight           Decimal   @default(1) @db.Decimal(6, 3)
+  percentComplete  Decimal   @default(0) @map("percent_complete") @db.Decimal(5, 2)
+  plannedStart     DateTime? @map("planned_start")
+  plannedEnd       DateTime? @map("planned_end")
+  status           String    @default("not_started")
+
+  phase Phase @relation(fields: [phaseId], references: [id], onDelete: Cascade)
+
+  @@map("tasks")
+}
+
+enum MilestoneStatus {
+  pending
+  verified
+
+  @@map("milestone_status")
+}
+
+model Milestone {
+  id                  String          @id @default(uuid())
+  phaseId             String          @map("phase_id")
+  name                String
+  dueDate             DateTime?       @map("due_date")
+  status              MilestoneStatus @default(pending)
+  verifiedAt          DateTime?       @map("verified_at")
+  verifiedByUserId    String?         @map("verified_by_user_id")
+  evidenceDocumentId  String?         @map("evidence_document_id")
+
+  phase          Phase     @relation(fields: [phaseId], references: [id], onDelete: Cascade)
+  verifiedByUser User?     @relation("MilestoneVerifiedBy", fields: [verifiedByUserId], references: [id])
+  evidenceDocument Document? @relation(fields: [evidenceDocumentId], references: [id])
+
+  @@map("milestones")
+}
+
+// ---------------------------------------------------------------------------
+// Finance
+// ---------------------------------------------------------------------------
+
+enum InvoiceStatus {
+  submitted
+  approved
+  rejected
+
+  @@map("invoice_status")
+}
+
+model Budget {
+  id            String   @id @default(uuid())
+  projectId     String   @unique @map("project_id")
+  currency      String
+  tolerancePct  Decimal  @default(0.10) @map("tolerance_pct") @db.Decimal(4, 3)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  project     Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  budgetLines BudgetLine[]
+
+  @@map("budgets")
+}
+
+model BudgetLine {
+  id                 String  @id @default(uuid())
+  budgetId           String  @map("budget_id")
+  phaseId            String? @map("phase_id")
+  category           String
+  plannedAmountMinor BigInt  @map("planned_amount_minor")
+  currency           String
+
+  budget   Budget    @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  phase    Phase?    @relation(fields: [phaseId], references: [id])
+  invoices Invoice[]
+
+  @@map("budget_lines")
+}
+
+// Append-only: UPDATE/DELETE are revoked from the app role in migration
+// 0002_enforce_append_only. A correction is a new row via supersedesInvoiceId.
+model Invoice {
+  id                   String        @id @default(uuid())
+  budgetLineId         String        @map("budget_line_id")
+  amountMinor          BigInt        @map("amount_minor")
+  currency             String
+  vendorName           String        @map("vendor_name")
+  status               InvoiceStatus @default(submitted)
+  submittedAt          DateTime      @default(now()) @map("submitted_at")
+  approvedAt           DateTime?     @map("approved_at")
+  approvedByUserId     String?       @map("approved_by_user_id")
+  supersedesInvoiceId  String?       @unique @map("supersedes_invoice_id")
+  createdAt            DateTime      @default(now()) @map("created_at")
+
+  budgetLine        BudgetLine @relation(fields: [budgetLineId], references: [id])
+  approvedByUser    User?      @relation("InvoiceApprovedBy", fields: [approvedByUserId], references: [id])
+  supersedesInvoice Invoice?   @relation("InvoiceSupersedes", fields: [supersedesInvoiceId], references: [id])
+  supersededBy      Invoice?   @relation("InvoiceSupersedes")
+  payments          Payment[]
+
+  @@map("invoices")
+}
+
+// Append-only.
+model Payment {
+  id           String   @id @default(uuid())
+  invoiceId    String   @map("invoice_id")
+  amountMinor  BigInt   @map("amount_minor")
+  currency     String
+  paidAt       DateTime @map("paid_at")
+  method       String
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id])
+
+  @@map("payments")
+}
+
+// ---------------------------------------------------------------------------
+// Documents & Plans
+// ---------------------------------------------------------------------------
+
+model Document {
+  id               String   @id @default(uuid())
+  projectId        String   @map("project_id")
+  kind             String
+  title            String
+  currentVersionId String?  @unique @map("current_version_id")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  project        Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  versions       PlanVersion[] @relation("DocumentVersions")
+  currentVersion PlanVersion?  @relation("CurrentVersion", fields: [currentVersionId], references: [id])
+  milestones     Milestone[]
+
+  @@map("documents")
+}
+
+// Append-only.
+model PlanVersion {
+  id               String   @id @default(uuid())
+  documentId       String   @map("document_id")
+  versionNo        Int      @map("version_no")
+  objectKey        String   @map("object_key")
+  uploadedByUserId String   @map("uploaded_by_user_id")
+  uploadedAt       DateTime @default(now()) @map("uploaded_at")
+  status           String   @default("processing")
+
+  document       Document @relation("DocumentVersions", fields: [documentId], references: [id], onDelete: Cascade)
+  uploadedByUser User     @relation("PlanVersionUploadedBy", fields: [uploadedByUserId], references: [id])
+  currentForDocument Document? @relation("CurrentVersion")
+
+  @@unique([documentId, versionNo])
+  @@map("plan_versions")
+}
+
+// ---------------------------------------------------------------------------
+// AI Vision Inspector (seam)
+// ---------------------------------------------------------------------------
+
+model SiteCapture {
+  id               String   @id @default(uuid())
+  projectId        String   @map("project_id")
+  phaseId          String?  @map("phase_id")
+  uploadedByUserId String   @map("uploaded_by_user_id")
+  objectKey        String   @map("object_key")
+  status           String   @default("uploaded")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  project        Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  uploadedByUser User        @relation("SiteCaptureUploadedBy", fields: [uploadedByUserId], references: [id])
+  detections     Detection[]
+
+  @@map("site_captures")
+}
+
+enum DetectionStatus {
+  suggested
+  approved
+  dismissed
+
+  @@map("detection_status")
+}
+
+model Detection {
+  id                    String          @id @default(uuid())
+  siteCaptureId         String          @map("site_capture_id")
+  kind                  String
+  severity              Int
+  confidence            Decimal         @db.Decimal(4, 3)
+  boundingBox           Json            @map("bounding_box")
+  estimatedCostMinMinor BigInt?         @map("estimated_cost_min_minor")
+  estimatedCostMaxMinor BigInt?         @map("estimated_cost_max_minor")
+  currency              String?
+  description           String
+  status                DetectionStatus @default(suggested)
+  reviewedByUserId      String?         @map("reviewed_by_user_id")
+  reviewedAt            DateTime?       @map("reviewed_at")
+  createdAt             DateTime        @default(now()) @map("created_at")
+
+  siteCapture    SiteCapture @relation(fields: [siteCaptureId], references: [id], onDelete: Cascade)
+  reviewedByUser User?       @relation("DetectionReviewedBy", fields: [reviewedByUserId], references: [id])
+  defect         Defect?
+
+  @@map("detections")
+}
+
+enum DefectStatus {
+  open
+  in_progress
+  resolved
+  closed
+
+  @@map("defect_status")
+}
+
+// A Defect is only ever created by approving a Detection (see ai-vision
+// module) — never written directly. This is the Detection vs Defect
+// separation the design doc's advisory-AI principle depends on.
+model Defect {
+  id               String       @id @default(uuid())
+  detectionId      String       @unique @map("detection_id")
+  projectId        String       @map("project_id")
+  title            String
+  severity         Int
+  assignedToUserId String?      @map("assigned_to_user_id")
+  dueDate          DateTime?    @map("due_date")
+  status           DefectStatus @default(open)
+  createdAt        DateTime     @default(now()) @map("created_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
+
+  detection      Detection     @relation(fields: [detectionId], references: [id])
+  project        Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  assignedToUser User?         @relation("DefectAssignedTo", fields: [assignedToUserId], references: [id])
+  events         DefectEvent[]
+
+  @@map("defects")
+}
+
+// Append-only.
+model DefectEvent {
+  id          String   @id @default(uuid())
+  defectId    String   @map("defect_id")
+  eventType   String   @map("event_type")
+  payload     Json
+  actorUserId String   @map("actor_user_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  defect    Defect @relation(fields: [defectId], references: [id], onDelete: Cascade)
+  actorUser User   @relation("DefectEventActor", fields: [actorUserId], references: [id])
+
+  @@map("defect_events")
+}
+
+// ---------------------------------------------------------------------------
+// Notifications
+// ---------------------------------------------------------------------------
+
+model Notification {
+  id        String    @id @default(uuid())
+  userId    String    @map("user_id")
+  projectId String?   @map("project_id")
+  type      String
+  payload   Json
+  readAt    DateTime? @map("read_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project Project? @relation(fields: [projectId], references: [id])
+
+  @@map("notifications")
+}
+
+// ---------------------------------------------------------------------------
+// Audit & Compliance
+// ---------------------------------------------------------------------------
+
+enum AuditActorType {
+  customer
+  staff
+  system
+
+  @@map("audit_actor_type")
+}
+
+// Append-only.
+model AuditEntry {
+  id          String         @id @default(uuid())
+  actorUserId String?        @map("actor_user_id")
+  actorType   AuditActorType @map("actor_type")
+  action      String
+  entityType  String         @map("entity_type")
+  entityId    String         @map("entity_id")
+  projectId   String?        @map("project_id")
+  metadata    Json
+  createdAt   DateTime       @default(now()) @map("created_at")
+
+  actorUser User?    @relation("AuditActor", fields: [actorUserId], references: [id])
+  project   Project? @relation(fields: [projectId], references: [id])
+
+  @@map("audit_entries")
+}
+
+// ---------------------------------------------------------------------------
+// Idempotency (money-moving endpoints)
+// ---------------------------------------------------------------------------
+
+model IdempotencyKey {
+  key          String   @id
+  responseBody Json?    @map("response_body")
+  statusCode   Int?     @map("status_code")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("idempotency_keys")
+}

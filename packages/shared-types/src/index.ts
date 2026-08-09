@@ -45,3 +45,23 @@ export interface HealthResponse {
   service: string;
   time: string;
 }
+
+export type AuthRealm = "monitor" | "admin";
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  accessToken: string;
+  user: MeResponse;
+}
+
+export interface MeResponse {
+  id: string;
+  email: string;
+  displayName: string;
+  userType: UserType;
+  staffRole?: StaffRole;
+}
