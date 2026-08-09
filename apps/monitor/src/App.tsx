@@ -1,26 +1,49 @@
-import { useQuery } from "@tanstack/react-query";
-import { api } from "./api";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { useAuth } from "./auth";
+import { RequireAuth } from "./RequireAuth";
+import { LoginPage } from "./pages/LoginPage";
+import { ProjectSwitcherPage } from "./pages/ProjectSwitcherPage";
+import { DashboardPage } from "./pages/DashboardPage";
 
-/**
- * M0 placeholder: proves the frontend can reach the API through
- * @buildguard/api-client end to end. Real routes (login, project switcher,
- * dashboard, documents, findings, team) land in M2+ per the build plan.
- */
-export function App() {
-  const health = useQuery({ queryKey: ["health"], queryFn: api.health });
-
+function TopBar() {
+  const { user, logout } = useAuth();
+  if (!user) return null;
   return (
-    <main style={{ fontFamily: "system-ui, sans-serif", padding: "2rem" }}>
-      <h1>BuildGuard Monitor</h1>
-      <p>Customer-facing project monitoring — scaffold in progress.</p>
-      <p>
-        API status:{" "}
-        {health.isLoading
-          ? "checking…"
-          : health.isError
-            ? `unreachable (${(health.error as Error).message})`
-            : `${health.data?.status} — ${health.data?.service}`}
-      </p>
-    </main>
+    <div className="topbar">
+      <div className="logo">
+        Build<span>Guard</span>
+      </div>
+      <div className="spacer" />
+      <div className="who">{user.displayName}</div>
+      <button onClick={logout}>Sign out</button>
+    </div>
+  );
+}
+
+export function App() {
+  return (
+    <>
+      <TopBar />
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/"
+          element={
+            <RequireAuth>
+              <ProjectSwitcherPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/projects/:projectId"
+          element={
+            <RequireAuth>
+              <DashboardPage />
+            </RequireAuth>
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </>
   );
 }

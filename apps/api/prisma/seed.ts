@@ -3,6 +3,12 @@ import * as argon2 from "argon2";
 
 const prisma = new PrismaClient();
 
+// amount_minor is always minor units (agorot for ILS), per the design doc's
+// money-as-integers rule — this keeps the spec tables below readable in
+// whole shekels (matching docs/demo/index.html's figures) while storing the
+// correct minor-unit values.
+const ils = (shekels: number) => BigInt(Math.round(shekels * 100));
+
 // Mirrors docs/demo/index.html's "Villa Sharon" scenario — phase names,
 // weights (via budget share), budget figures, and the same three findings —
 // so the real app can be sanity-checked against the validated static demo.
@@ -112,11 +118,11 @@ async function main() {
   });
 
   const phaseSpecs = [
-    { name: "Foundations", sequenceNo: 1, budget: 420_000n, status: "verified" },
-    { name: "Structure", sequenceNo: 2, budget: 780_000n, status: "in_progress" },
-    { name: "Envelope", sequenceNo: 3, budget: 390_000n, status: "in_progress" },
-    { name: "Systems", sequenceNo: 4, budget: 460_000n, status: "not_started" },
-    { name: "Finishing", sequenceNo: 5, budget: 300_000n, status: "not_started" },
+    { name: "Foundations", sequenceNo: 1, budget: ils(420_000), status: "verified" },
+    { name: "Structure", sequenceNo: 2, budget: ils(780_000), status: "in_progress" },
+    { name: "Envelope", sequenceNo: 3, budget: ils(390_000), status: "in_progress" },
+    { name: "Systems", sequenceNo: 4, budget: ils(460_000), status: "not_started" },
+    { name: "Finishing", sequenceNo: 5, budget: ils(300_000), status: "not_started" },
   ] as const;
 
   const phases: Record<string, { id: string }> = {};
@@ -181,6 +187,7 @@ async function main() {
       phaseId: phases.Structure.id,
       name: "Structure complete",
       status: "pending",
+      dueDate: new Date("2026-09-15"),
     },
   });
 
@@ -191,12 +198,12 @@ async function main() {
   });
 
   const budgetLineSpecs = [
-    { category: "Foundations & earthworks", phase: "Foundations", planned: 420_000n, actual: 438_200n },
-    { category: "Structure & concrete", phase: "Structure", planned: 780_000n, actual: 651_000n },
-    { category: "Envelope & roofing", phase: "Envelope", planned: 390_000n, actual: 47_300n },
-    { category: "Systems", phase: "Systems", planned: 460_000n, actual: 92_000n },
-    { category: "Finishing", phase: "Finishing", planned: 300_000n, actual: 0n },
-    { category: "Contingency", phase: null as string | null, planned: 100_000n, actual: 54_900n },
+    { category: "Foundations & earthworks", phase: "Foundations", planned: ils(420_000), actual: ils(438_200) },
+    { category: "Structure & concrete", phase: "Structure", planned: ils(780_000), actual: ils(651_000) },
+    { category: "Envelope & roofing", phase: "Envelope", planned: ils(390_000), actual: ils(47_300) },
+    { category: "Systems", phase: "Systems", planned: ils(460_000), actual: ils(92_000) },
+    { category: "Finishing", phase: "Finishing", planned: ils(300_000), actual: 0n },
+    { category: "Contingency", phase: null as string | null, planned: ils(100_000), actual: ils(54_900) },
   ];
 
   for (const spec of budgetLineSpecs) {
@@ -238,8 +245,8 @@ async function main() {
       severity: 4,
       confidence: 0.91,
       description: "Exposed reinforcement — column C-4",
-      costMin: 1_800n,
-      costMax: 3_200n,
+      costMin: ils(1_800),
+      costMax: ils(3_200),
     },
     {
       key: "guardrail-l2",
@@ -248,8 +255,8 @@ async function main() {
       severity: 5,
       confidence: 0.88,
       description: "Missing edge guardrail — level 2, south",
-      costMin: 400n,
-      costMax: 700n,
+      costMin: ils(400),
+      costMax: ils(700),
     },
     {
       key: "damp-north",
@@ -258,8 +265,8 @@ async function main() {
       severity: 3,
       confidence: 0.76,
       description: "Damp patch — north wall, ground floor",
-      costMin: 900n,
-      costMax: 2_400n,
+      costMin: ils(900),
+      costMax: ils(2_400),
     },
   ];
 

@@ -1,4 +1,11 @@
-import type { HealthResponse } from "@buildguard/shared-types";
+import type {
+  HealthResponse,
+  LoginRequest,
+  LoginResponse,
+  MeResponse,
+  ProjectDashboardResponse,
+  ProjectSummary,
+} from "@buildguard/shared-types";
 
 export class ApiError extends Error {
   constructor(
@@ -46,8 +53,18 @@ export function createApiClient({ baseUrl, getAccessToken }: ApiClientOptions) {
     return (await res.json()) as T;
   }
 
+  function login(realm: "customer" | "staff", body: LoginRequest): Promise<LoginResponse> {
+    return request<LoginResponse>(`/auth/${realm}/login`, { method: "POST", body: JSON.stringify(body) });
+  }
+
   return {
     health: () => request<HealthResponse>("/health"),
+    loginCustomer: (body: LoginRequest) => login("customer", body),
+    loginStaff: (body: LoginRequest) => login("staff", body),
+    me: () => request<MeResponse>("/auth/me"),
+    listProjects: () => request<ProjectSummary[]>("/projects"),
+    getProjectDashboard: (projectId: string) =>
+      request<ProjectDashboardResponse>(`/projects/${projectId}/dashboard`),
   };
 }
 
