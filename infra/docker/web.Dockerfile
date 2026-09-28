@@ -16,6 +16,10 @@ COPY apps/monitor/package.json apps/monitor/package.json
 COPY apps/admin/package.json apps/admin/package.json
 COPY packages/shared-types/package.json packages/shared-types/package.json
 COPY packages/api-client/package.json packages/api-client/package.json
+# apps/api's postinstall runs `prisma generate` for every workspace's `npm
+# ci` (even here, where only monitor/admin get built) — the schema needs to
+# be present already, not just copied later in the `build` stage.
+COPY apps/api/prisma apps/api/prisma
 RUN npm ci
 
 FROM deps AS build
