@@ -23,26 +23,89 @@ This is an npm-workspaces monorepo:
 
 ## Quick start — Docker Compose
 
+Requires Docker + the Compose plugin (`docker compose version`). No other local setup —
+Node, Postgres and MinIO all run inside containers.
+
 ```bash
 docker compose -f infra/docker-compose.yml up --build
 ```
 
-Brings up Postgres, MinIO (S3-compatible storage, with the bucket and CORS pre-configured),
-runs migrations + seeds the database, then starts the API and both frontends:
+This builds the API and both frontend images, then brings services up in dependency order:
+Postgres and MinIO start and wait for their healthchecks, a one-shot `migrate` service runs
+`prisma migrate deploy && prisma db seed` against Postgres and exits, MinIO's bucket +
+browser-CORS are provisioned, and only then do the API and the two frontends start. First run
+takes a few minutes (image builds); subsequent runs are fast since layers are cached.
+
+Once it settles (the `api`, `monitor` and `admin` containers report healthy):
 
 - Monitor: http://localhost:5173
 - Admin: http://localhost:5174
 - API: http://localhost:3000/api/v1/health
 - MinIO console: http://localhost:9001 (`buildguard` / `buildguard123`)
 
+Useful variants:
+
+```bash
+docker compose -f infra/docker-compose.yml up -d --build   # detached — reclaim the terminal
+docker compose -f infra/docker-compose.yml logs -f api      # tail one service's logs
+docker compose -f infra/docker-compose.yml down             # stop everything, keep data volumes
+docker compose -f infra/docker-compose.yml down -v          # stop and wipe Postgres/MinIO data too
+```
+
+After pulling schema or seed changes, re-run `up --build` — the `migrate` service re-applies
+any new migrations and the seed script is idempotent (safe to run again; it upserts/skips
+rows that already exist rather than duplicating the "Villa Sharon" fixture).
+
 Seeded accounts (see [`apps/api/prisma/seed.ts`](apps/api/prisma/seed.ts) for the full
-"Villa Sharon" fixture — phases, budget, findings, contractors in mixed verification states):
+"Villa Sharon" fixture — phases, budget, findings, contractors in mixed verification states,
+a tender with live bids, an already-signed contract with a review, and a demo CAD plan):
 
 | Role | Email | Password |
 |---|---|---|
 | Owner (Monitor) | `owner@buildguard.dev` | `owner-password-123` |
 | Staff (Admin) | `staff@buildguard.dev` | `staff-password-123` |
 | Contractor (Monitor) | `amir@amir-cohen-construction.example` | `contractor-password-123` |
+
+`Sharon Earthworks` and `Levi Plumbing & Systems` are also seeded as contractors (verified and
+pending, respectively) but have no login — they exist to populate bids/reviews/matching data
+without needing a second browser session.
+
+## Using the application
+
+A short tour through the seeded "Villa Sharon" project, once the stack above is running.
+
+**As the owner** (Monitor, `owner@buildguard.dev`):
+1. **Dashboard** — phase-by-phase progress, budget-weighted overall completion, and burn-rate
+   status computed live from the seeded phases/budget/invoices.
+2. **Documents** — upload a file (any kind), or open the seeded "Systems — electrical/plumbing
+   as-built (demo)" CAD document via its **CAD viewer** link: toggle the structural/electrical/
+   plumbing/finishing layers, click two-or-more points on the drawing to place a length or area
+   measurement, and save it — it persists and re-renders on reload.
+3. **Findings** — review the seeded AI Vision findings and approve or dismiss one (approving
+   promotes it to a tracked Defect; this is reflected immediately in the dashboard's open-findings
+   count).
+4. **Tenders** — the seeded "Systems phase — electrical rewire" tender is open for bidding with
+   two live bids in it. Open it, then go to **Compare bids** to see both contractors' trust
+   scores alongside their amounts/schedules, and **Select winner** to award it — this creates a
+   Contract in `draft`.
+5. **Contract** — sign the newly-created contract (`draft` → `signed`, generates payment
+   milestones proportioned across the project's phases), and leave a review for the contractor.
+6. **Ask** — ask the project chatbot something like *"how much contingency is left?"* or
+   *"what's the next milestone?"* — answers are grounded in this project's real budget/milestone/
+   finding data, with a citation, not a general-purpose chat.
+
+**As the contractor** (Monitor, `amir@amir-cohen-construction.example`, a separate browser
+session or incognito window): open **Tenders** → the electrical tender → submit or view your
+bid, and set your specialties/availability on **My contractor profile** (this feeds the
+matching engine's category/availability scoring for future tenders). If the owner leaves a
+low-rated review you disagree with, dispute it from that review's page — the dispute lands in
+staff's queue below.
+
+**As staff** (Admin console, `staff@buildguard.dev`): **Contractors** has a verification queue
+(Levi Plumbing & Systems is seeded `pending`) — verify or reject it and watch the contractor's
+Trust Score and tender eligibility change accordingly. **Tenders** and **Disputes** give
+cross-project oversight and let you resolve a contractor's appeal against a review (upholding
+one excludes that review from the contractor's Trust Score; dismissing leaves it counted).
 
 ## Local development without Docker
 
