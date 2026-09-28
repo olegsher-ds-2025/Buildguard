@@ -76,6 +76,8 @@ model User {
   defectEvents          DefectEvent[]      @relation("DefectEventActor")
   notifications         Notification[]
   auditEntries          AuditEntry[]       @relation("AuditActor")
+  createdTenders        Tender[]           @relation("TenderCreatedBy")
+  signedContracts       Contract[]         @relation("ContractSignedBy")
 
   @@map("users")
 }
@@ -100,11 +102,18 @@ model ContractorProfile {
   verificationStatus   ContractorVerificationStatus @default(unverified) @map("verification_status")
   verifiedAt           DateTime?                    @map("verified_at")
   verifiedByStaffUserId String?                     @map("verified_by_staff_user_id")
+  // Stand-in for a real availability calendar (see modules/tenders/matching) —
+  // a single toggle the contractor controls on their own profile.
+  currentlyAvailable   Boolean                      @default(true) @map("currently_available")
   createdAt            DateTime                     @default(now()) @map("created_at")
   updatedAt            DateTime                     @updatedAt @map("updated_at")
 
   user           User? @relation("ContractorUser", fields: [userId], references: [id])
   verifiedByStaff User? @relation("VerifiedBy", fields: [verifiedByStaffUserId], references: [id])
+  categories     ContractorCategory[]
+  tenderInvitations TenderInvitation[]
+  bids           Bid[]
+  contracts      Contract[]
 
   @@map("contractor_profiles")
 }
@@ -134,6 +143,8 @@ model Project {
   defects      Defect[]
   notifications Notification[]
   auditEntries AuditEntry[]
+  tenders      Tender[]
+  contracts    Contract[]
 
   @@map("projects")
 }
@@ -434,6 +445,215 @@ model DefectEvent {
   actorUser User   @relation("DefectEventActor", fields: [actorUserId], references: [id])
 
   @@map("defect_events")
+}
+
+// ---------------------------------------------------------------------------
+// Tenders & Contractors (M8)
+// ---------------------------------------------------------------------------
+//
+// Scope for this module (see docs/high-level-design.md §6.2 for the target
+// match-score formula and README's "Known simplifications" for what's
+// deliberately stubbed): geo proximity and Trust Score have no real data
+// source yet (no lat/long or PostGIS on Project/ContractorProfile, no Trust
+// Score module), so both terms are computed behind seams
+// (modules/tenders/matching/*) instead of being faked with invented numbers.
+
+model WorkCategory {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+
+  contractorCategories ContractorCategory[]
+  tenders              Tender[]
+
+  @@map("work_categories")
+}
+
+model ContractorCategory {
+  contractorProfileId String @map("contractor_profile_id")
+  workCategoryId      String @map("work_category_id")
+
+  contractorProfile ContractorProfile @relation(fields: [contractorProfileId], references: [id], onDelete: Cascade)
+  workCategory      WorkCategory      @relation(fields: [workCategoryId], references: [id], onDelete: Cascade)
+
+  @@id([contractorProfileId, workCategoryId])
+  @@map("contractor_categories")
+}
+
+enum TenderStatus {
+  draft
+  published
+  invited_bidding
+  awarded
+  cancelled
+  closed
+
+  @@map("tender_status")
+}
+
+// Mutable: a tender's lifecycle has no legal/audit requirement to preserve
+// every past state as an immutable row (unlike Bid/Invoice). The "what
+// happened and when" trail lives in AuditEntry, the same as Milestone
+// verification.
+model Tender {
+  id                String       @id @default(uuid())
+  projectId         String       @map("project_id")
+  workCategoryId    String       @map("work_category_id")
+  title             String
+  scopeDescription  Json         @map("scope_description")
+  budgetMinMinor    BigInt       @map("budget_min_minor")
+  budgetMaxMinor    BigInt       @map("budget_max_minor")
+  currency          String
+  plannedStartDate  DateTime?    @map("planned_start_date")
+  plannedEndDate    DateTime?    @map("planned_end_date")
+  status            TenderStatus @default(draft)
+  createdByUserId   String       @map("created_by_user_id")
+  publishedAt       DateTime?    @map("published_at")
+  createdAt         DateTime     @default(now()) @map("created_at")
+  updatedAt         DateTime     @updatedAt @map("updated_at")
+
+  project      Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  workCategory WorkCategory       @relation(fields: [workCategoryId], references: [id])
+  createdByUser User              @relation("TenderCreatedBy", fields: [createdByUserId], references: [id])
+  invitations  TenderInvitation[]
+  bids         Bid[]
+  contract     Contract?
+
+  @@map("tenders")
+}
+
+enum TenderInvitationStatus {
+  invited
+  declined
+  bid_submitted
+
+  @@map("tender_invitation_status")
+}
+
+// Mutable — output of the matching engine, status changes as the contractor
+// responds. matchScore is stored for transparency/debugging of the ranking.
+model TenderInvitation {
+  id                  String                  @id @default(uuid())
+  tenderId            String                  @map("tender_id")
+  contractorProfileId String                  @map("contractor_profile_id")
+  matchScore          Decimal                 @map("match_score") @db.Decimal(5, 4)
+  status              TenderInvitationStatus  @default(invited)
+  invitedAt           DateTime                @default(now()) @map("invited_at")
+  respondedAt         DateTime?               @map("responded_at")
+
+  tender            Tender            @relation(fields: [tenderId], references: [id], onDelete: Cascade)
+  contractorProfile ContractorProfile @relation(fields: [contractorProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([tenderId, contractorProfileId])
+  @@map("tender_invitations")
+}
+
+enum BidStatus {
+  submitted
+  withdrawn
+  accepted
+  rejected
+
+  @@map("bid_status")
+}
+
+// Append-only: UPDATE/DELETE are revoked from the app role in migration
+// enforce_append_only_bids. A revised bid is a new row via supersedesBidId,
+// the same pattern as Invoice.supersedesInvoiceId — plain column, not a
+// Prisma/Postgres FK, for the same reason documented on Invoice/PlanVersion
+// (a real FK would need a FOR KEY SHARE lock, which needs UPDATE privilege
+// on the referenced table — exactly what append-only revokes).
+model Bid {
+  id                      String    @id @default(uuid())
+  tenderId                String    @map("tender_id")
+  contractorProfileId     String    @map("contractor_profile_id")
+  totalAmountMinor        BigInt    @map("total_amount_minor")
+  currency                String
+  proposedStartDate       DateTime? @map("proposed_start_date")
+  proposedEndDate         DateTime? @map("proposed_end_date")
+  paymentTermsDescription String    @map("payment_terms_description")
+  status                  BidStatus @default(submitted)
+  submittedAt             DateTime  @default(now()) @map("submitted_at")
+  withdrawnAt             DateTime? @map("withdrawn_at")
+  supersedesBidId         String?   @unique @map("supersedes_bid_id")
+  createdAt               DateTime  @default(now()) @map("created_at")
+
+  tender            Tender            @relation(fields: [tenderId], references: [id], onDelete: Cascade)
+  contractorProfile ContractorProfile @relation(fields: [contractorProfileId], references: [id])
+  lineItems         BidLineItem[]
+
+  @@map("bids")
+}
+
+// Append-only, child of an append-only parent — same treatment as Bid.
+model BidLineItem {
+  id             String  @id @default(uuid())
+  bidId          String  @map("bid_id")
+  description    String
+  quantity       Decimal @db.Decimal(12, 3)
+  unitAmountMinor BigInt @map("unit_amount_minor")
+  currency       String
+
+  bid Bid @relation(fields: [bidId], references: [id], onDelete: Cascade)
+
+  @@map("bid_line_items")
+}
+
+enum ContractStatus {
+  draft
+  signed
+  active
+  completed
+  terminated
+
+  @@map("contract_status")
+}
+
+// Mutable while draft; the *signing* transition is set exactly once and
+// guarded in the service layer (like Milestone verification) rather than
+// enforced as DB-level append-only — there's nothing to supersede, since
+// @@unique(tenderId) means exactly one Contract per Tender.
+model Contract {
+  id                   String         @id @default(uuid())
+  tenderId             String         @unique @map("tender_id")
+  projectId            String         @map("project_id")
+  contractorProfileId  String         @map("contractor_profile_id")
+  winningBidId         String         @map("winning_bid_id")
+  totalAmountMinor     BigInt         @map("total_amount_minor")
+  currency             String
+  status               ContractStatus @default(draft)
+  signedAt             DateTime?      @map("signed_at")
+  signedByOwnerUserId  String?        @map("signed_by_owner_user_id")
+  createdAt            DateTime       @default(now()) @map("created_at")
+  updatedAt            DateTime       @updatedAt @map("updated_at")
+
+  tender            Tender               @relation(fields: [tenderId], references: [id])
+  project           Project              @relation(fields: [projectId], references: [id])
+  contractorProfile ContractorProfile    @relation(fields: [contractorProfileId], references: [id])
+  signedByOwnerUser User?                @relation("ContractSignedBy", fields: [signedByOwnerUserId], references: [id])
+  paymentMilestones ContractPaymentMilestone[]
+
+  @@map("contracts")
+}
+
+// The escrow stub: this table is only the *structure* a future Payments
+// module (Phase 4, Stripe Connect) will act on to actually hold/release
+// funds. No Payment relation is added here on purpose — releasing a
+// milestone's funds is out of scope for this module.
+model ContractPaymentMilestone {
+  id          String    @id @default(uuid())
+  contractId  String    @map("contract_id")
+  phaseId     String?   @map("phase_id")
+  sequenceNo  Int       @map("sequence_no")
+  description String
+  amountMinor BigInt    @map("amount_minor")
+  currency    String
+  status      String    @default("pending")
+  releasedAt  DateTime? @map("released_at")
+
+  contract Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+
+  @@map("contract_payment_milestones")
 }
 
 // ---------------------------------------------------------------------------

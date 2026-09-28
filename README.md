@@ -11,10 +11,11 @@ This is an npm-workspaces monorepo:
 
 - `apps/api` — NestJS backend (modular monolith), one deployable serving both frontends.
 - `apps/monitor` — customer-facing web app (Owner/Project Manager/Contractor/Inspector/Viewer):
-  project dashboard, documents, AI Vision Inspector findings review, team/role management.
+  project dashboard, documents, AI Vision Inspector findings review, team/role management,
+  tenders/bidding/contracts.
 - `apps/admin` — internal ops console for BuildGuard staff: contractor verification queue,
-  clients/projects/users directories, audit log. Separate login realm from `monitor` (distinct
-  JWT audience), same backend.
+  clients/projects/users directories, audit log, tenders/contracts oversight. Separate login
+  realm from `monitor` (distinct JWT audience), same backend.
 - `packages/shared-types` — TS types/enums shared between the API and both frontends.
 - `packages/api-client` — typed fetch client + TanStack Query wiring, used by both frontends.
 - `infra/` — `docker-compose.yml` and the Dockerfiles it builds.
@@ -103,5 +104,20 @@ Deliberate scope cuts, tracked here rather than silently dropped:
 - **No real AI model.** `AiVisionService` (`apps/api/src/modules/ai-vision/ai-vision.interface.ts`)
   is the integration seam; `MockAiVisionService` is a clearly-labeled placeholder. Swapping in
   a real Vision Inspector is a one-line provider change.
-- **No Tenders/matching, Trust Score computation, Payments/Escrow, Marketplace, RAG.** Phase
-  2–4 per the roadmap.
+- **Tenders & Contractors (M8) ships with several deliberately scoped-down pieces**, each behind
+  a documented seam so it can be upgraded without a rewrite:
+  - **No real geo matching.** `Project`/`ContractorProfile` carry no lat/long and there's no
+    PostGIS extension configured. The design doc's `geo_proximity_decay` term is a constant
+    placeholder (`GeoScoringProvider` in `apps/api/src/modules/tenders/matching/`) until real
+    location data + PostGIS are added.
+  - **No real Trust Score.** There is no Trust Score module yet — `trust_score_normalized` is
+    derived only from `ContractorVerificationStatus` via `TrustScoreProvider` (same
+    one-line-`useClass`-swap seam pattern as `AiVisionService`).
+  - **No availability calendar.** A contractor sets a single `currentlyAvailable` boolean on
+    their profile; the formula's `availability_fit(timeline)` term reads only that flag.
+  - **No escrow/Stripe payment execution.** `Contract.paymentMilestones` is a data structure
+    only (one milestone per project phase, proportioned by planned budget) — releasing a
+    milestone's funds is the Payments module's job (phase 4); no money moves as part of M8.
+  - **No dispute-resolution workflow.** The admin console gets read-only oversight of
+    tenders/contracts, not a dispute/flag action.
+- **No Marketplace, RAG.** Still phase 3–4 per the roadmap.

@@ -8,6 +8,11 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { DocumentsPage } from "./pages/DocumentsPage";
 import { FindingsPage } from "./pages/FindingsPage";
 import { TeamPage } from "./pages/TeamPage";
+import { TendersPage } from "./pages/TendersPage";
+import { TenderDetailPage } from "./pages/TenderDetailPage";
+import { BidComparisonPage } from "./pages/BidComparisonPage";
+import { ContractPage } from "./pages/ContractPage";
+import { ContractorProfilePage } from "./pages/ContractorProfilePage";
 
 function TopBar() {
   const { user, logout } = useAuth();
@@ -59,6 +64,11 @@ export function App() {
           <Route path="documents" element={<DocumentsPage />} />
           <Route path="findings" element={<FindingsPage />} />
           <Route path="team" element={<TeamPage />} />
+          <Route path="tenders" element={<TendersPage />} />
+          <Route path="tenders/:tenderId" element={<TenderDetailPage />} />
+          <Route path="tenders/:tenderId/bids" element={<BidComparisonPage />} />
+          <Route path="contracts/:contractId" element={<ContractPage />} />
+          <Route path="contractor-profile" element={<ContractorProfilePage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

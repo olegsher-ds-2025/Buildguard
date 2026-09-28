@@ -24,7 +24,12 @@ describe("BuildGuard API (e2e)", () => {
 
   let ownerToken: string;
   let staffToken: string;
+  let amirToken: string;
   let projectId: string;
+  let tenderId: string;
+  let winningBidId: string;
+  let winningBidAmountMinor: string;
+  let contractId: string;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
@@ -160,5 +165,81 @@ describe("BuildGuard API (e2e)", () => {
       .get(`/api/v1/projects/${projectId}/dashboard`)
       .set("Authorization", `Bearer ${ownerToken}`);
     expect(dashRes.body.openFindingsCount).toBe(2);
+  });
+
+  it("logs Amir (the invited, verified contractor) in for the Tenders & Contractors flow below", async () => {
+    const res = await request(server)
+      .post("/api/v1/auth/customer/login")
+      .send({ email: "amir@amir-cohen-construction.example", password: "contractor-password-123" });
+    expect(res.status).toBe(201);
+    amirToken = res.body.accessToken;
+  });
+
+  it("lists the seeded, open-for-bidding tender", async () => {
+    const res = await request(server)
+      .get(`/api/v1/projects/${projectId}/tenders`)
+      .set("Authorization", `Bearer ${ownerToken}`);
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveLength(1);
+    expect(res.body[0].status).toBe("invited_bidding");
+    tenderId = res.body[0].id;
+  });
+
+  it("a contractor is 403'd on the owner/PM-only bid comparison endpoint", async () => {
+    const res = await request(server)
+      .get(`/api/v1/projects/${projectId}/tenders/${tenderId}/bids`)
+      .set("Authorization", `Bearer ${amirToken}`);
+    expect(res.status).toBe(403);
+  });
+
+  it("owner sees both seeded bids (Amir + Sharon) on the comparison endpoint", async () => {
+    const res = await request(server)
+      .get(`/api/v1/projects/${projectId}/tenders/${tenderId}/bids`)
+      .set("Authorization", `Bearer ${ownerToken}`);
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveLength(2);
+    const byCompany = Object.fromEntries(res.body.map((b: { companyName: string; id: string }) => [b.companyName, b]));
+    expect(byCompany["Amir Cohen Construction"]).toBeDefined();
+    winningBidId = byCompany["Amir Cohen Construction"].id;
+    winningBidAmountMinor = byCompany["Amir Cohen Construction"].totalAmountMinor;
+  });
+
+  it("selecting a winner creates a Contract in draft and awards the tender", async () => {
+    const res = await request(server)
+      .post(`/api/v1/projects/${projectId}/tenders/${tenderId}/select-winner`)
+      .set("Authorization", `Bearer ${ownerToken}`)
+      .send({ bidId: winningBidId });
+    expect(res.status).toBe(201);
+    expect(res.body.status).toBe("draft");
+    contractId = res.body.id;
+
+    const tenderRes = await request(server)
+      .get(`/api/v1/projects/${projectId}/tenders/${tenderId}`)
+      .set("Authorization", `Bearer ${ownerToken}`);
+    expect(tenderRes.body.tender.status).toBe("awarded");
+  });
+
+  it("signing the contract sets signedAt exactly once (a second sign 400s)", async () => {
+    const signRes = await request(server)
+      .post(`/api/v1/projects/${projectId}/contracts/${contractId}/sign`)
+      .set("Authorization", `Bearer ${ownerToken}`);
+    expect(signRes.status).toBe(201);
+    expect(signRes.body.status).toBe("signed");
+    expect(signRes.body.signedAt).toEqual(expect.any(String));
+
+    const doubleSign = await request(server)
+      .post(`/api/v1/projects/${projectId}/contracts/${contractId}/sign`)
+      .set("Authorization", `Bearer ${ownerToken}`);
+    expect(doubleSign.status).toBe(400);
+  });
+
+  it("generates payment milestones summing to the winning bid's total amount", async () => {
+    const res = await request(server)
+      .get(`/api/v1/projects/${projectId}/contracts/${contractId}/payment-milestones`)
+      .set("Authorization", `Bearer ${ownerToken}`);
+    expect(res.status).toBe(200);
+    expect(res.body.length).toBeGreaterThan(0);
+    const sum = res.body.reduce((acc: bigint, m: { amountMinor: string }) => acc + BigInt(m.amountMinor), 0n);
+    expect(sum.toString()).toBe(BigInt(winningBidAmountMinor).toString());
   });
 });

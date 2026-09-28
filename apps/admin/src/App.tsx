@@ -7,6 +7,7 @@ import { ClientsPage } from "./pages/ClientsPage";
 import { ProjectsPage } from "./pages/ProjectsPage";
 import { UsersPage } from "./pages/UsersPage";
 import { AuditLogPage } from "./pages/AuditLogPage";
+import { TendersPage } from "./pages/TendersPage";
 
 function TopBar() {
   const { user, logout } = useAuth();
@@ -28,6 +29,9 @@ function TopBar() {
         </NavLink>
         <NavLink to="/users" className={({ isActive }) => (isActive ? "active" : "")}>
           Users
+        </NavLink>
+        <NavLink to="/tenders" className={({ isActive }) => (isActive ? "active" : "")}>
+          Tenders
         </NavLink>
         <NavLink to="/audit-log" className={({ isActive }) => (isActive ? "active" : "")}>
           Audit log
@@ -77,6 +81,14 @@ export function App() {
           element={
             <RequireAuth>
               <UsersPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/tenders"
+          element={
+            <RequireAuth>
+              <TendersPage />
             </RequireAuth>
           }
         />

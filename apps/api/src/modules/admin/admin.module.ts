@@ -9,10 +9,28 @@ import { AdminProjectsController } from "./admin-projects.controller";
 import { AdminProjectsService } from "./admin-projects.service";
 import { AdminAuditController } from "./admin-audit.controller";
 import { AdminAuditService } from "./admin-audit.service";
+import { AdminTendersController } from "./admin-tenders.controller";
+import { AdminTendersService } from "./admin-tenders.service";
+import { AdminContractsController } from "./admin-contracts.controller";
+import { AdminContractsService } from "./admin-contracts.service";
 
 @Module({
   imports: [IdentityModule, AuditModule],
-  controllers: [AdminContractorsController, AdminUsersController, AdminProjectsController, AdminAuditController],
-  providers: [AdminContractorsService, AdminUsersService, AdminProjectsService, AdminAuditService],
+  controllers: [
+    AdminContractorsController,
+    AdminUsersController,
+    AdminProjectsController,
+    AdminAuditController,
+    AdminTendersController,
+    AdminContractsController,
+  ],
+  providers: [
+    AdminContractorsService,
+    AdminUsersService,
+    AdminProjectsService,
+    AdminAuditService,
+    AdminTendersService,
+    AdminContractsService,
+  ],
 })
 export class AdminModule {}

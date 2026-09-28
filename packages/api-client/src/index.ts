@@ -1,15 +1,22 @@
 import type {
+  AdminContractSummary,
   AdminProjectSummary,
+  AdminTenderSummary,
   ApproveFindingRequest,
   AuditEntrySummary,
+  BidSummary,
   ChangeMemberRoleRequest,
   ClientSummary,
   ConfirmDocumentUploadRequest,
+  ContractPaymentMilestoneSummary,
+  ContractSummary,
+  ContractorProfileSelfSummary,
   ContractorSummary,
   CreateDocumentUploadRequest,
   CreateDocumentUploadResponse,
   CreateSiteCaptureUploadRequest,
   CreateSiteCaptureUploadResponse,
+  CreateTenderRequest,
   DocumentSummary,
   DownloadUrlResponse,
   FindingSummary,
@@ -21,7 +28,13 @@ import type {
   ProjectDashboardResponse,
   ProjectMemberSummary,
   ProjectSummary,
+  SelectWinnerRequest,
+  SubmitBidRequest,
+  TenderDetailResponse,
+  TenderSummary,
+  UpdateContractorProfileRequest,
   UserDirectoryEntry,
+  WorkCategorySummary,
 } from "@buildguard/shared-types";
 
 export class ApiError extends Error {
@@ -143,6 +156,43 @@ export function createApiClient({ baseUrl, getAccessToken }: ApiClientOptions) {
       }),
     removeMember: (projectId: string, userId: string) =>
       request<void>(`/projects/${projectId}/members/${userId}`, { method: "DELETE" }),
+
+    // --- Tenders & Contractors (M8) ---
+    listWorkCategories: () => request<WorkCategorySummary[]>("/work-categories"),
+    listTenders: (projectId: string) => request<TenderSummary[]>(`/projects/${projectId}/tenders`),
+    getTender: (projectId: string, tenderId: string) =>
+      request<TenderDetailResponse>(`/projects/${projectId}/tenders/${tenderId}`),
+    createTender: (projectId: string, body: CreateTenderRequest) =>
+      request<TenderSummary>(`/projects/${projectId}/tenders`, { method: "POST", body: JSON.stringify(body) }),
+    publishTender: (projectId: string, tenderId: string) =>
+      request<TenderSummary>(`/projects/${projectId}/tenders/${tenderId}/publish`, { method: "POST" }),
+    cancelTender: (projectId: string, tenderId: string) =>
+      request<TenderSummary>(`/projects/${projectId}/tenders/${tenderId}/cancel`, { method: "POST" }),
+    listBids: (projectId: string, tenderId: string) =>
+      request<BidSummary[]>(`/projects/${projectId}/tenders/${tenderId}/bids`),
+    submitBid: (projectId: string, tenderId: string, body: SubmitBidRequest) =>
+      request<BidSummary>(`/projects/${projectId}/tenders/${tenderId}/bids`, {
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+    withdrawBid: (projectId: string, tenderId: string, bidId: string) =>
+      request<BidSummary>(`/projects/${projectId}/tenders/${tenderId}/bids/${bidId}/withdraw`, { method: "POST" }),
+    selectWinner: (projectId: string, tenderId: string, body: SelectWinnerRequest) =>
+      request<ContractSummary>(`/projects/${projectId}/tenders/${tenderId}/select-winner`, {
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+    getContract: (projectId: string, contractId: string) =>
+      request<ContractSummary>(`/projects/${projectId}/contracts/${contractId}`),
+    listPaymentMilestones: (projectId: string, contractId: string) =>
+      request<ContractPaymentMilestoneSummary[]>(`/projects/${projectId}/contracts/${contractId}/payment-milestones`),
+    signContract: (projectId: string, contractId: string) =>
+      request<ContractSummary>(`/projects/${projectId}/contracts/${contractId}/sign`, { method: "POST" }),
+    getMyContractorProfile: () => request<ContractorProfileSelfSummary>("/contractor-profile/me"),
+    updateMyContractorProfile: (body: UpdateContractorProfileRequest) =>
+      request<ContractorProfileSelfSummary>("/contractor-profile/me", { method: "PATCH", body: JSON.stringify(body) }),
+    adminListTenders: () => request<AdminTenderSummary[]>("/admin/tenders"),
+    adminListContracts: () => request<AdminContractSummary[]>("/admin/contracts"),
   };
 }
 

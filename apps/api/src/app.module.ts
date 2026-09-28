@@ -7,6 +7,8 @@ import { ProjectsModule } from "./modules/projects/projects.module";
 import { DocumentsModule } from "./modules/documents/documents.module";
 import { AiVisionModule } from "./modules/ai-vision/ai-vision.module";
 import { AdminModule } from "./modules/admin/admin.module";
+import { TendersModule } from "./modules/tenders/tenders.module";
+import { ContractsModule } from "./modules/contracts/contracts.module";
 
 /**
  * Root module. Domain modules (identity, projects, finance, documents,
@@ -24,6 +26,8 @@ import { AdminModule } from "./modules/admin/admin.module";
     DocumentsModule,
     AiVisionModule,
     AdminModule,
+    TendersModule,
+    ContractsModule,
   ],
 })
 export class AppModule {}

@@ -51,7 +51,7 @@ async function main() {
     },
   });
 
-  await prisma.contractorProfile.upsert({
+  const amir = await prisma.contractorProfile.upsert({
     where: { userId: amirUser.id },
     update: {},
     create: {
@@ -66,9 +66,9 @@ async function main() {
     },
   });
 
-  const sharonEarthworks = await prisma.contractorProfile.findFirst({ where: { companyName: "Sharon Earthworks" } });
-  if (!sharonEarthworks) {
-    await prisma.contractorProfile.create({
+  let sharon = await prisma.contractorProfile.findFirst({ where: { companyName: "Sharon Earthworks" } });
+  if (!sharon) {
+    sharon = await prisma.contractorProfile.create({
       data: {
         companyName: "Sharon Earthworks",
         licenseNumber: "CON-2290",
@@ -80,9 +80,12 @@ async function main() {
     });
   }
 
-  const levi = await prisma.contractorProfile.findFirst({ where: { companyName: "Levi Plumbing & Systems" } });
+  // Deliberately included in the tender invitations below (see the M8 tender
+  // fixture) so the "invited but unverified can't bid" business rule
+  // (BidsService.submit) is exercisable against seed data, not just unit tests.
+  let levi = await prisma.contractorProfile.findFirst({ where: { companyName: "Levi Plumbing & Systems" } });
   if (!levi) {
-    await prisma.contractorProfile.create({
+    levi = await prisma.contractorProfile.create({
       data: {
         companyName: "Levi Plumbing & Systems",
         licenseNumber: "CON-8834",
@@ -297,6 +300,127 @@ async function main() {
         description: spec.description,
         status: "suggested",
       },
+    });
+  }
+
+  // --- Tenders & Contractors (M8) -------------------------------------------
+
+  const workCategoryNames = ["excavation", "structure_concrete", "roofing", "plumbing", "electrical", "finishing"];
+  const workCategories: Record<string, { id: string }> = {};
+  for (const name of workCategoryNames) {
+    workCategories[name] = await prisma.workCategory.upsert({
+      where: { name },
+      update: {},
+      create: { name },
+    });
+  }
+
+  // Both verified contractors declare specializations + availability so
+  // they're candidates for the matching engine's prefilter (build plan §1).
+  await prisma.contractorCategory.upsert({
+    where: {
+      contractorProfileId_workCategoryId: {
+        contractorProfileId: amir.id,
+        workCategoryId: workCategories.electrical.id,
+      },
+    },
+    update: {},
+    create: { contractorProfileId: amir.id, workCategoryId: workCategories.electrical.id },
+  });
+  await prisma.contractorCategory.upsert({
+    where: {
+      contractorProfileId_workCategoryId: {
+        contractorProfileId: amir.id,
+        workCategoryId: workCategories.structure_concrete.id,
+      },
+    },
+    update: {},
+    create: { contractorProfileId: amir.id, workCategoryId: workCategories.structure_concrete.id },
+  });
+  await prisma.contractorCategory.upsert({
+    where: {
+      contractorProfileId_workCategoryId: { contractorProfileId: sharon.id, workCategoryId: workCategories.excavation.id },
+    },
+    update: {},
+    create: { contractorProfileId: sharon.id, workCategoryId: workCategories.excavation.id },
+  });
+  await prisma.contractorProfile.update({ where: { id: amir.id }, data: { currentlyAvailable: true } });
+  await prisma.contractorProfile.update({ where: { id: sharon.id }, data: { currentlyAvailable: true } });
+
+  // One published (invited_bidding) tender on the Systems phase's electrical
+  // scope, left un-awarded — the e2e test drives select-winner/sign itself
+  // against this fixture rather than asserting on a pre-awarded state.
+  let tender = await prisma.tender.findFirst({ where: { projectId: project.id, title: "Systems phase — electrical rewire" } });
+  if (!tender) {
+    tender = await prisma.tender.create({
+      data: {
+        projectId: project.id,
+        workCategoryId: workCategories.electrical.id,
+        title: "Systems phase — electrical rewire",
+        scopeDescription: "Full electrical rough-in and finish for the Systems phase, per approved plans.",
+        budgetMinMinor: ils(380_000),
+        budgetMaxMinor: ils(460_000),
+        currency: "ILS",
+        plannedStartDate: new Date("2026-10-01"),
+        plannedEndDate: new Date("2026-12-15"),
+        status: "invited_bidding",
+        createdByUserId: owner.id,
+        publishedAt: new Date(),
+      },
+    });
+
+    // Levi is invited despite `pending` verification specifically to prove
+    // the "invited but unverified can't bid" rule (BidsService.submit) is
+    // reachable from seed data, not just unit tests.
+    const invitationSpecs = [
+      { contractorProfileId: amir.id, matchScore: 0.81, status: "bid_submitted" as const },
+      { contractorProfileId: sharon.id, matchScore: 0.62, status: "bid_submitted" as const },
+      { contractorProfileId: levi.id, matchScore: 0.55, status: "invited" as const },
+    ];
+    for (const spec of invitationSpecs) {
+      await prisma.tenderInvitation.create({
+        data: {
+          tenderId: tender.id,
+          contractorProfileId: spec.contractorProfileId,
+          matchScore: spec.matchScore,
+          status: spec.status,
+        },
+      });
+    }
+
+    const amirBid = await prisma.bid.create({
+      data: {
+        tenderId: tender.id,
+        contractorProfileId: amir.id,
+        totalAmountMinor: ils(415_000),
+        currency: "ILS",
+        proposedStartDate: new Date("2026-10-05"),
+        proposedEndDate: new Date("2026-12-10"),
+        paymentTermsDescription: "30% on start, 40% at rough-in inspection, 30% on completion",
+      },
+    });
+    await prisma.bidLineItem.createMany({
+      data: [
+        { bidId: amirBid.id, description: "Rough-in wiring, all floors", quantity: 1, unitAmountMinor: ils(240_000), currency: "ILS" },
+        { bidId: amirBid.id, description: "Panel + fixtures + finish", quantity: 1, unitAmountMinor: ils(175_000), currency: "ILS" },
+      ],
+    });
+
+    const sharonBid = await prisma.bid.create({
+      data: {
+        tenderId: tender.id,
+        contractorProfileId: sharon.id,
+        totalAmountMinor: ils(452_000),
+        currency: "ILS",
+        proposedStartDate: new Date("2026-10-12"),
+        proposedEndDate: new Date("2026-12-20"),
+        paymentTermsDescription: "50% on start, 50% on completion",
+      },
+    });
+    await prisma.bidLineItem.createMany({
+      data: [
+        { bidId: sharonBid.id, description: "Full electrical scope", quantity: 1, unitAmountMinor: ils(452_000), currency: "ILS" },
+      ],
     });
   }
 

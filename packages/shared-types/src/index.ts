@@ -277,3 +277,175 @@ export interface InviteMemberRequest {
 export interface ChangeMemberRoleRequest {
   role: ProjectRole;
 }
+
+// --- Tenders & Contractors (M8) -------------------------------------------
+//
+// See docs/high-level-design.md §6.2 for the target match-score formula and
+// README's "Known simplifications" for what's deliberately stubbed (geo
+// matching, Trust Score) behind seams rather than faked.
+
+export type TenderStatus =
+  | "draft"
+  | "published"
+  | "invited_bidding"
+  | "awarded"
+  | "cancelled"
+  | "closed";
+
+export type TenderInvitationStatus = "invited" | "declined" | "bid_submitted";
+
+export type BidStatus = "submitted" | "withdrawn" | "accepted" | "rejected";
+
+export type ContractStatus = "draft" | "signed" | "active" | "completed" | "terminated";
+
+export interface WorkCategorySummary {
+  id: string;
+  name: string;
+}
+
+export interface TenderSummary {
+  id: string;
+  projectId: string;
+  workCategory: WorkCategorySummary;
+  title: string;
+  scopeDescription: string;
+  budgetMinMinor: AmountMinorWire;
+  budgetMaxMinor: AmountMinorWire;
+  currency: string;
+  plannedStartDate: string | null;
+  plannedEndDate: string | null;
+  status: TenderStatus;
+  publishedAt: string | null;
+  createdAt: string;
+  /** Only present when the caller has an invitation on this tender. */
+  myBidId: string | null;
+}
+
+export interface CreateTenderRequest {
+  workCategoryId: string;
+  title: string;
+  scopeDescription: string;
+  budgetMinMinor: AmountMinorWire;
+  budgetMaxMinor: AmountMinorWire;
+  currency: string;
+  plannedStartDate?: string;
+  plannedEndDate?: string;
+}
+
+export interface TenderInvitationSummary {
+  contractorProfileId: string;
+  companyName: string;
+  /** 0..1, computed by the matching engine at invite time — kept for transparency/debugging, see build plan §1. */
+  matchScore: number;
+  status: TenderInvitationStatus;
+  invitedAt: string;
+}
+
+export interface BidLineItemSummary {
+  description: string;
+  quantity: number;
+  unitAmountMinor: AmountMinorWire;
+  currency: string;
+}
+
+export interface BidLineItemRequest {
+  description: string;
+  quantity: number;
+  unitAmountMinor: AmountMinorWire;
+  currency: string;
+}
+
+export interface BidSummary {
+  id: string;
+  contractorProfileId: string;
+  companyName: string;
+  totalAmountMinor: AmountMinorWire;
+  currency: string;
+  proposedStartDate: string | null;
+  proposedEndDate: string | null;
+  paymentTermsDescription: string;
+  status: BidStatus;
+  submittedAt: string;
+  lineItems: BidLineItemSummary[];
+}
+
+export interface SubmitBidRequest {
+  totalAmountMinor: AmountMinorWire;
+  currency: string;
+  proposedStartDate?: string;
+  proposedEndDate?: string;
+  paymentTermsDescription: string;
+  lineItems?: BidLineItemRequest[];
+}
+
+export interface TenderDetailResponse {
+  tender: TenderSummary;
+  /** Only populated for owner/project_manager callers — a contractor never sees other contractors' invitations. */
+  invitations: TenderInvitationSummary[];
+  myBid: BidSummary | null;
+}
+
+export interface SelectWinnerRequest {
+  bidId: string;
+}
+
+export interface ContractPaymentMilestoneSummary {
+  id: string;
+  sequenceNo: number;
+  description: string;
+  amountMinor: AmountMinorWire;
+  currency: string;
+  status: "pending" | "released";
+  releasedAt: string | null;
+}
+
+export interface ContractSummary {
+  id: string;
+  tenderId: string;
+  projectId: string;
+  contractorProfileId: string;
+  companyName: string;
+  totalAmountMinor: AmountMinorWire;
+  currency: string;
+  status: ContractStatus;
+  signedAt: string | null;
+  paymentMilestones: ContractPaymentMilestoneSummary[];
+}
+
+// --- Contractor self-service (categories / availability) -------------------
+
+export interface ContractorProfileSelfSummary {
+  id: string;
+  companyName: string;
+  verificationStatus: ContractorVerificationStatus;
+  currentlyAvailable: boolean;
+  categories: WorkCategorySummary[];
+}
+
+export interface UpdateContractorProfileRequest {
+  currentlyAvailable?: boolean;
+  categoryIds?: string[];
+}
+
+// --- Admin oversight --------------------------------------------------------
+
+export interface AdminTenderSummary {
+  id: string;
+  projectId: string;
+  projectName: string;
+  title: string;
+  status: TenderStatus;
+  bidCount: number;
+  createdAt: string;
+}
+
+export interface AdminContractSummary {
+  id: string;
+  projectId: string;
+  projectName: string;
+  companyName: string;
+  totalAmountMinor: AmountMinorWire;
+  currency: string;
+  status: ContractStatus;
+  signedAt: string | null;
+}
