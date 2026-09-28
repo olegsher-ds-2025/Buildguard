@@ -6,7 +6,9 @@ import type {
   ApproveFindingRequest,
   AuditEntrySummary,
   BidSummary,
+  CadViewerDataResponse,
   ChangeMemberRoleRequest,
+  ChatMessageSummary,
   ClientSummary,
   ConfirmDocumentUploadRequest,
   ContractPaymentMilestoneSummary,
@@ -15,6 +17,7 @@ import type {
   ContractorSummary,
   CreateDocumentUploadRequest,
   CreateDocumentUploadResponse,
+  CreateMeasurementRequest,
   CreateReviewRequest,
   CreateSiteCaptureUploadRequest,
   CreateSiteCaptureUploadResponse,
@@ -28,6 +31,7 @@ import type {
   LoginRequest,
   LoginResponse,
   MeResponse,
+  MeasurementSummary,
   ProjectDashboardResponse,
   ProjectMemberSummary,
   ProjectSummary,
@@ -35,6 +39,8 @@ import type {
   ResolveDisputeRequest,
   ReviewSummary,
   SelectWinnerRequest,
+  SendChatMessageRequest,
+  SendChatMessageResponse,
   SubmitBidRequest,
   TenderDetailResponse,
   TenderSummary,
@@ -214,6 +220,25 @@ export function createApiClient({ baseUrl, getAccessToken }: ApiClientOptions) {
     adminListOpenDisputes: () => request<AdminDisputeSummary[]>("/admin/disputes"),
     adminResolveDispute: (disputeId: string, body: ResolveDisputeRequest) =>
       request<DisputeSummary>(`/admin/disputes/${disputeId}/resolve`, { method: "POST", body: JSON.stringify(body) }),
+
+    // --- RAG Assistant (M10) ---
+    listChatMessages: (projectId: string) => request<ChatMessageSummary[]>(`/projects/${projectId}/chat/messages`),
+    sendChatMessage: (projectId: string, body: SendChatMessageRequest) =>
+      request<SendChatMessageResponse>(`/projects/${projectId}/chat/messages`, {
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+
+    // --- CAD/Plan Viewer (M10) ---
+    getCadViewerData: (projectId: string, documentId: string) =>
+      request<CadViewerDataResponse>(`/projects/${projectId}/documents/${documentId}/cad/viewer`),
+    listMeasurements: (projectId: string, documentId: string) =>
+      request<MeasurementSummary[]>(`/projects/${projectId}/documents/${documentId}/cad/measurements`),
+    createMeasurement: (projectId: string, documentId: string, body: CreateMeasurementRequest) =>
+      request<MeasurementSummary>(`/projects/${projectId}/documents/${documentId}/cad/measurements`, {
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
   };
 }
 

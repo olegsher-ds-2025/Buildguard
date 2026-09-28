@@ -10,6 +10,8 @@ import { AdminModule } from "./modules/admin/admin.module";
 import { TendersModule } from "./modules/tenders/tenders.module";
 import { ContractsModule } from "./modules/contracts/contracts.module";
 import { TrustModule } from "./modules/trust/trust.module";
+import { RagModule } from "./modules/rag/rag.module";
+import { CadModule } from "./modules/cad/cad.module";
 
 /**
  * Root module. Domain modules (identity, projects, finance, documents,
@@ -30,6 +32,8 @@ import { TrustModule } from "./modules/trust/trust.module";
     TendersModule,
     ContractsModule,
     TrustModule,
+    RagModule,
+    CadModule,
   ],
 })
 export class AppModule {}

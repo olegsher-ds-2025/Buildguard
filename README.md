@@ -12,7 +12,8 @@ This is an npm-workspaces monorepo:
 - `apps/api` — NestJS backend (modular monolith), one deployable serving both frontends.
 - `apps/monitor` — customer-facing web app (Owner/Project Manager/Contractor/Inspector/Viewer):
   project dashboard, documents, AI Vision Inspector findings review, team/role management,
-  tenders/bidding/contracts, contractor reviews and Trust Score.
+  tenders/bidding/contracts, contractor reviews and Trust Score, a project Q&A chat, and a CAD/plan
+  viewer with layers and measurements.
 - `apps/admin` — internal ops console for BuildGuard staff: contractor verification queue,
   clients/projects/users directories, audit log, tenders/contracts oversight, review disputes.
   Separate login realm from `monitor` (distinct JWT audience), same backend.
@@ -137,4 +138,16 @@ Deliberate scope cuts, tracked here rather than silently dropped:
     console's Disputes page. There is no owner-initiated dispute against contractor performance,
     and anomaly-detection fraud defense (device/IP graphs, rating-distribution analysis) is
     fully deferred — no usage data exists yet to detect anomalies in.
-- **No Marketplace, RAG.** Still phase 3–4 per the roadmap.
+- **RAG Assistant (M10) is UI + plumbing only — the retrieval/LLM pipeline is a hardcoded stand-in.**
+  `MockRagService` (`apps/api/src/modules/rag/mock-rag.service.ts`) answers via keyword matching
+  against real project data (Finance, Milestone, Detection queries) — not semantic retrieval or an
+  LLM. This keeps the "numbers come from the API, not the LLM" principle honest even in mock form.
+  `RagService` is the swap-in seam for a real hybrid-retrieval + LLM pipeline; nothing else in the
+  module (schema, controller, frontend) needs to change when that lands.
+- **CAD/Plan Viewer (M10) is UI + plumbing only — there is no real DWG/DXF conversion.**
+  `MockCadDataService` (`apps/api/src/modules/cad/mock-cad-data.service.ts`) returns a
+  hand-authored inline demo floor plan (fixed layers, fixed scale) regardless of which document is
+  requested — it never reads the uploaded file. `CadDataProvider` is the swap-in seam for a real
+  conversion pipeline. `Measurement` (length/area, via the shoelace formula) is fully real and
+  persisted — only the drawing data it measures against is canned.
+- **No Marketplace.** Still phase 4 per the roadmap.

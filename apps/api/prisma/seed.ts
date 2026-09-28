@@ -492,6 +492,21 @@ async function main() {
     });
   }
 
+  // A seeded CAD document so the plan viewer (M10) has something to open
+  // out of the box. No PlanVersion/object-storage upload needed — the demo
+  // viewer's drawing data is entirely canned (MockCadDataService), it never
+  // reads the underlying file.
+  await prisma.document.upsert({
+    where: { id: `${project.id}-cad-demo` },
+    update: {},
+    create: {
+      id: `${project.id}-cad-demo`,
+      projectId: project.id,
+      kind: "cad",
+      title: "Systems — electrical/plumbing as-built (demo)",
+    },
+  });
+
   console.log("Seed complete:", {
     project: project.name,
     owner: owner.email,

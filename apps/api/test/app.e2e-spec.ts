@@ -332,4 +332,67 @@ describe("BuildGuard API (e2e)", () => {
     const disputesComponent = scoreRes.body.components.find((c: { key: string }) => c.key === "disputes");
     expect(disputesComponent.value).toBe(0.7); // neutral: no published reviews left
   });
+
+  it("RAG chat answers a budget question grounded in real data, with a citation, and persists history", async () => {
+    const sendRes = await request(server)
+      .post(`/api/v1/projects/${projectId}/chat/messages`)
+      .set("Authorization", `Bearer ${ownerToken}`)
+      .send({ content: "How much contingency is left?" });
+    expect(sendRes.status).toBe(201);
+    expect(sendRes.body.userMessage.role).toBe("user");
+    expect(sendRes.body.assistantMessage.role).toBe("assistant");
+    expect(sendRes.body.assistantMessage.citations.length).toBeGreaterThan(0);
+    expect(sendRes.body.assistantMessage.content).toMatch(/contingency/i);
+
+    const historyRes = await request(server)
+      .get(`/api/v1/projects/${projectId}/chat/messages`)
+      .set("Authorization", `Bearer ${ownerToken}`);
+    expect(historyRes.status).toBe(200);
+    expect(historyRes.body).toHaveLength(2);
+  });
+
+  it("RAG chat gives a grounded no-info refusal for an off-topic question", async () => {
+    const res = await request(server)
+      .post(`/api/v1/projects/${projectId}/chat/messages`)
+      .set("Authorization", `Bearer ${ownerToken}`)
+      .send({ content: "what's the weather like today" });
+    expect(res.status).toBe(201);
+    expect(res.body.assistantMessage.citations).toEqual([]);
+    expect(res.body.assistantMessage.content).toMatch(/don't have information/i);
+  });
+
+  it("CAD viewer returns the demo drawing's layers, and a measurement is computed and persisted", async () => {
+    const docsRes = await request(server)
+      .get(`/api/v1/projects/${projectId}/documents`)
+      .set("Authorization", `Bearer ${ownerToken}`);
+    const cadDoc = docsRes.body.find((d: { kind: string }) => d.kind === "cad");
+    expect(cadDoc).toBeDefined();
+
+    const viewerRes = await request(server)
+      .get(`/api/v1/projects/${projectId}/documents/${cadDoc.id}/cad/viewer`)
+      .set("Authorization", `Bearer ${ownerToken}`);
+    expect(viewerRes.status).toBe(200);
+    expect(viewerRes.body.layers.length).toBeGreaterThan(0);
+    const scale = viewerRes.body.scaleMetersPerPixel;
+
+    const measureRes = await request(server)
+      .post(`/api/v1/projects/${projectId}/documents/${cadDoc.id}/cad/measurements`)
+      .set("Authorization", `Bearer ${ownerToken}`)
+      .send({ kind: "length", points: [{ x: 0, y: 0 }, { x: 100, y: 0 }] });
+    expect(measureRes.status).toBe(201);
+    expect(measureRes.body.valueMeters).toBeCloseTo(100 * scale, 5);
+
+    const listRes = await request(server)
+      .get(`/api/v1/projects/${projectId}/documents/${cadDoc.id}/cad/measurements`)
+      .set("Authorization", `Bearer ${ownerToken}`);
+    expect(listRes.status).toBe(200);
+    expect(listRes.body.some((m: { id: string }) => m.id === measureRes.body.id)).toBe(true);
+  });
+
+  it("CAD viewer 404s for a document outside the caller's project", async () => {
+    const res = await request(server)
+      .get(`/api/v1/projects/${projectId}/documents/00000000-0000-0000-0000-000000000000/cad/viewer`)
+      .set("Authorization", `Bearer ${ownerToken}`);
+    expect(res.status).toBe(404);
+  });
 });

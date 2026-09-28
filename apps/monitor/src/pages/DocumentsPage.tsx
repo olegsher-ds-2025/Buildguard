@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import type { DocumentKind } from "@buildguard/shared-types";
 import { api } from "../api";
 
 export function DocumentsPage() {
@@ -8,6 +9,7 @@ export function DocumentsPage() {
   const queryClient = useQueryClient();
   const fileInput = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState("");
+  const [kind, setKind] = useState<DocumentKind>("plan");
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,7 +35,7 @@ export function DocumentsPage() {
       // 1. Ask our API for a presigned upload URL — no file bytes sent to us yet.
       const created = await api.createDocumentUpload(projectId, {
         title: title || file.name,
-        kind: "plan",
+        kind,
         filename: file.name,
         contentType: file.type || "application/octet-stream",
       });
@@ -49,7 +51,7 @@ export function DocumentsPage() {
       // 3. Confirm — the API independently verifies the object exists before persisting anything.
       await api.confirmDocumentUpload(projectId, created.documentId, created.versionId, {
         title: title || file.name,
-        kind: "plan",
+        kind,
       });
 
       setTitle("");
@@ -78,6 +80,12 @@ export function DocumentsPage() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
+          <select value={kind} onChange={(e) => setKind(e.target.value as DocumentKind)}>
+            <option value="plan">Plan</option>
+            <option value="cad">CAD</option>
+            <option value="contract">Contract</option>
+            <option value="other">Other</option>
+          </select>
           <input ref={fileInput} type="file" />
           {error && <p className="form-error">{error}</p>}
           <button className="primary" onClick={onUpload} disabled={uploading}>
@@ -111,9 +119,14 @@ export function DocumentsPage() {
                       {doc.currentVersion ? new Date(doc.currentVersion.uploadedAt).toLocaleDateString() : "—"}
                     </td>
                     <td>
-                      <button onClick={() => download.mutate(doc.id)} disabled={!doc.currentVersion}>
-                        Download
-                      </button>
+                      <div className="row-actions">
+                        <button onClick={() => download.mutate(doc.id)} disabled={!doc.currentVersion}>
+                          Download
+                        </button>
+                        {(doc.kind === "plan" || doc.kind === "cad") && (
+                          <Link to={`/projects/${projectId}/documents/${doc.id}/cad`}>CAD viewer</Link>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}

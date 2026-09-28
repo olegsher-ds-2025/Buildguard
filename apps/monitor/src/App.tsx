@@ -13,6 +13,8 @@ import { TenderDetailPage } from "./pages/TenderDetailPage";
 import { BidComparisonPage } from "./pages/BidComparisonPage";
 import { ContractPage } from "./pages/ContractPage";
 import { ContractorProfilePage } from "./pages/ContractorProfilePage";
+import { ChatPage } from "./pages/ChatPage";
+import { CadViewerPage } from "./pages/CadViewerPage";
 
 function TopBar() {
   const { user, logout } = useAuth();
@@ -69,6 +71,8 @@ export function App() {
           <Route path="tenders/:tenderId/bids" element={<BidComparisonPage />} />
           <Route path="contracts/:contractId" element={<ContractPage />} />
           <Route path="contractor-profile" element={<ContractorProfilePage />} />
+          <Route path="chat" element={<ChatPage />} />
+          <Route path="documents/:documentId/cad" element={<CadViewerPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

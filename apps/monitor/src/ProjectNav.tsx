@@ -31,6 +31,9 @@ export function ProjectNav() {
         <NavLink to={`/projects/${projectId}/tenders`} className={({ isActive }) => (isActive ? "active" : "")}>
           Tenders
         </NavLink>
+        <NavLink to={`/projects/${projectId}/chat`} className={({ isActive }) => (isActive ? "active" : "")}>
+          Ask
+        </NavLink>
         {isContractor && (
           <NavLink
             to={`/projects/${projectId}/contractor-profile`}

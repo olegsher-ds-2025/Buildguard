@@ -129,7 +129,7 @@ export interface ProjectDashboardResponse {
   openFindingsCount: number;
 }
 
-export type DocumentKind = "plan" | "contract" | "other";
+export type DocumentKind = "plan" | "contract" | "cad" | "other";
 export type PlanVersionStatus = "processing" | "ready";
 
 export interface CreateDocumentUploadRequest {
@@ -541,4 +541,82 @@ export interface AdminDisputeSummary {
   reason: string;
   status: DisputeStatus;
   createdAt: string;
+}
+
+// --- RAG Assistant (M10) -----------------------------------------------
+//
+// UI + plumbing only — see docs/high-level-design.md §7.2 for the target
+// architecture and README's "Known simplifications" for what's stubbed.
+// MockRagService answers via keyword matching against real project data,
+// not a real retrieval+LLM pipeline; RagService is the swap-in seam.
+
+export type MessageRole = "user" | "assistant";
+
+export interface CitationSummary {
+  documentId: string | null;
+  documentTitle: string | null;
+  snippet: string;
+}
+
+export interface ChatMessageSummary {
+  id: string;
+  role: MessageRole;
+  content: string;
+  citations: CitationSummary[];
+  createdAt: string;
+}
+
+export interface SendChatMessageRequest {
+  content: string;
+}
+
+export interface SendChatMessageResponse {
+  userMessage: ChatMessageSummary;
+  assistantMessage: ChatMessageSummary;
+}
+
+// --- CAD/Plan Viewer (M10) -----------------------------------------------
+//
+// UI + plumbing only — see docs/high-level-design.md §6.5 for the target
+// capability and README's "Known simplifications" for what's stubbed.
+// The drawing data (baseSvgMarkup/layers) is a hand-authored demo canned by
+// MockCadDataProvider, not a real DWG/DXF conversion; CadDataProvider is
+// the swap-in seam. Measurement is real and persisted.
+
+export interface CadLayerSummary {
+  id: string;
+  name: string;
+  colorHex: string;
+  svgMarkup: string;
+  defaultVisible: boolean;
+}
+
+export interface CadViewerDataResponse {
+  documentId: string;
+  baseSvgMarkup: string;
+  viewBox: string;
+  scaleMetersPerPixel: number;
+  layers: CadLayerSummary[];
+}
+
+export type MeasurementKind = "length" | "area";
+
+export interface PlanPoint {
+  x: number;
+  y: number;
+}
+
+export interface MeasurementSummary {
+  id: string;
+  kind: MeasurementKind;
+  points: PlanPoint[];
+  valueMeters: number;
+  unit: string;
+  createdByUserId: string;
+  createdAt: string;
+}
+
+export interface CreateMeasurementRequest {
+  kind: MeasurementKind;
+  points: PlanPoint[];
 }

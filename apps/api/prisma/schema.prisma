@@ -81,6 +81,9 @@ model User {
   authoredReviews       Review[]           @relation("ReviewAuthor")
   raisedDisputes        Dispute[]          @relation("DisputeRaisedBy")
   resolvedDisputes      Dispute[]          @relation("DisputeResolvedBy")
+  createdConversations  Conversation[]     @relation("ConversationCreatedBy")
+  authoredMessages      Message[]          @relation("MessageAuthor")
+  createdMeasurements   Measurement[]      @relation("MeasurementCreatedBy")
 
   @@map("users")
 }
@@ -150,6 +153,7 @@ model Project {
   tenders      Tender[]
   contracts    Contract[]
   reviews      Review[]
+  conversation Conversation?
 
   @@map("projects")
 }
@@ -333,6 +337,7 @@ model Document {
   project        Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
   versions       PlanVersion[]
   milestones     Milestone[]
+  measurements   Measurement[]
 
   @@map("documents")
 }
@@ -758,6 +763,93 @@ model Dispute {
   resolvedByStaff  User?  @relation("DisputeResolvedBy", fields: [resolvedByStaffUserId], references: [id])
 
   @@map("disputes")
+}
+
+// ---------------------------------------------------------------------------
+// RAG Assistant (M10) — UI + plumbing only, real retrieval/LLM to follow
+// ---------------------------------------------------------------------------
+//
+// Scope for this module: there is no vector DB, no document text
+// extraction/indexing, and no LLM integration yet. RagService is the
+// integration seam (mirrors AiVisionService's pattern) — MockRagService
+// answers from real project data (Finance/Milestone queries) via simple
+// keyword matching, not a real retrieval+generation pipeline. Swapping the
+// one `useClass` binding (see RagModule) for a real hybrid-retrieval + LLM
+// implementation is the entire integration point; the controller, schema,
+// and frontend never need to change. See README's "Known simplifications".
+
+enum MessageRole {
+  user
+  assistant
+
+  @@map("message_role")
+}
+
+// One shared thread per project (all project members post into the same
+// conversation), auto-created on first message.
+model Conversation {
+  id              String   @id @default(uuid())
+  projectId       String   @unique @map("project_id")
+  createdByUserId String   @map("created_by_user_id")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  project         Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdByUser   User      @relation("ConversationCreatedBy", fields: [createdByUserId], references: [id])
+  messages        Message[]
+
+  @@map("conversations")
+}
+
+// Mutable in principle (no append-only enforcement) but no endpoint ever
+// updates a message — only inserts. citations is a snapshot Json array of
+// {documentId, documentTitle, snippet} at answer time.
+model Message {
+  id             String      @id @default(uuid())
+  conversationId String      @map("conversation_id")
+  authorUserId   String?     @map("author_user_id")
+  role           MessageRole
+  content        String
+  citations      Json        @default("[]")
+  createdAt      DateTime    @default(now()) @map("created_at")
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  authorUser   User?        @relation("MessageAuthor", fields: [authorUserId], references: [id])
+
+  @@map("messages")
+}
+
+// ---------------------------------------------------------------------------
+// CAD/Plan Viewer (M10) — UI + plumbing only, real DWG/DXF conversion to follow
+// ---------------------------------------------------------------------------
+//
+// No CAD conversion pipeline exists yet (design doc §6.5, §14.2/R5: "start
+// with PDF only; CAD in phase 3 using a commercial conversion library").
+// CadDataProvider is the integration seam — MockCadDataProvider returns a
+// hand-authored inline demo SVG floor plan with a fixed scale, not a real
+// DWG/DXF-derived geometry model. Measurement is real and persisted — only
+// the drawing data + scale it measures against is canned.
+
+enum MeasurementKind {
+  length
+  area
+
+  @@map("measurement_kind")
+}
+
+model Measurement {
+  id              String          @id @default(uuid())
+  documentId      String          @map("document_id")
+  kind            MeasurementKind
+  pointsJson      Json            @map("points_json")
+  valueMeters     Decimal         @map("value_meters") @db.Decimal(10, 3)
+  unit            String          @default("m")
+  createdByUserId String          @map("created_by_user_id")
+  createdAt       DateTime        @default(now()) @map("created_at")
+
+  document       Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  createdByUser  User     @relation("MeasurementCreatedBy", fields: [createdByUserId], references: [id])
+
+  @@map("measurements")
 }
 
 // ---------------------------------------------------------------------------
