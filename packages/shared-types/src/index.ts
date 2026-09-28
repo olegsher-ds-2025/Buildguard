@@ -449,3 +449,96 @@ export interface AdminContractSummary {
   status: ContractStatus;
   signedAt: string | null;
 }
+
+// --- Trust Score (M9) --------------------------------------------------
+//
+// See docs/high-level-design.md §6.3 for the target formula. TrustScore is
+// computed on read (not a persisted table) — three of its six components
+// are stubbed behind seams because Defect/Invoice aren't attributable to a
+// specific contractor in this schema yet; see README's "Known
+// simplifications" and the Trust Score section header in schema.prisma.
+
+export type TrustScoreComponentKey =
+  | "schedule_adherence"
+  | "execution_quality"
+  | "financial_transparency"
+  | "disputes"
+  | "service"
+  | "tenure_experience";
+
+export interface TrustScoreComponentSummary {
+  key: TrustScoreComponentKey;
+  /** This component's weight in the formula, e.g. 0.25 for execution_quality. */
+  weight: number;
+  /** 0..1 — this component's computed value before weighting. */
+  value: number;
+  /** false for schedule_adherence/execution_quality/financial_transparency — see module header. */
+  isReal: boolean;
+}
+
+export interface TrustScoreSummary {
+  contractorProfileId: string;
+  /** 0..100. */
+  score: number;
+  /** 0..1 — Bayesian shrinkage factor applied for small sample sizes (design doc §6.3). */
+  confidence: number;
+  /** Number of signed/active/completed contracts this score's confidence is based on. */
+  sampleSize: number;
+  components: TrustScoreComponentSummary[];
+}
+
+export type ReviewStatus = "published" | "rejected";
+
+export interface ReviewSummary {
+  id: string;
+  projectId: string;
+  projectName: string;
+  contractorProfileId: string;
+  companyName: string;
+  reviewerUserId: string;
+  reviewerName: string;
+  contractId: string;
+  rating: number;
+  comment: string | null;
+  status: ReviewStatus;
+  createdAt: string;
+  disputeStatus: DisputeStatus | null;
+}
+
+export interface CreateReviewRequest {
+  contractId: string;
+  rating: number;
+  comment?: string;
+}
+
+export type DisputeStatus = "open" | "upheld" | "dismissed";
+
+export interface DisputeSummary {
+  id: string;
+  reviewId: string;
+  reason: string;
+  status: DisputeStatus;
+  resolvedAt: string | null;
+  resolutionNote: string | null;
+  createdAt: string;
+}
+
+export interface RaiseDisputeRequest {
+  reason: string;
+}
+
+export interface ResolveDisputeRequest {
+  /** true = the dispute is valid, the review is rejected. false = the dispute is denied, the review stands. */
+  upheld: boolean;
+  resolutionNote?: string;
+}
+
+export interface AdminDisputeSummary {
+  id: string;
+  reviewId: string;
+  companyName: string;
+  reviewRating: number;
+  reason: string;
+  status: DisputeStatus;
+  createdAt: string;
+}

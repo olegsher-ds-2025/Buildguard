@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { IdentityModule } from "../identity/identity.module";
 import { AuditModule } from "../audit/audit.module";
+import { TrustModule } from "../trust/trust.module";
 import { WorkCategoriesController } from "./work-categories.controller";
 import { WorkCategoriesService } from "./work-categories.service";
 import { ContractorProfileController } from "./contractor-profile.controller";
@@ -12,23 +13,23 @@ import { BidsService } from "./bids.service";
 import { MatchingEngine } from "./matching/matching.interface";
 import { DefaultMatchingEngine } from "./matching/default-matching.service";
 import { TrustScoreProvider } from "./matching/trust-score.interface";
-import { DefaultTrustScoreProvider } from "./matching/default-trust-score.service";
+import { ComputedTrustScoreProvider } from "./matching/computed-trust-score.provider";
 import { GeoScoringProvider } from "./matching/geo-scoring.interface";
 import { DefaultGeoScoringProvider } from "./matching/default-geo-scoring.service";
 
 @Module({
-  imports: [IdentityModule, AuditModule],
+  imports: [IdentityModule, AuditModule, TrustModule],
   controllers: [WorkCategoriesController, ContractorProfileController, TendersController, BidsController],
   providers: [
     WorkCategoriesService,
     ContractorProfileService,
     TendersService,
     BidsService,
-    // The matching seams (build plan §1): swap these bindings for real geo
-    // (PostGIS) and real Trust Score lookups once those exist — nothing
-    // else in this module changes.
+    // The geo seam (build plan §1): swap for a real PostGIS-backed lookup
+    // once Project/ContractorProfile carry location data. Trust Score is
+    // real as of M9 — ComputedTrustScoreProvider delegates to TrustModule.
     { provide: GeoScoringProvider, useClass: DefaultGeoScoringProvider },
-    { provide: TrustScoreProvider, useClass: DefaultTrustScoreProvider },
+    { provide: TrustScoreProvider, useClass: ComputedTrustScoreProvider },
     { provide: MatchingEngine, useClass: DefaultMatchingEngine },
   ],
   exports: [TendersService, BidsService],

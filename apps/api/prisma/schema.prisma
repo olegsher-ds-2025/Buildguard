@@ -78,6 +78,9 @@ model User {
   auditEntries          AuditEntry[]       @relation("AuditActor")
   createdTenders        Tender[]           @relation("TenderCreatedBy")
   signedContracts       Contract[]         @relation("ContractSignedBy")
+  authoredReviews       Review[]           @relation("ReviewAuthor")
+  raisedDisputes        Dispute[]          @relation("DisputeRaisedBy")
+  resolvedDisputes      Dispute[]          @relation("DisputeResolvedBy")
 
   @@map("users")
 }
@@ -114,6 +117,7 @@ model ContractorProfile {
   tenderInvitations TenderInvitation[]
   bids           Bid[]
   contracts      Contract[]
+  reviews        Review[]
 
   @@map("contractor_profiles")
 }
@@ -145,6 +149,7 @@ model Project {
   auditEntries AuditEntry[]
   tenders      Tender[]
   contracts    Contract[]
+  reviews      Review[]
 
   @@map("projects")
 }
@@ -453,10 +458,12 @@ model DefectEvent {
 //
 // Scope for this module (see docs/high-level-design.md §6.2 for the target
 // match-score formula and README's "Known simplifications" for what's
-// deliberately stubbed): geo proximity and Trust Score have no real data
-// source yet (no lat/long or PostGIS on Project/ContractorProfile, no Trust
-// Score module), so both terms are computed behind seams
-// (modules/tenders/matching/*) instead of being faked with invented numbers.
+// deliberately stubbed): geo proximity has no real data source yet (no
+// lat/long or PostGIS on Project/ContractorProfile), so that term is
+// computed behind a seam (modules/tenders/matching/geo-scoring.interface.ts)
+// instead of being faked with an invented number. Trust Score is real as of
+// M9 (see the Trust Score section below) — ComputedTrustScoreProvider
+// delegates to it.
 
 model WorkCategory {
   id        String   @id @default(uuid())
@@ -632,6 +639,7 @@ model Contract {
   contractorProfile ContractorProfile    @relation(fields: [contractorProfileId], references: [id])
   signedByOwnerUser User?                @relation("ContractSignedBy", fields: [signedByOwnerUserId], references: [id])
   paymentMilestones ContractPaymentMilestone[]
+  reviews           Review[]
 
   @@map("contracts")
 }
@@ -654,6 +662,102 @@ model ContractPaymentMilestone {
   contract Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
 
   @@map("contract_payment_milestones")
+}
+
+// ---------------------------------------------------------------------------
+// Trust Score (M9)
+// ---------------------------------------------------------------------------
+//
+// Scope for this module (see docs/high-level-design.md §6.3 for the target
+// formula and README's "Known simplifications" for the full breakdown of
+// what's real vs stubbed): TrustScore/ScoreComponent are NOT persisted
+// tables — the score is computed on read by TrustScoreService from the data
+// actually available (Review, Dispute, Contract, TenderInvitation), the
+// same "compute, don't sync" approach already used for Phase.progressPct
+// and Document's "current version". Three of the design doc's six weighted
+// components (schedule adherence, execution quality, financial
+// transparency) have no attributable-per-contractor data source in this
+// schema yet — Defect and Invoice aren't linked to which contractor did the
+// work — so those three are computed behind seams
+// (modules/trust/scoring/*) instead of being faked.
+//
+// The design doc's structural review barrier is "signed a contract AND
+// completed a verified milestone" — Milestone in this schema is tied to a
+// Phase, not to a specific Contract/contractor, so there's no way to check
+// "this contractor's work was the one verified". This module's structural
+// barrier is scoped down to "a signed Contract exists between this reviewer
+// (project owner/PM) and this contractor on this project" — still a real
+// cost on fraud (a contract had to actually be signed), just not as tight
+// as the design doc's ideal. Anomaly-detection fraud defense (device/IP
+// graphs, rating-distribution analysis) is fully deferred — no usage data
+// to detect anomalies in yet.
+
+enum ReviewStatus {
+  published
+  rejected
+
+  @@map("review_status")
+}
+
+// Not append-only: rating/comment are immutable in practice because no
+// endpoint ever updates them (only `status`, via dispute resolution) — see
+// disputes.service.ts. DB-level append-only wasn't added here because,
+// unlike Bid/Invoice, there's no legal requirement to preserve a rejected
+// review's history distinctly from just marking it rejected in place.
+model Review {
+  id                  String       @id @default(uuid())
+  projectId           String       @map("project_id")
+  contractorProfileId String       @map("contractor_profile_id")
+  reviewerUserId      String       @map("reviewer_user_id")
+  contractId          String       @map("contract_id")
+  rating              Int
+  comment              String?
+  status              ReviewStatus @default(published)
+  createdAt           DateTime     @default(now()) @map("created_at")
+
+  project           Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  contractorProfile ContractorProfile @relation(fields: [contractorProfileId], references: [id])
+  reviewerUser      User              @relation("ReviewAuthor", fields: [reviewerUserId], references: [id])
+  contract          Contract          @relation(fields: [contractId], references: [id])
+  dispute           Dispute?
+
+  // One review per reviewer per contract — not per (project, contractor),
+  // so a project with multiple contracts against the same contractor
+  // (e.g. re-tendered scope) allows one review per engagement.
+  @@unique([contractId, reviewerUserId])
+  @@map("reviews")
+}
+
+enum DisputeStatus {
+  open
+  upheld
+  dismissed
+
+  @@map("dispute_status")
+}
+
+// The contractor's appeal path against a review they believe is unfair
+// (design doc §6.3: "appeals go through the dispute process"). This models
+// only review disputes — not a general owner-initiated "performance
+// complaint" entity, which the design doc's "Disputes" score component
+// otherwise implies; see TrustScoreService for how the Disputes component
+// is approximated instead.
+model Dispute {
+  id                  String        @id @default(uuid())
+  reviewId            String        @unique @map("review_id")
+  raisedByUserId      String        @map("raised_by_user_id")
+  reason              String
+  status              DisputeStatus @default(open)
+  resolvedByStaffUserId String?     @map("resolved_by_staff_user_id")
+  resolvedAt          DateTime?     @map("resolved_at")
+  resolutionNote      String?       @map("resolution_note")
+  createdAt           DateTime      @default(now()) @map("created_at")
+
+  review           Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  raisedByUser     User   @relation("DisputeRaisedBy", fields: [raisedByUserId], references: [id])
+  resolvedByStaff  User?  @relation("DisputeResolvedBy", fields: [resolvedByStaffUserId], references: [id])
+
+  @@map("disputes")
 }
 
 // ---------------------------------------------------------------------------

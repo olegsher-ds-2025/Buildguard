@@ -12,10 +12,10 @@ This is an npm-workspaces monorepo:
 - `apps/api` — NestJS backend (modular monolith), one deployable serving both frontends.
 - `apps/monitor` — customer-facing web app (Owner/Project Manager/Contractor/Inspector/Viewer):
   project dashboard, documents, AI Vision Inspector findings review, team/role management,
-  tenders/bidding/contracts.
+  tenders/bidding/contracts, contractor reviews and Trust Score.
 - `apps/admin` — internal ops console for BuildGuard staff: contractor verification queue,
-  clients/projects/users directories, audit log, tenders/contracts oversight. Separate login
-  realm from `monitor` (distinct JWT audience), same backend.
+  clients/projects/users directories, audit log, tenders/contracts oversight, review disputes.
+  Separate login realm from `monitor` (distinct JWT audience), same backend.
 - `packages/shared-types` — TS types/enums shared between the API and both frontends.
 - `packages/api-client` — typed fetch client + TanStack Query wiring, used by both frontends.
 - `infra/` — `docker-compose.yml` and the Dockerfiles it builds.
@@ -110,14 +110,31 @@ Deliberate scope cuts, tracked here rather than silently dropped:
     PostGIS extension configured. The design doc's `geo_proximity_decay` term is a constant
     placeholder (`GeoScoringProvider` in `apps/api/src/modules/tenders/matching/`) until real
     location data + PostGIS are added.
-  - **No real Trust Score.** There is no Trust Score module yet — `trust_score_normalized` is
-    derived only from `ContractorVerificationStatus` via `TrustScoreProvider` (same
-    one-line-`useClass`-swap seam pattern as `AiVisionService`).
+  - **Trust Score is real as of M9** (see below) — `TrustScoreProvider` now delegates to it via
+    `ComputedTrustScoreProvider`.
   - **No availability calendar.** A contractor sets a single `currentlyAvailable` boolean on
     their profile; the formula's `availability_fit(timeline)` term reads only that flag.
   - **No escrow/Stripe payment execution.** `Contract.paymentMilestones` is a data structure
     only (one milestone per project phase, proportioned by planned budget) — releasing a
     milestone's funds is the Payments module's job (phase 4); no money moves as part of M8.
-  - **No dispute-resolution workflow.** The admin console gets read-only oversight of
-    tenders/contracts, not a dispute/flag action.
+- **Trust Score (M9) is computed on read, not persisted, and three of its six weighted
+  components are stubbed** — see `schema.prisma`'s Trust Score section header for the full
+  reasoning:
+  - **Real components:** disputes (approximated as the rate of ≤2-star published reviews — no
+    owner-initiated "performance complaint" entity exists, only the review-appeal `Dispute`
+    below), service (blend of review sentiment + tender-invitation response speed), tenure &
+    experience (signed-contract count + account age).
+  - **Stubbed components** (`schedule_adherence`, `execution_quality`, `financial_transparency`):
+    constant placeholders behind seams in `apps/api/src/modules/trust/scoring/` — Defect and
+    Invoice aren't attributable to a specific contractor in this schema yet, so there's no real
+    per-contractor signal to compute them from.
+  - **Narrower fraud barrier than the design doc's ideal.** A review requires a real signed
+    `Contract` between the reviewer's project and the contractor; the design doc's stricter
+    "AND completed a verified milestone" isn't enforceable because `Milestone` is tied to a
+    `Phase`, not a specific Contract/contractor.
+  - **Dispute resolution works, but only for reviews** — a contractor can appeal a review they
+    believe is unfair (`POST /reviews/:reviewId/disputes`), and staff resolve it from the admin
+    console's Disputes page. There is no owner-initiated dispute against contractor performance,
+    and anomaly-detection fraud defense (device/IP graphs, rating-distribution analysis) is
+    fully deferred — no usage data exists yet to detect anomalies in.
 - **No Marketplace, RAG.** Still phase 3–4 per the roadmap.

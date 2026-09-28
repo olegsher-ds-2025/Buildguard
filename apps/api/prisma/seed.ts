@@ -424,6 +424,74 @@ async function main() {
     });
   }
 
+  // A second, already-awarded-and-signed contract (Sharon Earthworks,
+  // excavation/Foundations) — kept separate from the tender above so that
+  // fixture stays un-awarded for the e2e test to drive itself. This one
+  // exists purely to give Trust Score (M9) real, non-zero seed data: a
+  // signed Contract (the review's structural eligibility barrier) and a
+  // published Review.
+  let foundationsTender = await prisma.tender.findFirst({
+    where: { projectId: project.id, title: "Foundations — excavation & earthworks" },
+  });
+  if (!foundationsTender) {
+    foundationsTender = await prisma.tender.create({
+      data: {
+        projectId: project.id,
+        workCategoryId: workCategories.excavation.id,
+        title: "Foundations — excavation & earthworks",
+        scopeDescription: "Site excavation and earthworks ahead of foundation pour.",
+        budgetMinMinor: ils(180_000),
+        budgetMaxMinor: ils(220_000),
+        currency: "ILS",
+        plannedStartDate: new Date("2026-03-05"),
+        plannedEndDate: new Date("2026-04-10"),
+        status: "invited_bidding",
+        createdByUserId: owner.id,
+        publishedAt: new Date("2026-02-20"),
+      },
+    });
+    await prisma.tenderInvitation.create({
+      data: { tenderId: foundationsTender.id, contractorProfileId: sharon.id, matchScore: 0.74, status: "bid_submitted" },
+    });
+    const foundationsBid = await prisma.bid.create({
+      data: {
+        tenderId: foundationsTender.id,
+        contractorProfileId: sharon.id,
+        totalAmountMinor: ils(205_000),
+        currency: "ILS",
+        proposedStartDate: new Date("2026-03-05"),
+        proposedEndDate: new Date("2026-04-08"),
+        paymentTermsDescription: "50% on start, 50% on completion",
+      },
+    });
+    const foundationsContract = await prisma.contract.create({
+      data: {
+        tenderId: foundationsTender.id,
+        projectId: project.id,
+        contractorProfileId: sharon.id,
+        winningBidId: foundationsBid.id,
+        totalAmountMinor: foundationsBid.totalAmountMinor,
+        currency: "ILS",
+        status: "completed",
+        signedAt: new Date("2026-03-01"),
+        signedByOwnerUserId: owner.id,
+      },
+    });
+    await prisma.tender.update({ where: { id: foundationsTender.id }, data: { status: "awarded" } });
+    await prisma.bid.update({ where: { id: foundationsBid.id }, data: { status: "accepted" } });
+
+    await prisma.review.create({
+      data: {
+        projectId: project.id,
+        contractorProfileId: sharon.id,
+        reviewerUserId: owner.id,
+        contractId: foundationsContract.id,
+        rating: 5,
+        comment: "On schedule, clean site, no surprises on the invoice.",
+      },
+    });
+  }
+
   console.log("Seed complete:", {
     project: project.name,
     owner: owner.email,

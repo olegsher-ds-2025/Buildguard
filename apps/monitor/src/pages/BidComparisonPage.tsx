@@ -2,6 +2,20 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../api";
 
+function TrustScoreBadge({ contractorProfileId }: { contractorProfileId: string }) {
+  const score = useQuery({
+    queryKey: ["trust-score", contractorProfileId],
+    queryFn: () => api.getTrustScore(contractorProfileId),
+  });
+  if (score.isLoading) return <span className="hint">…</span>;
+  if (score.isError || !score.data) return <span className="hint">—</span>;
+  return (
+    <span title={`Based on ${score.data.sampleSize} contract(s), confidence ${(score.data.confidence * 100).toFixed(0)}%`}>
+      {score.data.score.toFixed(0)}/100
+    </span>
+  );
+}
+
 export function BidComparisonPage() {
   const { projectId, tenderId } = useParams<{ projectId: string; tenderId: string }>();
   const navigate = useNavigate();
@@ -38,6 +52,7 @@ export function BidComparisonPage() {
               <thead>
                 <tr>
                   <th>Contractor</th>
+                  <th>Trust score</th>
                   <th>Amount</th>
                   <th>Schedule</th>
                   <th>Payment terms</th>
@@ -49,6 +64,9 @@ export function BidComparisonPage() {
                 {bids.data?.map((b) => (
                   <tr key={b.id}>
                     <td>{b.companyName}</td>
+                    <td>
+                      <TrustScoreBadge contractorProfileId={b.contractorProfileId} />
+                    </td>
                     <td>
                       {(Number(b.totalAmountMinor) / 100).toLocaleString()} {b.currency}
                     </td>

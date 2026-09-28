@@ -1,5 +1,6 @@
 import type {
   AdminContractSummary,
+  AdminDisputeSummary,
   AdminProjectSummary,
   AdminTenderSummary,
   ApproveFindingRequest,
@@ -14,9 +15,11 @@ import type {
   ContractorSummary,
   CreateDocumentUploadRequest,
   CreateDocumentUploadResponse,
+  CreateReviewRequest,
   CreateSiteCaptureUploadRequest,
   CreateSiteCaptureUploadResponse,
   CreateTenderRequest,
+  DisputeSummary,
   DocumentSummary,
   DownloadUrlResponse,
   FindingSummary,
@@ -28,10 +31,14 @@ import type {
   ProjectDashboardResponse,
   ProjectMemberSummary,
   ProjectSummary,
+  RaiseDisputeRequest,
+  ResolveDisputeRequest,
+  ReviewSummary,
   SelectWinnerRequest,
   SubmitBidRequest,
   TenderDetailResponse,
   TenderSummary,
+  TrustScoreSummary,
   UpdateContractorProfileRequest,
   UserDirectoryEntry,
   WorkCategorySummary,
@@ -193,6 +200,20 @@ export function createApiClient({ baseUrl, getAccessToken }: ApiClientOptions) {
       request<ContractorProfileSelfSummary>("/contractor-profile/me", { method: "PATCH", body: JSON.stringify(body) }),
     adminListTenders: () => request<AdminTenderSummary[]>("/admin/tenders"),
     adminListContracts: () => request<AdminContractSummary[]>("/admin/contracts"),
+
+    // --- Trust Score (M9) ---
+    listProjectReviews: (projectId: string) => request<ReviewSummary[]>(`/projects/${projectId}/reviews`),
+    createReview: (projectId: string, body: CreateReviewRequest) =>
+      request<ReviewSummary>(`/projects/${projectId}/reviews`, { method: "POST", body: JSON.stringify(body) }),
+    getTrustScore: (contractorProfileId: string) =>
+      request<TrustScoreSummary>(`/contractor-profiles/${contractorProfileId}/trust-score`),
+    listContractorReviews: (contractorProfileId: string) =>
+      request<ReviewSummary[]>(`/contractor-profiles/${contractorProfileId}/reviews`),
+    raiseDispute: (reviewId: string, body: RaiseDisputeRequest) =>
+      request<DisputeSummary>(`/reviews/${reviewId}/disputes`, { method: "POST", body: JSON.stringify(body) }),
+    adminListOpenDisputes: () => request<AdminDisputeSummary[]>("/admin/disputes"),
+    adminResolveDispute: (disputeId: string, body: ResolveDisputeRequest) =>
+      request<DisputeSummary>(`/admin/disputes/${disputeId}/resolve`, { method: "POST", body: JSON.stringify(body) }),
   };
 }
 

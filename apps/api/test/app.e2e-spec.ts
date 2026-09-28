@@ -30,6 +30,10 @@ describe("BuildGuard API (e2e)", () => {
   let winningBidId: string;
   let winningBidAmountMinor: string;
   let contractId: string;
+  let sharonContractorProfileId: string;
+  let amirContractorProfileId: string;
+  let reviewId: string;
+  let disputeId: string;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
@@ -175,14 +179,18 @@ describe("BuildGuard API (e2e)", () => {
     amirToken = res.body.accessToken;
   });
 
-  it("lists the seeded, open-for-bidding tender", async () => {
+  it("lists the seeded tenders, including one still open for bidding", async () => {
     const res = await request(server)
       .get(`/api/v1/projects/${projectId}/tenders`)
       .set("Authorization", `Bearer ${ownerToken}`);
     expect(res.status).toBe(200);
-    expect(res.body).toHaveLength(1);
-    expect(res.body[0].status).toBe("invited_bidding");
-    tenderId = res.body[0].id;
+    // Two seeded tenders: the electrical one (left un-awarded for this flow
+    // to drive itself) and a second, already-awarded Foundations tender
+    // that exists purely to give Trust Score (M9) non-zero seed data.
+    expect(res.body).toHaveLength(2);
+    const open = res.body.find((t: { status: string }) => t.status === "invited_bidding");
+    expect(open).toBeDefined();
+    tenderId = open.id;
   });
 
   it("a contractor is 403'd on the owner/PM-only bid comparison endpoint", async () => {
@@ -241,5 +249,87 @@ describe("BuildGuard API (e2e)", () => {
     expect(res.body.length).toBeGreaterThan(0);
     const sum = res.body.reduce((acc: bigint, m: { amountMinor: string }) => acc + BigInt(m.amountMinor), 0n);
     expect(sum.toString()).toBe(BigInt(winningBidAmountMinor).toString());
+  });
+
+  it("Sharon Earthworks (seeded, already-completed contract + 5-star review) has a non-zero Trust Score", async () => {
+    const contractorsRes = await request(server)
+      .get("/api/v1/admin/contractors")
+      .set("Authorization", `Bearer ${staffToken}`);
+    const sharon = contractorsRes.body.find((c: { companyName: string }) => c.companyName === "Sharon Earthworks");
+    sharonContractorProfileId = sharon.id;
+
+    const res = await request(server)
+      .get(`/api/v1/contractor-profiles/${sharonContractorProfileId}/trust-score`)
+      .set("Authorization", `Bearer ${ownerToken}`);
+    expect(res.status).toBe(200);
+    expect(res.body.sampleSize).toBe(1);
+    expect(res.body.score).toBeGreaterThan(0);
+    const disputesComponent = res.body.components.find((c: { key: string }) => c.key === "disputes");
+    expect(disputesComponent.value).toBe(1); // no low-rating reviews yet
+  });
+
+  it("owner leaves a review on Amir's freshly-signed contract, and a duplicate review is rejected", async () => {
+    const createRes = await request(server)
+      .post(`/api/v1/projects/${projectId}/reviews`)
+      .set("Authorization", `Bearer ${ownerToken}`)
+      .send({ contractId, rating: 2, comment: "Slower than quoted, but acceptable work." });
+    expect(createRes.status).toBe(201);
+    expect(createRes.body.companyName).toBe("Amir Cohen Construction");
+    reviewId = createRes.body.id;
+    amirContractorProfileId = createRes.body.contractorProfileId;
+
+    const dupRes = await request(server)
+      .post(`/api/v1/projects/${projectId}/reviews`)
+      .set("Authorization", `Bearer ${ownerToken}`)
+      .send({ contractId, rating: 5 });
+    expect(dupRes.status).toBe(409);
+  });
+
+  it("only the reviewed contractor's own linked user can dispute a review (owner is 403'd, Amir succeeds)", async () => {
+    const ownerAttempt = await request(server)
+      .post(`/api/v1/reviews/${reviewId}/disputes`)
+      .set("Authorization", `Bearer ${ownerToken}`)
+      .send({ reason: "I disagree with this review" });
+    expect(ownerAttempt.status).toBe(403);
+
+    const amirAttempt = await request(server)
+      .post(`/api/v1/reviews/${reviewId}/disputes`)
+      .set("Authorization", `Bearer ${amirToken}`)
+      .send({ reason: "The delay was caused by a late plan revision, not us" });
+    expect(amirAttempt.status).toBe(201);
+    expect(amirAttempt.body.status).toBe("open");
+    disputeId = amirAttempt.body.id;
+
+    const secondDispute = await request(server)
+      .post(`/api/v1/reviews/${reviewId}/disputes`)
+      .set("Authorization", `Bearer ${amirToken}`)
+      .send({ reason: "trying again" });
+    expect(secondDispute.status).toBe(409);
+  });
+
+  it("staff sees the open dispute, upholds it, and the review is excluded from the Trust Score afterward", async () => {
+    const listRes = await request(server).get("/api/v1/admin/disputes").set("Authorization", `Bearer ${staffToken}`);
+    expect(listRes.status).toBe(200);
+    expect(listRes.body.some((d: { id: string }) => d.id === disputeId)).toBe(true);
+
+    const resolveRes = await request(server)
+      .post(`/api/v1/admin/disputes/${disputeId}/resolve`)
+      .set("Authorization", `Bearer ${staffToken}`)
+      .send({ upheld: true, resolutionNote: "Confirmed: delay was a plan-revision issue, not the contractor's." });
+    expect(resolveRes.status).toBe(201);
+    expect(resolveRes.body.status).toBe("upheld");
+
+    const doubleResolve = await request(server)
+      .post(`/api/v1/admin/disputes/${disputeId}/resolve`)
+      .set("Authorization", `Bearer ${staffToken}`)
+      .send({ upheld: false });
+    expect(doubleResolve.status).toBe(400);
+
+    // The rejected review no longer counts toward Amir's disputes component.
+    const scoreRes = await request(server)
+      .get(`/api/v1/contractor-profiles/${amirContractorProfileId}/trust-score`)
+      .set("Authorization", `Bearer ${ownerToken}`);
+    const disputesComponent = scoreRes.body.components.find((c: { key: string }) => c.key === "disputes");
+    expect(disputesComponent.value).toBe(0.7); // neutral: no published reviews left
   });
 });
