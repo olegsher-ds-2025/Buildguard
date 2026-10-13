@@ -13,13 +13,52 @@ This is an npm-workspaces monorepo:
 - `apps/monitor` — customer-facing web app (Owner/Project Manager/Contractor/Inspector/Viewer):
   project dashboard, documents, AI Vision Inspector findings review, team/role management,
   tenders/bidding/contracts, contractor reviews and Trust Score, a project Q&A chat, and a CAD/plan
-  viewer with layers and measurements.
+  viewer with layers and measurements. It also carries the Hebrew construction-supervision edition
+  (RTL, mobile-first, installable as a PWA with an offline queue) — see
+  [Supervision engine](#supervision-engine).
 - `apps/admin` — internal ops console for BuildGuard staff: contractor verification queue,
   clients/projects/users directories, audit log, tenders/contracts oversight, review disputes.
   Separate login realm from `monitor` (distinct JWT audience), same backend.
 - `packages/shared-types` — TS types/enums shared between the API and both frontends.
 - `packages/api-client` — typed fetch client + TanStack Query wiring, used by both frontends.
 - `infra/` — `docker-compose.yml` and the Dockerfiles it builds.
+
+## Supervision engine
+
+The Hebrew supervision edition (spec: `prompt-construction-app.md`, checklist source:
+`checklist-1-15.docx`) adds, on top of the project/contract core:
+
+- **Checklists** — 15 stage templates (before / during / after items, standards, hold points, common
+  defects) loaded from `apps/api/prisma/seed-data/checklist.he.json`, regenerated from the docx with
+  `uv run --with python-docx apps/api/prisma/seed-data/extract_checklist.py checklist-1-15.docx`.
+  Inspectors clone a template and edit their copy. Numeric thresholds are extracted by regex and are
+  only enforced once a person marks them reviewed.
+- **Inspections and defects** — per-item ✓/✗/n.a., failed or out-of-threshold items open defects; defect
+  workflow open → in progress → fixed (needs an "after" photo) → verified.
+- **Hold points and the payment gate** — an open hold point blocks approving a phase and releasing its
+  payment; closing needs a signer plus an attached document or photo; only the owner can bypass, with an
+  audited reason.
+- **Lab and timed tests** — concrete pours with 7/28-day results, formwork-removal rules, 24 h pressure and
+  72 h flood timers, and notifications from a scheduler.
+- **Photos** — tagged, with arrow/circle/text markup, optional GPS, and "before cover" enforcement.
+- **Daily logs, Form 4 readiness, reports** — locked daily logs, Form 4 requirement tracking, Hebrew RTL
+  PDFs (daily log, inspection report) and a handover ZIP ("תיק מבנה").
+- **AI quote comparison** — uploaded quotes (PDF/photo) are read into structured terms, risk-flagged by fixed
+  rules, and compared against the stage's requirements.
+- **Offline** — inspection results and photos queue in IndexedDB and replay in order, deduplicated by an
+  `Idempotency-Key`, when the connection returns.
+
+The concrete-strength and formwork-removal figures come from the checklist, not the standard; have a
+structural engineer sign them off before relying on them (`apps/api/src/modules/lab-tests/concrete-rules.ts`).
+
+Optional configuration (all unset by default):
+
+| Variable | Effect |
+|---|---|
+| `QUOTE_ANALYSIS_PROVIDER=claude` | Read and compare quotes with Claude (needs `ANTHROPIC_API_KEY`); otherwise a deterministic mock is used. |
+| `QUOTE_EXTRACTION_MODEL`, `QUOTE_COMPARISON_MODEL` | Model ids for the two steps; both default to `claude-sonnet-5-5`. |
+| `WEATHER_PROVIDER=open-meteo` | Fill daily-log weather automatically from the project's coordinates. |
+| `S3_PUBLIC_ENDPOINT` | Address browsers use for presigned upload/download URLs when it differs from `S3_ENDPOINT` (set in `docker-compose.yml`). |
 
 ## Quick start — Docker Compose
 
@@ -63,6 +102,7 @@ a tender with live bids, an already-signed contract with a review, and a demo CA
 | Role | Email | Password |
 |---|---|---|
 | Owner (Monitor) | `owner@buildguard.dev` | `owner-password-123` |
+| Inspector (Monitor) | `inspector@buildguard.dev` | `inspector-password-123` |
 | Staff (Admin) | `staff@buildguard.dev` | `staff-password-123` |
 | Contractor (Monitor) | `amir@amir-cohen-construction.example` | `contractor-password-123` |
 
