@@ -28,6 +28,18 @@ export class ContractsController {
     return this.contracts.listPaymentMilestones(projectId, contractId);
   }
 
+  /** Releasing money is owner-only; the hold-point gate is enforced in the service. */
+  @Post(":contractId/payment-milestones/:milestoneId/release")
+  @Roles("owner")
+  releasePaymentMilestone(
+    @Param("projectId") projectId: string,
+    @Param("contractId") contractId: string,
+    @Param("milestoneId") milestoneId: string,
+    @CurrentUser() user: JwtPayload,
+  ): Promise<ContractPaymentMilestoneSummary> {
+    return this.contracts.releasePaymentMilestone(projectId, contractId, milestoneId, user.sub);
+  }
+
   /** Signing is an owner-level commitment — narrower than the PM role that can create/award tenders. */
   @Post(":contractId/sign")
   @Roles("owner")

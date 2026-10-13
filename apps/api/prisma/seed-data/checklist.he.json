@@ -1,0 +1,3906 @@
+[
+  {
+    "stageNo": 1,
+    "title": "עבודות עפר — חפירה, מילוי והידוק",
+    "standards": [
+      {
+        "text": "ת\"י 4466 — תשתיות ועבודות עפר",
+        "subStage": null
+      },
+      {
+        "text": "ת\"י 940 — ביסוס",
+        "subStage": null
+      },
+      {
+        "text": "תקנות הבטיחות בעבודה",
+        "subStage": null
+      }
+    ],
+    "notes": [],
+    "items": [
+      {
+        "sortOrder": 0,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "אישור בכתב לסימון המודד: קווי בניין, מפלס 0.00±, גבולות מגרש (נקודת דיווח סטטוטורית)",
+        "standardRef": null,
+        "itemType": "written_approval",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 1,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "קריאת דוח הקרקע מול תוכנית החפירה: עומק מתוכנן, סוג קרקע צפוי (חרסיתית/חולית/סלע), מפלס מי תהום",
+        "standardRef": null,
+        "itemType": "document",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 2,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "תוכנית התארגנות אתר: דרכי גישה, אחסון, ערימות עפר, יעד שפיכה מורשה לעודפים",
+        "standardRef": null,
+        "itemType": "document",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 3,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "חפירה ליד מבנה/גדר שכן: תוכנית דיפון מאושרת על ידי הקונסטרוקטור + תיעוד מצולם של המצב הקיים (מניעת תביעות)",
+        "standardRef": null,
+        "itemType": "document",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": true
+      },
+      {
+        "sortOrder": 4,
+        "subStage": null,
+        "section": "במהלך",
+        "phaseKind": "during",
+        "text": "בקרת עומק ומפלסים שוטפת מול המודד — לא עמוק מדי (מילוי חוזר יקר ומחליש) ולא רדוד מדי",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 5,
+        "subStage": null,
+        "section": "במהלך",
+        "phaseKind": "during",
+        "text": "זיהוי הקרקע בפועל מול הדוח — כיסי חרסית, מילוי ישן לא מבוקר, סלע לא צפוי או רטיבות ← עצירה ודיווח מיידי ליועץ הקרקע ולקונסטרוקטור",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 6,
+        "subStage": null,
+        "section": "במהלך",
+        "phaseKind": "during",
+        "text": "מיון חומר חפור: מתאים למילוי חוזר מול פסול (חרסית פלסטית, חומר אורגני, פסולת בניין) — פסול מפונה לאתר מורשה בלבד",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 7,
+        "subStage": null,
+        "section": "במהלך",
+        "phaseKind": "during",
+        "text": "מילוי בשכבות של 25–30 ס\"מ לכל היותר, בהרטבה לרטיבות אופטימלית לפי בדיקת פרוקטור, בציוד הידוק מתאים",
+        "standardRef": null,
+        "itemType": "lab_test",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 8,
+        "subStage": null,
+        "section": "במהלך",
+        "phaseKind": "during",
+        "text": "הידוק זהיר סביב צנרת: ציוד קל למילוי ראשוני, ציוד כבד רק אחרי שכבת כיסוי; שכבת חול בתחתית תעלות; דיוק שיפועי תעלות ביוב",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 9,
+        "subStage": null,
+        "section": "במהלך",
+        "phaseKind": "during",
+        "text": "בטיחות: שיפועי חפירה/דיפון לפי התקנות, גידור בורות, ללא אחסון עומסים בשפת חפירה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 10,
+        "subStage": null,
+        "section": "אחרי",
+        "phaseKind": "after",
+        "text": "בדיקות צפיפות שדה של מעבדה מוסמכת לכל שכבה: מתחת למבנים ורצפות ≥ 95%–98% פרוקטור; מצע סוג א' עד 100%. שכבה שנכשלה — הידוק ובדיקה חוזרים",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≥",
+            "value": 95.0,
+            "upperValue": 98.0,
+            "unit": "%",
+            "raw": "≥ 95%–98%"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 11,
+        "subStage": null,
+        "section": "אחרי",
+        "phaseKind": "after",
+        "text": "אישור מודד למפלסי גמר חפירה/מילוי",
+        "standardRef": null,
+        "itemType": "written_approval",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 12,
+        "subStage": null,
+        "section": "אחרי",
+        "phaseKind": "after",
+        "text": "תיעוד בתיק: יומן עבודה, תעודות מקור של חומרי מצע, תוצאות פרוקטור וצפיפות, תעודות פינוי פסולת",
+        "standardRef": null,
+        "itemType": "lab_test",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      }
+    ],
+    "commonDefects": [
+      {
+        "subStage": null,
+        "text": "דילוג על דוח קרקע (תיקון ביסוס שגוי: 50–200 אלף ₪)",
+        "costMinMinor": 5000000,
+        "costMaxMinor": 20000000
+      },
+      {
+        "subStage": null,
+        "text": "גובה אפס שגוי",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "מילוי בשכבה עבה אחת ללא הידוק",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "פסולת בניין כמילוי",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "ויתור על בדיקות הידוק \"כי זה בית קטן\"",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      }
+    ],
+    "holdPoints": [
+      {
+        "sortOrder": 0,
+        "subStage": null,
+        "text": "אין מעבר לביסוס ללא אישור יועץ קרקע שהקרקע בפועל תואמת את הדוח + תעודות הידוק תקינות לכל מילוי מובנה. אין יציקת רצפה על מילוי ללא תעודות."
+      }
+    ]
+  },
+  {
+    "stageNo": 2,
+    "title": "ביסוס — כלונסאות, יסודות עוברים",
+    "standards": [
+      {
+        "text": "ת\"י 940 — ביסוס",
+        "subStage": null
+      },
+      {
+        "text": "ת\"י 466 — חוקת הבטון",
+        "subStage": null
+      },
+      {
+        "text": "ת\"י 118 — בטון",
+        "subStage": null
+      },
+      {
+        "text": "ת\"י 26 — בדיקות בטון",
+        "subStage": null
+      }
+    ],
+    "notes": [],
+    "items": [
+      {
+        "sortOrder": 0,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "תוכנית ביסוס במהדורה האחרונה בשטח + סימון מודד של מרכזי כלונסאות ובדיקת אלכסונים — אישור בכתב",
+        "standardRef": null,
+        "itemType": "written_approval",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 1,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "נוכחות יועץ הקרקע ביום הקידוח — חובה: מאשר שהקרקע הנחשפת תואמת את הדוח ואת עומק התכנון",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 2,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "הזמנת מעבדה מוסמכת ליום היציקה, לפי שעת אספקת הבטון",
+        "standardRef": null,
+        "itemType": "lab_test",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 3,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "בדיקת כלובי זיון לפני הורדה: קוטר וכמות מוטות, חישוקים/ספירלה ומרווחיהם, אורך כלוב מול עומק, שומרי מרחק לכיסוי בטון, אורך קוצים עליונים להמשך לקורות",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 4,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "תעודת משלוח בטון מול ההזמנה: סוג (למשל ב-30), שקיעה (כלונסאות — בטון נוזלי יחסית), דרגת חשיפה לפי דוח הקרקע (קרקע אגרסיבית/מי תהום)",
+        "standardRef": null,
+        "itemType": "document",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 5,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "הארקת יסוד: פס פלדה/מוליך מגושר לזיון עם יציאות ללוח החשמל, לחדרים רטובים ולפילרים — הזדמנות חד-פעמית, מתועדת בצילום",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": true
+      },
+      {
+        "sortOrder": 6,
+        "subStage": null,
+        "section": "במהלך",
+        "phaseKind": "during",
+        "text": "עומק בפועל נמדד ומתועד לכל כלונס מול טבלת הכלונסאות; אנכיות קידוח; ניקוי תחתית מרפש",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 7,
+        "subStage": null,
+        "section": "במהלך",
+        "phaseKind": "during",
+        "text": "זיהוי שכבות ביציאת המקדח מול הדוח (חרסית: עומקים טיפוסיים 10–12 מ'; חול: 4–5 מ')",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 8,
+        "subStage": null,
+        "section": "במהלך",
+        "phaseKind": "during",
+        "text": "אין קידוח שנשאר פתוח לאורך זמן; בקרקע לא יציבה/מי תהום — בנטונייט או שרוול (קייסינג) לפי הנחיית היועץ",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 9,
+        "subStage": null,
+        "section": "במהלך",
+        "phaseKind": "during",
+        "text": "כלוב זיון מורד במרכז הקידוח, תלוי, לא שוקע ולא צף בזמן היציקה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 10,
+        "subStage": null,
+        "section": "במהלך",
+        "phaseKind": "during",
+        "text": "יציקה באותו יום של הקידוח, רציפה, בצינור טרמי כשנדרש. איסור מוחלט על הוספת מים לבטון בשטח",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 11,
+        "subStage": null,
+        "section": "במהלך",
+        "phaseKind": "during",
+        "text": "מעבדה נוטלת מדגמי קוביות מאמצע פריקת המערבל + בדיקת שקיעה מתועדת",
+        "standardRef": null,
+        "itemType": "lab_test",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 12,
+        "subStage": null,
+        "section": "במהלך",
+        "phaseKind": "during",
+        "text": "נוכחות מפקח ביציקה + אישור בכתב לתקינותה",
+        "standardRef": null,
+        "itemType": "written_approval",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 13,
+        "subStage": null,
+        "section": "אחרי",
+        "phaseKind": "after",
+        "text": "רישום As-Made של הביסוס: עומק כל כלונס וסטיות מיקום; סטייה חריגה ← הכרעת קונסטרוקטור (לעיתים כלונס משלים)",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 14,
+        "subStage": null,
+        "section": "אחרי",
+        "phaseKind": "after",
+        "text": "כלונסאות בנטונייט/עומק חריג — בדיקה סונית לרציפות, לפי דרישת המתכנן",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 15,
+        "subStage": null,
+        "section": "אחרי",
+        "phaseKind": "after",
+        "text": "חשיפת ראשי כלונסאות וסיתות לבטון בריא; קוצים עקומים חותכים ומחליפים — לא מכופפים חזרה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 16,
+        "subStage": null,
+        "section": "אחרי",
+        "phaseKind": "after",
+        "text": "תוצאות מעבדה: 7 ימים ≥ ~62% מהחוזק; 28 יום — חוזק מלא (ב-30 ← 33 מגפ\"ס). כישלון ← דיווח מיידי לקונסטרוקטור; קידוח גלילים רק בהנחייתו",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≥",
+            "value": 62.0,
+            "upperValue": null,
+            "unit": "%",
+            "raw": "≥ ~62%"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 17,
+        "subStage": null,
+        "section": "אחרי",
+        "phaseKind": "after",
+        "text": "דיווח סטטוטורי של אחראי הביקורת לרשות בגמר היסודות",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      }
+    ],
+    "commonDefects": [
+      {
+        "subStage": null,
+        "text": "קידוח ללא יועץ קרקע",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "כלונס קצר מהתכנון (\"הגענו לסלע\") בלי אישור",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "כלוב קצר או צף",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "הוספת מים לבטון",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "אי-הזמנת מעבדה",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "התמוטטות דופן שלא דווחה",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      }
+    ],
+    "holdPoints": [
+      {
+        "sortOrder": 0,
+        "subStage": null,
+        "text": "אין לצקת כלונס ללא יועץ קרקע בקידוח + כלוב זיון מאושר + מעבדה באתר. אין להמשיך לקורות קשר לפני אישור בכתב לתקינות הביסוס."
+      }
+    ]
+  },
+  {
+    "stageNo": 3,
+    "title": "שלד — רצפות, קירות, תקרות, ממ\"ד, מדרגות, גג",
+    "standards": [
+      {
+        "text": "ת\"י 466 — חוקת הבטון",
+        "subStage": null
+      },
+      {
+        "text": "ת\"י 1923 — בטון באתר",
+        "subStage": null
+      },
+      {
+        "text": "ת\"י 413 — רעידות אדמה",
+        "subStage": null
+      },
+      {
+        "text": "ת\"י 1523 — קירות בני",
+        "subStage": null
+      },
+      {
+        "text": "ת\"י 789 — סטיות מותרות",
+        "subStage": null
+      },
+      {
+        "text": "הנחיות פיקוד העורף",
+        "subStage": "ממ\"ד — מרחב מוגן דירתי"
+      },
+      {
+        "text": "ת\"י 4422 — חלון הדף",
+        "subStage": "ממ\"ד — מרחב מוגן דירתי"
+      },
+      {
+        "text": "ת\"י 5075 / 4577 — אטימות",
+        "subStage": "ממ\"ד — מרחב מוגן דירתי"
+      }
+    ],
+    "notes": [
+      {
+        "subStage": null,
+        "text": "כלל ברזל לכל השלד: לפני כל יציקה — אישור מהנדס בכתב לזיון; במהלך כל יציקה — מעבדה באתר; אחרי כל יציקה — אשפרה ובדיקה חזותית. מדגמי בטון בכל יציקה, בלי יוצא מן הכלל."
+      }
+    ],
+    "items": [
+      {
+        "sortOrder": 0,
+        "subStage": "קורות קשר, רצפה תלויה ומרתף",
+        "section": "לפני היציקה",
+        "phaseKind": "before",
+        "text": "טפסנות: מידות חתך מול תוכנית, יציבות, ניקיון, שמן תבניות",
+        "standardRef": null,
+        "itemType": "document",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 1,
+        "subStage": "קורות קשר, רצפה תלויה ומרתף",
+        "section": "לפני היציקה",
+        "phaseKind": "before",
+        "text": "זיון קורות: קוטר, כמות, אורכי חפייה לפי ת\"י 466, חישוקים, עיגון לקוצי הכלונסאות; כיסוי בטון ≥ 2.5 ס\"מ (יותר במגע עם קרקע) באמצעות שומרי מרחק",
+        "standardRef": "ת\"י 466",
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≥",
+            "value": 2.5,
+            "upperValue": null,
+            "unit": "ס\"מ",
+            "raw": "≥ 2.5 ס\"מ"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 2,
+        "subStage": "קורות קשר, רצפה תלויה ומרתף",
+        "section": "לפני היציקה",
+        "phaseKind": "before",
+        "text": "רצפה: מצע מהודק עם תעודות + יריעת פוליאתילן / בטון רזה לפי תכנון",
+        "standardRef": null,
+        "itemType": "document",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 3,
+        "subStage": "קורות קשר, רצפה תלויה ומרתף",
+        "section": "לפני היציקה",
+        "phaseKind": "before",
+        "text": "כל ההכנות לפני יציקה: צנרת ביוב ואינסטלציה (כולל בדיקת מעבדה לצנרת קבורה — ראו שלב אינסטלציה), שרוולי חשמל, הארקת יסוד. מעבר צנרת בקורות רק בשרוולים שאישר הקונסטרוקטור",
+        "standardRef": null,
+        "itemType": "lab_test",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 4,
+        "subStage": "קורות קשר, רצפה תלויה ומרתף",
+        "section": "לפני היציקה",
+        "phaseKind": "before",
+        "text": "מרתף: איטום רצפה לפי מפרט יועץ איטום, עצרי מים (Water Stop) בתפר רצפה–קירות",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 5,
+        "subStage": "קורות קשר, רצפה תלויה ומרתף",
+        "section": "לפני היציקה",
+        "phaseKind": "before",
+        "text": "אישור מהנדס הקונסטרוקציה לזיון — בכתב",
+        "standardRef": null,
+        "itemType": "written_approval",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 6,
+        "subStage": "קורות קשר, רצפה תלויה ומרתף",
+        "section": "במהלך",
+        "phaseKind": "during",
+        "text": "מעבדה: מדגמים + שקיעה; בדיקת תעודות משלוח — בטון שחלף זמנו נפסל",
+        "standardRef": null,
+        "itemType": "lab_test",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 7,
+        "subStage": "קורות קשר, רצפה תלויה ומרתף",
+        "section": "במהלך",
+        "phaseKind": "during",
+        "text": "ויברציה (מרטט) לכל אורך היציקה; שמירה שהזיון לא זז; בקרת מפלסים ועובי",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 8,
+        "subStage": "קורות קשר, רצפה תלויה ומרתף",
+        "section": "אחרי",
+        "phaseKind": "after",
+        "text": "אשפרה מהיום שאחרי היציקה: הרטבה רציפה או כיסוי — קריטי בקיץ הישראלי",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 9,
+        "subStage": "קורות קשר, רצפה תלויה ומרתף",
+        "section": "אחרי",
+        "phaseKind": "after",
+        "text": "בדיקה חזותית אחרי פירוק: כיסי חצץ, ברזל חשוף, סדקים; תיקונים רק בשיטה מאושרת",
+        "standardRef": null,
+        "itemType": "document",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 10,
+        "subStage": "עמודים וקירות בטון",
+        "section": "לפני כל יציקה",
+        "phaseKind": "before",
+        "text": "מיקום מדויק של כל אלמנט מול התוכנית — עמודים, קירות, פתחים. טעות מיקום = הריסה ויציקה חוזרת",
+        "standardRef": null,
+        "itemType": "document",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 11,
+        "subStage": "עמודים וקירות בטון",
+        "section": "לפני כל יציקה",
+        "phaseKind": "before",
+        "text": "זיון: קוטר, כמות, חפיפות, חישוקים בצפיפות מוגברת בקצוות עמודים (ת\"י 413), עיגון לקוצי היציקה הקודמת",
+        "standardRef": "ת\"י 413",
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 12,
+        "subStage": "עמודים וקירות בטון",
+        "section": "לפני כל יציקה",
+        "phaseKind": "before",
+        "text": "שומרי מרחק בכל אזורי היציקה — הזנחת כיסוי = חלודה, התנפחות וסדקים בעתיד",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 13,
+        "subStage": "עמודים וקירות בטון",
+        "section": "לפני כל יציקה",
+        "phaseKind": "before",
+        "text": "טפסנות: אנכיות ומישוריות, חיזוקים לגובה, ניקיון; סימון בגיר של עמודים עם שרוולי צנרת למניעת קדיחה עתידית בטעות",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 14,
+        "subStage": "עמודים וקירות בטון",
+        "section": "לפני כל יציקה",
+        "phaseKind": "before",
+        "text": "שרוולים בעמודים וקירות בטון — רק באישור קונסטרוקטור. אסור לחצוב בשלד אחרי יציקה",
+        "standardRef": null,
+        "itemType": "written_approval",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 15,
+        "subStage": "עמודים וקירות בטון",
+        "section": "במהלך",
+        "phaseKind": "during",
+        "text": "יציקה בשכבות עם ויברציה; בקיר גבוה (3 מ'+) קצב מבוקר בגלל לחץ הידרוסטטי על תבניות",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 16,
+        "subStage": "עמודים וקירות בטון",
+        "section": "אחרי",
+        "phaseKind": "after",
+        "text": "בדיקה אחרי פירוק: סגרגציה, כיסי חצץ, קוצים במקומם; אנכיות — סטייה מותרת ~1 ס\"מ (ת\"י 789); אשפרה",
+        "standardRef": "ת\"י 789",
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 17,
+        "subStage": "קירות בלוקים",
+        "section": null,
+        "phaseKind": "general",
+        "text": "שיטת ביצוע: מומלץ \"סנדוויץ'\" — קירות בלוקים תחילה ואז יציקת עמודים ביניהם; שטרבות לגיטימי אם מבוצע היטב",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 18,
+        "subStage": "קירות בלוקים",
+        "section": null,
+        "phaseKind": "general",
+        "text": "חגורות בטון אופקיות + בלוקי U מעל פתחים, עם זיון ו-3 קוצי ⌀8 לחיבור לעמודים — מניעת סדיקה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 19,
+        "subStage": "קירות בלוקים",
+        "section": null,
+        "phaseKind": "general",
+        "text": "בלוקים תקניים (תו תקן), ללא שבורים; איסור בלוקים שוכבים בשורה העליונה — הרווח לתקרה נסגר ביציקת בטון; רווח קטן מ-20 ס\"מ נוצק, לא ממולא בשברים",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 20,
+        "subStage": "קירות בלוקים",
+        "section": null,
+        "phaseKind": "general",
+        "text": "מישוריות ואנכיות לפי ת\"י 789 (~1.5 ס\"מ ל-3 מ'); מילוי מישקים מלא בטיט",
+        "standardRef": "ת\"י 789",
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 21,
+        "subStage": "קירות בלוקים",
+        "section": null,
+        "phaseKind": "general",
+        "text": "קיר חוץ (איטונג/פומיס/תרמי): התאמה לדרישות הבידוד התרמי — ת\"י 1045",
+        "standardRef": "ת\"י 1045",
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 22,
+        "subStage": "תקרות",
+        "section": "לפני היציקה",
+        "phaseKind": "before",
+        "text": "טפסנות: תמיכות במרווחים לפי תוכנית, על בסיס יציב (לא עפר רופף); בקרת מפלס תחתית התקרה",
+        "standardRef": null,
+        "itemType": "document",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 23,
+        "subStage": "תקרות",
+        "section": "לפני היציקה",
+        "phaseKind": "before",
+        "text": "תקרת מילוי (איטונג/פומיס): סידור גופים לפי תוכנית, רוחב צלעות נכון, טופינג 6–8 ס\"מ",
+        "standardRef": null,
+        "itemType": "document",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 24,
+        "subStage": "תקרות",
+        "section": "לפני היציקה",
+        "phaseKind": "before",
+        "text": "זיון: רשתות, ברזל צלעות, ברזל עליון מעל תמכים — הליקוי הקלאסי שנשמט; ספסלים ושומרי מרחק",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 25,
+        "subStage": "תקרות",
+        "section": "לפני היציקה",
+        "phaseKind": "before",
+        "text": "כל ההכנות בתוך התקרה: צנרת חשמל, נקודות תאורה, אינסטלציה, שרוולי דוד/מזגן — ביקור חשמלאי, אינסטלטור ואדריכל לפני יציקה. אין חציבה בתקרה בדיעבד",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 26,
+        "subStage": "תקרות",
+        "section": "לפני היציקה",
+        "phaseKind": "before",
+        "text": "אישור מהנדס לזיון בכתב + הזמנת מעבדה + הרטבת משטחים",
+        "standardRef": null,
+        "itemType": "lab_test",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 27,
+        "subStage": "תקרות",
+        "section": "במהלך",
+        "phaseKind": "during",
+        "text": "יציקה רציפה עם ויברציה; בקרת עובי; הגנה על הצנרת; מדגמים; ללא תוספת מים",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 28,
+        "subStage": "תקרות",
+        "section": "אחרי",
+        "phaseKind": "after",
+        "text": "אשפרה מהיום שאחרי היציקה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 29,
+        "subStage": "תקרות",
+        "section": "אחרי",
+        "phaseKind": "after",
+        "text": "פירוק תמיכות רק לפי ת\"י 466: מפתח עד 3 מ' — 3–6 ימים; 3–6 מ' — 7 ימים; מעל 6 מ' — 10 ימים (זיז נספר כפול; הולכים לפי הצלע הארוכה). תוצאת 7 ימים נמוכה מ~62% ← לא מפרקים עד בירור",
+        "standardRef": "ת\"י 466",
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 30,
+        "subStage": "תקרות",
+        "section": "אחרי",
+        "phaseKind": "after",
+        "text": "בדיקה אחרי פירוק: שקיעות/כפף, סגרגציה, סדקים, ברזל חשוף בתחתית",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 31,
+        "subStage": "ממ\"ד — מרחב מוגן דירתי",
+        "section": "לפני היציקה",
+        "phaseKind": "before",
+        "text": "תוכנית ממ\"ד מאושרת פיקוד העורף; מידות פנים לפי ההיתר (טיפוסי: ≥ 9 מ\"ר נטו, גובה 2.5–2.8 מ', רוחב ≥ 1.6 מ')",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≥",
+            "value": 9.0,
+            "upperValue": null,
+            "unit": "מ\"ר",
+            "raw": "≥ 9 מ\"ר"
+          },
+          {
+            "op": "≥",
+            "value": 1.6,
+            "upperValue": null,
+            "unit": "מ'",
+            "raw": "≥ 1.6 מ'"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 32,
+        "subStage": "ממ\"ד — מרחב מוגן דירתי",
+        "section": "לפני היציקה",
+        "phaseKind": "before",
+        "text": "עוביים: קירות ≥ 25–30 ס\"מ, תקרה ≥ 30 ס\"מ, רצפה ≥ 20 ס\"מ; זיון צפוף בשתי רשתות לפי תוכנית המיגון",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≥",
+            "value": 25.0,
+            "upperValue": 30.0,
+            "unit": "ס\"מ",
+            "raw": "≥ 25–30 ס\"מ"
+          },
+          {
+            "op": "≥",
+            "value": 30.0,
+            "upperValue": null,
+            "unit": "ס\"מ",
+            "raw": "≥ 30 ס\"מ"
+          },
+          {
+            "op": "≥",
+            "value": 20.0,
+            "upperValue": null,
+            "unit": "ס\"מ",
+            "raw": "≥ 20 ס\"מ"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 33,
+        "subStage": "ממ\"ד — מרחב מוגן דירתי",
+        "section": "לפני היציקה",
+        "phaseKind": "before",
+        "text": "כל ההכנות משוקעות בבטון בלבד: שרוול אוורור וסינון, צנרת חשמל ותקשורת, משקוף פלדה לדלת הדף ומסגרת חלון ההדף — מפולסים ומעוגנים. אסור לחצוב בממ\"ד אחרי יציקה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 34,
+        "subStage": "ממ\"ד — מרחב מוגן דירתי",
+        "section": "לפני היציקה",
+        "phaseKind": "before",
+        "text": "יציקה מונוליטית אחת ככל האפשר — מינימום תפרי עבודה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 35,
+        "subStage": "ממ\"ד — מרחב מוגן דירתי",
+        "section": "במהלך",
+        "phaseKind": "during",
+        "text": "יציקה רציפה בנוכחות מפקח; ויברציה קפדנית (זיון צפוף = סיכון כיסי חצץ); מדגמי בטון ייעודיים",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 36,
+        "subStage": "ממ\"ד — מרחב מוגן דירתי",
+        "section": "אחרי",
+        "phaseKind": "after",
+        "text": "ללא סגרגציה וללא חורים (פוגעים באטימות); תיקונים לפי מפרט בלבד",
+        "standardRef": null,
+        "itemType": "document",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 37,
+        "subStage": "ממ\"ד — מרחב מוגן דירתי",
+        "section": "אחרי",
+        "phaseKind": "after",
+        "text": "בהמשך: דלת הדף וחלון הדף תקניים + בדיקת אטימות ממ\"ד במעבדה מוסמכת — נדרשת לטופס 4",
+        "standardRef": null,
+        "itemType": "lab_test",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 38,
+        "subStage": "מדרגות",
+        "section": null,
+        "phaseKind": "general",
+        "text": "לפני: רום ושלח לפי התוכנית והתקנות — אחידות מוחלטת; זיון משופע מעוגן לרצפות; טפסנות משומנת",
+        "standardRef": null,
+        "itemType": "document",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 39,
+        "subStage": "מדרגות",
+        "section": null,
+        "phaseKind": "general",
+        "text": "במהלך: יציקה מבוקרת — תחתונות תחילה, המתנה להתקשרות ראשונית, המשך; מרטט לכל האורך",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 40,
+        "subStage": "מדרגות",
+        "section": null,
+        "phaseKind": "general",
+        "text": "אחרי: בדיקת אחידות רומים ושלחים (סטייה = ליקוי בטיחותי מובהק), אשפרה, פירוק לפי ת\"י 466",
+        "standardRef": "ת\"י 466",
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 41,
+        "subStage": "גג בטון שטוח",
+        "section": null,
+        "phaseKind": "general",
+        "text": "כמו תקרה + הכנת מעקות וחגורות, שרוולים למרזבים ומעברי צנרת, בסיסים למערכות (דוד, מזגן) — לפני יציקה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 42,
+        "subStage": "גג בטון שטוח",
+        "section": null,
+        "phaseKind": "general",
+        "text": "שיפועי ניקוז (בטקל/מדה משופעת) לכיוון המרזבים — בדיקת שלוליות אחרי הרטבה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 43,
+        "subStage": "גמר שלד",
+        "section": null,
+        "phaseKind": "general",
+        "text": "מדידת As-Made של מודד מוסמך בגמר השלד — אימות התאמה להיתר",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 44,
+        "subStage": "גמר שלד",
+        "section": null,
+        "phaseKind": "general",
+        "text": "דיווח סטטוטורי של אחראי הביקורת לרשות על גמר שלד",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 45,
+        "subStage": "גמר שלד",
+        "section": null,
+        "phaseKind": "general",
+        "text": "תיק תיעוד מלא: תעודות בטון 7/28 יום מכל יציקה, אישורי שלבים חתומים, צילום כל אלמנט לפני כיסויו, יומן עבודה",
+        "standardRef": null,
+        "itemType": "document",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      }
+    ],
+    "commonDefects": [],
+    "holdPoints": [
+      {
+        "sortOrder": 0,
+        "subStage": "ממ\"ד — מרחב מוגן דירתי",
+        "text": "אין יציקת ממ\"ד ללא אישור זיון וכל ההכנות המשוקעות; אין טיוח לפני בדיקת המפקח."
+      },
+      {
+        "sortOrder": 1,
+        "subStage": "גג בטון שטוח",
+        "text": "אין אישור לתחילת האיטום ללא אישור שיפועים בפועל."
+      }
+    ]
+  },
+  {
+    "stageNo": 4,
+    "title": "חשמל",
+    "standards": [
+      {
+        "text": "חוק החשמל התשי\"ד-1954",
+        "subStage": null
+      },
+      {
+        "text": "תקנות הארקות יסוד",
+        "subStage": null
+      },
+      {
+        "text": "חשמלאי מורשה בלבד",
+        "subStage": null
+      }
+    ],
+    "notes": [
+      {
+        "subStage": null,
+        "text": "מוליכים: 1.5 ממ\"ר למאור (מא\"ז 10A), 2.5 ממ\"ר לשקעים (מא\"ז 16A), קו ייעודי לכל מכשיר מעל ~1,500W. חיבור לרשת מותנה בבדיקת חשמלאי בודק מוסמך."
+      },
+      {
+        "subStage": null,
+        "text": "בדיקת חשמלאי בודק מוסמך — תנאי לחיבור מונה ולטופס 4: התנגדות הארקה · בידוד מוליכים (מגר) · רציפות הארקה לכל נקודה · זמן ניתוק פחת (עד 0.3 שניות) · התאמת מא\"זים לחתכים · לולאת תקלה · בדיקה חזותית של הלוח."
+      }
+    ],
+    "items": [
+      {
+        "sortOrder": 0,
+        "subStage": null,
+        "section": "שלב ביסוס ושלד",
+        "phaseKind": "during",
+        "text": "הארקת יסוד מגושרת לזיון לפני יציקה, עם יציאות ללוח, לחדרים רטובים ולפילרים + תיעוד צילומי — אין תיקון בדיעבד",
+        "standardRef": null,
+        "itemType": "document",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 1,
+        "subStage": null,
+        "section": "שלב ביסוס ושלד",
+        "phaseKind": "during",
+        "text": "שרוולי הזנה ראשית מתחת לרצפה: מפילר חח\"י + שרוול רזרבי + שרוולים לגינה, לשער ולמעבים",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 2,
+        "subStage": null,
+        "section": "שלב ביסוס ושלד",
+        "phaseKind": "during",
+        "text": "הכנות ביציקות: נקודות תאורה בתקרות בטון ונקודות חשמל/תקשורת בממ\"ד — סופיות לפני יציקה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 3,
+        "subStage": null,
+        "section": "שלב ביסוס ושלד",
+        "phaseKind": "during",
+        "text": "מיקום לוח חשמל: מוגן ממים, נגיש, רצוי בקיר בלוקים; פילר מונה בחזית לפי הנחיות חח\"י; תיאום גודל חיבור (3×25 / 3×40 / 3×63) מול תוכנית העומסים",
+        "standardRef": null,
+        "itemType": "document",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 4,
+        "subStage": null,
+        "section": "לפני טיח — צנרת וקופסאות (שלב קריטי)",
+        "phaseKind": "before",
+        "text": "ספירת נקודות בכל חדר מול תוכנית החשמל: שקעים, מפסקים, תאורה, כוח, תקשורת; גבהים (שקעים ~30 ס\"מ, מפסקים ~110 ס\"מ, מטבח לפי תוכנית מטבח סופית)",
+        "standardRef": null,
+        "itemType": "document",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 5,
+        "subStage": null,
+        "section": "לפני טיח — צנרת וקופסאות (שלב קריטי)",
+        "phaseKind": "before",
+        "text": "תוואי צנרת בקווים ישרים בלבד (אנכי/אופקי מהאביזר) — לא באלכסון, כדי לאפשר קדיחה בטוחה בעתיד",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 6,
+        "subStage": null,
+        "section": "לפני טיח — צנרת וקופסאות (שלב קריטי)",
+        "phaseKind": "before",
+        "text": "קוטרי צינורות עם רזרבה להשחלה; ללא צנרת מעוכה; רדיוסי כיפוף סבירים",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 7,
+        "subStage": null,
+        "section": "לפני טיח — צנרת וקופסאות (שלב קריטי)",
+        "phaseKind": "before",
+        "text": "קופסאות מפולסות בעומק נכון ביחס לטיח, מכוסות נגד סתימה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 8,
+        "subStage": null,
+        "section": "לפני טיח — צנרת וקופסאות (שלב קריטי)",
+        "phaseKind": "before",
+        "text": "קווים ייעודיים: תנור, אינדוקציה, מדיח, מכונת כביסה, מייבש, דוד, מזגנים, משאבות, שער חשמלי, הכנה לרכב חשמלי",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 9,
+        "subStage": null,
+        "section": "לפני טיח — צנרת וקופסאות (שלב קריטי)",
+        "phaseKind": "before",
+        "text": "חלוקת פאזות מאוזנת; הפרדה מצנרת תקשורת",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 10,
+        "subStage": null,
+        "section": "לפני טיח — צנרת וקופסאות (שלב קריטי)",
+        "phaseKind": "before",
+        "text": "הכנות חוץ: תאורת גן, שער, מצלמות, מעבים, ג'קוזי/בריכה (פחת ייעודי), פעמון",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 11,
+        "subStage": null,
+        "section": "לפני טיח — צנרת וקופסאות (שלב קריטי)",
+        "phaseKind": "before",
+        "text": "תיעוד צילומי של כל הקירות לפני טיח — חשמל ואינסטלציה יחד",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 12,
+        "subStage": null,
+        "section": "אחרי טיח — השחלה ולוח",
+        "phaseKind": "after",
+        "text": "מוליכים בחתכים נכונים, צבעים תקניים (הארקה צהוב-ירוק); כל נקודה מוארקת",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 13,
+        "subStage": null,
+        "section": "אחרי טיח — השחלה ולוח",
+        "phaseKind": "after",
+        "text": "לוח: מפסק ראשי, כמה ממסרי פחת 30mA (לא פחת יחיד לכל הבית), מא\"זים תואמי חתך, שילוט ברור לכל מעגל, ~20% מקום שמור",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 14,
+        "subStage": null,
+        "section": "אחרי טיח — השחלה ולוח",
+        "phaseKind": "after",
+        "text": "פס השוואת פוטנציאלים: גישור צנרת מים מתכתית, גז ודוד שמש",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 15,
+        "subStage": null,
+        "section": "גמר — בדיקת בודק",
+        "phaseKind": "after",
+        "text": "הפעלת כל נקודה: כל שקע עם בודק שקעים (כולל קוטביות!), כל מפסק וגוף תאורה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 16,
+        "subStage": null,
+        "section": "גמר — בדיקת בודק",
+        "phaseKind": "after",
+        "text": "קבלת תוכנית חשמל As-Made + סכמת לוח + תעודת בודק",
+        "standardRef": null,
+        "itemType": "document",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      }
+    ],
+    "commonDefects": [
+      {
+        "subStage": null,
+        "text": "היפוך קוטביות",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "נקודות ללא הארקה",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "פחת יחיד",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "צנרת אלכסונית",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "קופסאות סתומות בטיח",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "חתך קטן לקו ארוך",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "לוח ללא שילוט",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "נקודות ממ\"ד שנשכחו לפני יציקה",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "לוח צמוד לנקודת מים",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      }
+    ],
+    "holdPoints": [
+      {
+        "sortOrder": 0,
+        "subStage": null,
+        "text": "לפני יציקת יסודות — הארקת יסוד"
+      },
+      {
+        "sortOrder": 1,
+        "subStage": null,
+        "text": "לפני יציקת תקרות וממ\"ד — הכנות"
+      },
+      {
+        "sortOrder": 2,
+        "subStage": null,
+        "text": "לפני טיח — אישור צנרת + צילום"
+      },
+      {
+        "sortOrder": 3,
+        "subStage": null,
+        "text": "לפני חיבור מונה — תעודת בודק"
+      }
+    ]
+  },
+  {
+    "stageNo": 5,
+    "title": "אינסטלציה — מים, ביוב וניקוז",
+    "standards": [
+      {
+        "text": "הל\"ת",
+        "subStage": null
+      },
+      {
+        "text": "ת\"י 1205 — כל החלקים",
+        "subStage": null
+      },
+      {
+        "text": "תקנות תברואה תש\"ף-2019",
+        "subStage": null
+      },
+      {
+        "text": "שרברב מוסמך",
+        "subStage": null
+      }
+    ],
+    "notes": [
+      {
+        "subStage": null,
+        "text": "בדיקת מעבדה מוסמכת לפי ת\"י 1205 היא תנאי לטופס 4. סדר ביקורי מעבדה טיפוסי: (1) צנרת קבורה — לפני יציקת רצפה; (2) צנרת בקירות — לפני טיח; (3) נקזים — לפני ריצוף; (4–5) מערכות חוץ — לפני כיסוי; (6) קבועות — בגמר. להזמין ~96 שעות מראש, בנוכחות השרברב."
+      }
+    ],
+    "items": [
+      {
+        "sortOrder": 0,
+        "subStage": null,
+        "section": "לפני יציקת רצפה",
+        "phaseKind": "before",
+        "text": "ביוב ונקזים מתחת לרצפה: קוטרים לפי תוכנית (4\" ראשי, 2\" נקזים), שיפוע 1%–2% רציף — נמדד, ללא שיפוע הפוך",
+        "standardRef": null,
+        "itemType": "document",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 1,
+        "subStage": null,
+        "section": "לפני יציקת רצפה",
+        "phaseKind": "before",
+        "text": "מיקום מדויק: אסלות, מחסומי רצפה, מקלחונים, ניקוז מזגן, פתחי ביקורת",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 2,
+        "subStage": null,
+        "section": "לפני יציקת רצפה",
+        "phaseKind": "before",
+        "text": "עיגון הצנרת נגד תזוזה וציפה ביציקה; פקקים על הקצוות",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 3,
+        "subStage": null,
+        "section": "לפני יציקת רצפה",
+        "phaseKind": "before",
+        "text": "שרוולי מעבר בקורות יסוד (מים, ביוב, גז, ניקוז מזגנים) — לא חוצבים בקורות בדיעבד",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 4,
+        "subStage": null,
+        "section": "לפני יציקת רצפה",
+        "phaseKind": "before",
+        "text": "בדיקת אטימות ביוב קבור במעבדה לפני היציקה; שוחות חוץ בקוטר ובעומק לפי התוכנית הסניטרית",
+        "standardRef": null,
+        "itemType": "lab_test",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 5,
+        "subStage": null,
+        "section": "לפני טיח",
+        "phaseKind": "before",
+        "text": "מים חמים/קרים לפי תוכנית: קר מימין למשתמש, בידוד לצנרת חמים, גבהים ומרחקים תקניים בין יציאות סוללה",
+        "standardRef": null,
+        "itemType": "document",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 6,
+        "subStage": null,
+        "section": "לפני טיח",
+        "phaseKind": "before",
+        "text": "מערכת מחלקים: ארון נגיש + שילוט קווים; ללא מחברים חבויים ככל האפשר",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 7,
+        "subStage": null,
+        "section": "לפני טיח",
+        "phaseKind": "before",
+        "text": "אוורור ביוב: קו 2\"–4\" עולה מעל הגג לכל קבוצת קבועות — הסעיף שנשכח וגורם ריחות",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 8,
+        "subStage": null,
+        "section": "לפני טיח",
+        "phaseKind": "before",
+        "text": "בדיקת לחץ לפני טיח — נקודת עצירה מוחלטת: לחץ מעל לחץ העבודה (מקובל 10–12 אטמ' ל-24 שעות לפחות, לפי המפרט והמעבדה), מד לחץ מותקן, ללא נפילה; צילום המד בתחילה ובסוף",
+        "standardRef": null,
+        "itemType": "lab_test",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 9,
+        "subStage": null,
+        "section": "לפני טיח",
+        "phaseKind": "before",
+        "text": "צילום כל תוואי הצנרת לפני טיח",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": true
+      },
+      {
+        "sortOrder": 10,
+        "subStage": null,
+        "section": "לפני ריצוף",
+        "phaseKind": "before",
+        "text": "בדיקת לחץ חוזרת לצנרת שברצפה לפני מילוי וריצוף — הכשל הזול עכשיו והיקר ביותר אחרי",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 11,
+        "subStage": null,
+        "section": "לפני ריצוף",
+        "phaseKind": "before",
+        "text": "בדיקת נקזים דירתיים לפני סגירת מילוי; הגנת מחסומי רצפה מפסולת ריצוף",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 12,
+        "subStage": null,
+        "section": "גמר",
+        "phaseKind": "after",
+        "text": "קבועות: אסלות יציבות ואטומות, כיורים, סוללות — חם/קר לא הפוכים בכל נקודה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 13,
+        "subStage": null,
+        "section": "גמר",
+        "phaseKind": "after",
+        "text": "ספיקה ולחץ בכל נקודה (כמה ברזים בו-זמנית); ניקוז בכל קבועה ללא בעבוע וריחות; מילוי מחסומי רצפה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 14,
+        "subStage": null,
+        "section": "גמר",
+        "phaseKind": "after",
+        "text": "שסתום אל-חוזר ומקטין לחץ בכניסה, ברז ראשי נגיש, ברזי ניתוק אזוריים לכל חדר רטוב",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 15,
+        "subStage": null,
+        "section": "גמר",
+        "phaseKind": "after",
+        "text": "בדיקת מעבדה סופית לת\"י 1205 + אישור תאגיד המים + תוכנית As-Made",
+        "standardRef": "ת\"י 1205",
+        "itemType": "lab_test",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      }
+    ],
+    "commonDefects": [
+      {
+        "subStage": null,
+        "text": "שיפוע נקז הפוך/אפסי",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "מחסום רצפה ללא שיפוע אליו",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "היעדר אוורור ביוב",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "חם/קר הפוכים",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "נזילות במחברים חבויים",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "צנרת ללא בידוד",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "ניקוז מזגן לביוב בלי מחסום ריח",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      }
+    ],
+    "holdPoints": [
+      {
+        "sortOrder": 0,
+        "subStage": null,
+        "text": "לפני יציקת רצפה — מעבדה לצנרת קבורה"
+      },
+      {
+        "sortOrder": 1,
+        "subStage": null,
+        "text": "לפני טיח — בדיקת לחץ מתועדת"
+      },
+      {
+        "sortOrder": 2,
+        "subStage": null,
+        "text": "לפני ריצוף — לחץ חוזר + נקזים"
+      },
+      {
+        "sortOrder": 3,
+        "subStage": null,
+        "text": "טופס 4 — ת\"י 1205 מלא"
+      }
+    ]
+  },
+  {
+    "stageNo": 6,
+    "title": "מיזוג אוויר, גז ודוד שמש",
+    "standards": [
+      {
+        "text": "ת\"י 158",
+        "subStage": "גז"
+      },
+      {
+        "text": "מתקין גז מוסמך בלבד",
+        "subStage": "גז"
+      },
+      {
+        "text": "ת\"י 579 — חובה בבנייה חדשה",
+        "subStage": "דוד שמש ומים חמים"
+      },
+      {
+        "text": "ת\"י 69 — דוד חשמלי",
+        "subStage": "דוד שמש ומים חמים"
+      }
+    ],
+    "notes": [
+      {
+        "subStage": "מיזוג אוויר",
+        "text": "המיזוג מכתיב תקרות מונמכות, תוואי תעלות ומיקומי מעבים — לתכנן מוקדם ככל האפשר. דרישה לפני ביצוע: תוכנית מיזוג, חישוב עומסים (BTU לחדר) ומפרט ציוד. בבית גדול — לשקול שתי מערכות נפרדות."
+      }
+    ],
+    "items": [
+      {
+        "sortOrder": 0,
+        "subStage": "מיזוג אוויר",
+        "section": "שלב שלד",
+        "phaseKind": "during",
+        "text": "פתחים ושרוולים ביציקות: מעברי צנרת בקורות ותקרות, פתח שירות ליחידה הפנימית",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 1,
+        "subStage": "מיזוג אוויר",
+        "section": "שלב שלד",
+        "phaseKind": "during",
+        "text": "ממ\"ד: מערכת אוורור וסינון נפרדת לפי פיקוד העורף — אין חיבור מיזוג רגיל",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 2,
+        "subStage": "מיזוג אוויר",
+        "section": "שלב שלד",
+        "phaseKind": "during",
+        "text": "מיקום מעבים סופי: משטח טכני נגיש לתחזוקה, שיקולי רעש משכנים, 0.7 מ' לפחות מנקודת גז",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 3,
+        "subStage": "מיזוג אוויר",
+        "section": "לפני סגירת קירות ותקרות",
+        "phaseKind": "before",
+        "text": "צנרת גז קירור (נחושת): שני צינורות מבודדים בקוטר לפי מפרט היצרן, ללא כיפופים חדים, קצוות אטומים; אורכים והפרשי גבהים בגבולות המפרט",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 4,
+        "subStage": "מיזוג אוויר",
+        "section": "לפני סגירת קירות ותקרות",
+        "phaseKind": "before",
+        "text": "ניקוז מים בשיפוע רציף לנקודת ניקוז מאושרת; חיבור לביוב רק דרך מחסום ריח; משאבת ניקוז היכן שאין גרביטציה. בדיקת מעבר מים בפועל לפני סגירה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 5,
+        "subStage": "מיזוג אוויר",
+        "section": "לפני סגירת קירות ותקרות",
+        "phaseKind": "before",
+        "text": "קו חשמל ייעודי (מא\"ז + פחת) וכבל פיקוד לכל יחידה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 6,
+        "subStage": "מיזוג אוויר",
+        "section": "לפני סגירת קירות ותקרות",
+        "phaseKind": "before",
+        "text": "תקרה מונמכת: גובה מספיק + פתח שירות נגיש (חובה) למאייד, למגש הניקוז ולמסננים; אוויר חוזר בגודל מספיק",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 7,
+        "subStage": "מיזוג אוויר",
+        "section": "לפני סגירת קירות ותקרות",
+        "phaseKind": "before",
+        "text": "תיעוד צילומי לפני סגירת גבס",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 8,
+        "subStage": "מיזוג אוויר",
+        "section": "גמר",
+        "phaseKind": "after",
+        "text": "ריקון ואקום לפני מילוי גז; בדיקת לחץ ואטימות לצנרת הקירור",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 9,
+        "subStage": "מיזוג אוויר",
+        "section": "גמר",
+        "phaseKind": "after",
+        "text": "בדיקת ניקוז בפועל: שפיכת מים למגש ווידוא יציאה בקצה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 10,
+        "subStage": "מיזוג אוויר",
+        "section": "גמר",
+        "phaseKind": "after",
+        "text": "הפעלה מלאה: טמפרטורות, איזון אוויר בין חדרים, רעש ורעידות מעבים; תעודת אחריות + התאמת הציוד למפרט שסוכם",
+        "standardRef": null,
+        "itemType": "document",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 11,
+        "subStage": "גז",
+        "section": null,
+        "phaseKind": "general",
+        "text": "מרחקי בטיחות לצוברת/בלונים: 1.2 מ' מדלתות ופתחים; 0.7 מ' ממקור ניצוץ (מעבה, שקע); 3 מ' מפתח ביוב או שטח נמוך; גישה להחלפה בלי כניסה לבית",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 12,
+        "subStage": "גז",
+        "section": null,
+        "phaseKind": "general",
+        "text": "נקודות וקטרים: כיריים 3/8\", מחמם מים 1/2\"–5/8\", קמין 1/2\", גריל 3/8\" (1/2\" מעל 20 מ')",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 13,
+        "subStage": "גז",
+        "section": null,
+        "phaseKind": "general",
+        "text": "צנרת נחושת בשרוול פלסטי קשיח, קווים ישרים; בקטעים חבויים ריתוך בלבד — אסורות הברגות; מוטמעת בבטון לכל אורכה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 14,
+        "subStage": "גז",
+        "section": null,
+        "phaseKind": "general",
+        "text": "ברז ניתוק לכל נקודה; מרחק 0.5 מ' מדלתות ושקעים; מחמם אטמוספרי רק בחוץ (טורבו מותר בפנים עם ארובה)",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 15,
+        "subStage": "גז",
+        "section": null,
+        "phaseKind": "general",
+        "text": "בדיקת אטימות ראשונה לפני ריצוף; הארקת המערכת לפס השוואת פוטנציאלים",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 16,
+        "subStage": "גז",
+        "section": null,
+        "phaseKind": "general",
+        "text": "בדיקת אטימות שנייה + אישור ת\"י 158 לפני פתיחת אספקה — נדרש גם לטופס 4; וסת וצינור תקניים עם תאריך תפוגה לכיריים",
+        "standardRef": "ת\"י 158",
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 17,
+        "subStage": "דוד שמש ומים חמים",
+        "section": null,
+        "phaseKind": "general",
+        "text": "הכנה בשלד: צנרת סולארית הלוך-חזור ממתכת (נחושת) עם בידוד עמיד UV — לא פלסטיק (טמפרטורות גבוהות)",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 18,
+        "subStage": "דוד שמש ומים חמים",
+        "section": null,
+        "phaseKind": "general",
+        "text": "בסיס לדוד וקולטים: כיוון דרום, זווית 40–60°, ללא הצללה (ארובות, עצים, שכנים), עיגון סטטי לגג",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 19,
+        "subStage": "דוד שמש ומים חמים",
+        "section": null,
+        "phaseKind": "general",
+        "text": "קו חשמל ייעודי לגיבוי + מפסק דו-קוטבי עם נורית בתוך הבית",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 20,
+        "subStage": "דוד שמש ומים חמים",
+        "section": null,
+        "phaseKind": "general",
+        "text": "ניקוז שסתום הביטחון לנקודה מסודרת — לא על הגג או הקיר",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 21,
+        "subStage": "דוד שמש ומים חמים",
+        "section": null,
+        "phaseKind": "general",
+        "text": "גמר: תו תקן, נפח לפי תפוסה (150–200 ליטר טיפוסי), שסתום ביטחון + אל-חוזר, בידוד צנרת חמים, בדיקת חימום סולארי וגיבוי, גישור הארקה. אישור נדרש לטופס 4",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      }
+    ],
+    "commonDefects": [
+      {
+        "subStage": "מיזוג אוויר",
+        "text": "ניקוז ללא שיפוע ← הצפת תקרה",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": "מיזוג אוויר",
+        "text": "ניקוז לביוב בלי מחסום ← ריחות",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": "מיזוג אוויר",
+        "text": "אין פתח שירות",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": "מיזוג אוויר",
+        "text": "אוויר חוזר קטן ← רעש וביצועים ירודים",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": "מיזוג אוויר",
+        "text": "מעבה ללא גישה",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      }
+    ],
+    "holdPoints": []
+  },
+  {
+    "stageNo": 7,
+    "title": "תקשורת, מתח נמוך ובית חכם",
+    "standards": [],
+    "notes": [
+      {
+        "subStage": null,
+        "text": "\"בלי צנרת בקירות אין בית חכם\" — צינור ריק בשלב השלד עולה כמעט כלום; תוספת בדיעבד עולה אלפים. הכל מתנקז לארון תקשורת מרכזי בטופולוגיית כוכב."
+      }
+    ],
+    "items": [
+      {
+        "sortOrder": 0,
+        "subStage": null,
+        "section": "שלב שלד ולפני טיח",
+        "phaseKind": "during",
+        "text": "ארון תקשורת מרכזי: נישה מאווררת עם שקע כוח ונקודת הארקה, במיקום נגיש",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 1,
+        "subStage": null,
+        "section": "שלב שלד ולפני טיח",
+        "phaseKind": "during",
+        "text": "צינור 32 מ\"מ חלק מפילר התקשורת בגבול המגרש אל הארון + צינור רזרבי; הכנת סיב אופטי",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 2,
+        "subStage": null,
+        "section": "שלב שלד ולפני טיח",
+        "phaseKind": "during",
+        "text": "נקודת רשת (CAT6 ומעלה או צינור ריק) בכל חדר + נקודות TV ועמדות עבודה — לא להסתמך על WiFi בלבד",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 3,
+        "subStage": null,
+        "section": "שלב שלד ולפני טיח",
+        "phaseKind": "during",
+        "text": "נקודות Access Point בתקרה במרכז כל קומה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 4,
+        "subStage": null,
+        "section": "שלב שלד ולפני טיח",
+        "phaseKind": "during",
+        "text": "צנרת למצלמות חוץ (4–8 נקודות היקפיות), אינטרקום בכניסה ובשער, אזעקה (גלאים, סירנה, לוח), רמקולים",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 5,
+        "subStage": null,
+        "section": "שלב שלד ולפני טיח",
+        "phaseKind": "during",
+        "text": "בית חכם: מוליך אפס (ניוטרל) בכל קופסת מפסק — קריטי למפסקים חכמים; לוח מוגדל אם המערכת קווית (KNX); העדפת תקנים פתוחים",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 6,
+        "subStage": null,
+        "section": "שלב שלד ולפני טיח",
+        "phaseKind": "during",
+        "text": "תריסים חשמליים: קופסת מפסק + הזנה ליד כל תריס, הכנת פיקוד מרכזי",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 7,
+        "subStage": null,
+        "section": "שלב שלד ולפני טיח",
+        "phaseKind": "during",
+        "text": "הפרדה פיזית מצנרת 220V (הצלבות בזווית ישרה); תיעוד צילומי + As-Made",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 8,
+        "subStage": null,
+        "section": "גמר",
+        "phaseKind": "after",
+        "text": "השחלת כבלים, ארון מסודר: פאנל ניתוב, מתג, נתב; בדיקת רציפות וסימון כל נקודה בטסטר",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 9,
+        "subStage": null,
+        "section": "גמר",
+        "phaseKind": "after",
+        "text": "בדיקת מצלמות, אינטרקום ואזעקה בפועל",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      }
+    ],
+    "commonDefects": [
+      {
+        "subStage": null,
+        "text": "צינורות סתומים שאי אפשר להשחיל בהם",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "אין אפס בקופסאות מפסק",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "ארון בלי חשמל ואוורור",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "אין צינור רזרבי מהפילר",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      }
+    ],
+    "holdPoints": []
+  },
+  {
+    "stageNo": 8,
+    "title": "איטום — גג, חדרים רטובים, מרתף",
+    "standards": [
+      {
+        "text": "ת\"י 1752 — איטום גגות",
+        "subStage": null
+      },
+      {
+        "text": "ת\"י 1555 ח\"3 — רטובים",
+        "subStage": null
+      },
+      {
+        "text": "ת\"י 1476 — הצפה והמטרה",
+        "subStage": null
+      }
+    ],
+    "notes": [
+      {
+        "subStage": "גג שטוח ומרפסות",
+        "text": "בדיקת הצפה (ת\"י 1476 ח\"1) — על שכבת האיטום בלבד, לפני ריצוף או חצץ: אטימת נקזים, הצפה ~5 ס\"מ בנקודה הגבוהה, 72 שעות. מעקב מפלס + בדיקת רטיבות מלמטה (מד לחות/תרמוגרפיה). תיעוד תאריכים, תמונות וחתימת קבלן האיטום. אחרי כל תיקון — הצפה חוזרת מלאה. אין לבצע הצפה על גג שכבר רוצף."
+      },
+      {
+        "subStage": "חדרים רטובים",
+        "text": "בדיקת הצפה לפני ריצוף: סתימת מחסום, הצפה 5–7 ס\"מ, 24–72 שעות (מומלץ 72). בדיקת התקרה שמתחת ובסיסי קירות סמוכים. אישור בכתב לריצוף רק אחרי הצפה תקינה."
+      }
+    ],
+    "items": [
+      {
+        "sortOrder": 0,
+        "subStage": "גג שטוח ומרפסות",
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "מדה/בטון שיפועים יבש (בטון חדש ~28 יום); שיפוע ≥ 1.5% לניקוז במערכת חשופה, נמדד — ללא שלוליות עומדות",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≥",
+            "value": 1.5,
+            "upperValue": null,
+            "unit": "%",
+            "raw": "≥ 1.5%"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 1,
+        "subStage": "גג שטוח ומרפסות",
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "כל הצנרות, המעברים והקולטנים מותקנים סופית — אסור לפתוח את האיטום אחרי ביצוע",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 2,
+        "subStage": "גג שטוח ומרפסות",
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "רולקות 45° (~4–5 ס\"מ) בכל מפגש רצפה–מעקה; שטח נקי מבליטות ושמן; לא מבצעים בגשם",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 3,
+        "subStage": "גג שטוח ומרפסות",
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "חומרים: יריעות ביטומניות SBS/APP בעובי 4–5 מ\"מ עם זיון פוליאסטר, תו תקן; פריימר תואם יצרן; אחסון בעמידה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 4,
+        "subStage": "גג שטוח ומרפסות",
+        "section": "במהלך",
+        "phaseKind": "during",
+        "text": "פריימר על כל השטח + ייבוש ~24 שעות; הלחמה מלאה; חפיפות ~10 ס\"מ לאורך / ~15 ס\"מ לרוחב; \"ביטומן נוזל\" נראה בשולי כל תפר",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 5,
+        "subStage": "גג שטוח ומרפסות",
+        "section": "במהלך",
+        "phaseKind": "during",
+        "text": "העלאת יריעה על מעקות ≥ ~30 ס\"מ מעל פני הגמר + קיבוע מכני + פרופיל סוגר עם מסטיק",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≥",
+            "value": 30.0,
+            "upperValue": null,
+            "unit": "ס\"מ",
+            "raw": "≥ ~30 ס\"מ"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 6,
+        "subStage": "גג שטוח ומרפסות",
+        "section": "במהלך",
+        "phaseKind": "during",
+        "text": "חיזוקי יריעה בפינות, ברולקות ובקולטנים; אביזרי איטום ייעודיים סביב כל צינור; קולטנים במפלס הנמוך + רשתות עלים",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 7,
+        "subStage": "גג שטוח ומרפסות",
+        "section": "במהלך",
+        "phaseKind": "during",
+        "text": "מרפסת מעל חלל מגורים: ניקוז כפול / נקז מי חלחול מתחת לריצוף",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 8,
+        "subStage": "גג שטוח ומרפסות",
+        "section": "אחרי",
+        "phaseKind": "after",
+        "text": "הגנה על האיטום לפני ההמשך: בד גיאוטכני / מדה — אסור לרצף ישירות על יריעה חשופה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 9,
+        "subStage": "חדרים רטובים",
+        "section": null,
+        "phaseKind": "general",
+        "text": "לפני: צנרת הותקנה ונבדקה בלחץ; חגורת סף 4 ס\"מ מעל הריצוף המתוכנן בפתחי החדר (ת\"י 1555 ח\"3); מצע נקי + פריימר",
+        "standardRef": "ת\"י 1555 ח\"3",
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 10,
+        "subStage": "חדרים רטובים",
+        "section": null,
+        "phaseKind": "general",
+        "text": "איטום צמנטי גמיש: 2 שכבות בהצלבה, עובי כולל 2–3 מ\"מ לפי יצרן",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 11,
+        "subStage": "חדרים רטובים",
+        "section": null,
+        "phaseKind": "general",
+        "text": "עלייה על קירות ≥ 10 ס\"מ בכל ההיקף; באזור מקלחת/אמבטיה — עד ~2 מ'",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≥",
+            "value": 10.0,
+            "upperValue": null,
+            "unit": "ס\"מ",
+            "raw": "≥ 10 ס\"מ"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 12,
+        "subStage": "חדרים רטובים",
+        "section": null,
+        "phaseKind": "general",
+        "text": "רשת זיון בפינות ובמפגשי רצפה–קיר; פלנצ'ים סביב כל צנרת ומחסום + מסטיק",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 13,
+        "subStage": "חדרים רטובים",
+        "section": null,
+        "phaseKind": "general",
+        "text": "אחרי הביצוע — איסור קדיחה עד הריצוף (כולל מוט מקלחון!)",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 14,
+        "subStage": "מרתף וקירות במגע עם קרקע",
+        "section": null,
+        "phaseKind": "general",
+        "text": "לפני: קירות נקיים מחוטי קשירה, סגרגציה תוקנה, טיפול בהפסקות יציקה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 15,
+        "subStage": "מרתף וקירות במגע עם קרקע",
+        "section": null,
+        "phaseKind": "general",
+        "text": "פריימר + יריעות SBS 4 מ\"מ אנכית עם רציפות לאיטום הרצפה, או ביטומן מרוח לפי מפרט יועץ איטום",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 16,
+        "subStage": "מרתף וקירות במגע עם קרקע",
+        "section": null,
+        "phaseKind": "general",
+        "text": "שכבת הגנה חובה לפני מילוי חוזר: HDPE מחורץ / פוליסטירן / בד גיאוטכני",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 17,
+        "subStage": "מרתף וקירות במגע עם קרקע",
+        "section": null,
+        "phaseKind": "general",
+        "text": "ניקוז היקפי: צינור שרשורי עטוף גיאוטכני + חצץ, מנוקז לחלחול; מילוי חוזר בשכבות ללא פסולת חדה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 18,
+        "subStage": "מרתף וקירות במגע עם קרקע",
+        "section": null,
+        "phaseKind": "general",
+        "text": "רום איטום ~15–20 ס\"מ מעל פני הפיתוח הסופיים",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 19,
+        "subStage": "מרתף וקירות במגע עם קרקע",
+        "section": null,
+        "phaseKind": "general",
+        "text": "תיעוד צילומי מלא + אישור בכתב לפני המילוי החוזר — זה שלב שנקבר לתמיד",
+        "standardRef": null,
+        "itemType": "written_approval",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      }
+    ],
+    "commonDefects": [
+      {
+        "subStage": "מרתף וקירות במגע עם קרקע",
+        "text": "איטום שלא הועלה על קירות",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": "מרתף וקירות במגע עם קרקע",
+        "text": "פלנץ' חסר",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": "מרתף וקירות במגע עם קרקע",
+        "text": "ריצוף לפני הצפה",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": "מרתף וקירות במגע עם קרקע",
+        "text": "שיפוע הפוך מהמחסום",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": "מרתף וקירות במגע עם קרקע",
+        "text": "קידוח מקלחון דרך האיטום",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": "מרתף וקירות במגע עם קרקע",
+        "text": "מילוי חוזר שקרע איטום ללא הגנה",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      }
+    ],
+    "holdPoints": [
+      {
+        "sortOrder": 0,
+        "subStage": "מרתף וקירות במגע עם קרקע",
+        "text": "אין ריצוף, חצץ או מילוי חוזר על איטום שלא עבר בדיקת הצפה מתועדת ואישור בכתב."
+      }
+    ]
+  },
+  {
+    "stageNo": 9,
+    "title": "טיח פנים וחוץ",
+    "standards": [
+      {
+        "text": "ת\"י 1920 — טיח",
+        "subStage": null
+      },
+      {
+        "text": "ת\"י 1731 — טיח מוכן",
+        "subStage": null
+      }
+    ],
+    "notes": [],
+    "items": [
+      {
+        "sortOrder": 0,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "כל החריצים נחתכו והצנרת הותקנה, נבדקה וכוסתה ברשת XPM",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 1,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "רשת בכל מפגש בטון–בלוק, מעל משקופים ובפינות פתחים — חפיפה ~10 ס\"מ לכל צד (מניעת סדקי מפגש)",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 2,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "פינות מגן (PVC/מגולוון) בכל פינה חשופה ובגליפים; הרטבת הקיר; לא על קיר קפוא/לוהט/רטוב",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 3,
+        "subStage": null,
+        "section": "ביצוע — פנים",
+        "phaseKind": "during",
+        "text": "שכבות: הרבצה ← מיישרת ← גמר; עובי כולל ~15 מ\"מ; ג'ולות/סרגלי דוקים לקביעת מישוריות; 24 שעות לפחות בין שכבות",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 4,
+        "subStage": null,
+        "section": "ביצוע — חוץ ושליכט",
+        "phaseKind": "during",
+        "text": "הרבצה צמנטית 5–8 מ\"מ עם מוסף אוטם ← חריצה ← מיישרת אחרי 24 שעות ← שליכט גמר ~2 מ\"מ",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 5,
+        "subStage": null,
+        "section": "ביצוע — חוץ ושליכט",
+        "phaseKind": "during",
+        "text": "הרבצה גם על חגורות ועמודי בטון (אחידות ספיגה); רשת שריון במפגשי חומרים",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 6,
+        "subStage": null,
+        "section": "ביצוע — חוץ ושליכט",
+        "phaseKind": "during",
+        "text": "אף מים מתחת לכל בליטה, אדן וקופינג; תפרי הפרדה בין קומות",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 7,
+        "subStage": null,
+        "section": "ביצוע — חוץ ושליכט",
+        "phaseKind": "during",
+        "text": "אשפרת טיח חוץ בהרטבה 3 ימים בקיץ; שליכט ברצף לקיר שלם (\"רטוב על רטוב\"), גוון מאצווה אחת",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 8,
+        "subStage": null,
+        "section": "קבלה — מדידות עם סרגל אלומיניום 2 מ' ופלס",
+        "phaseKind": "after",
+        "text": "מישוריות: סטייה ≤ 4 מ\"מ על סרגל 2 מ'; אנכיות ~6 מ\"מ לגובה קומה; גליפים ישרים ברוחב אחיד (≤ 2–3 מ\"מ)",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≤",
+            "value": 4.0,
+            "upperValue": null,
+            "unit": "מ\"מ",
+            "raw": "≤ 4 מ\"מ"
+          },
+          {
+            "op": "≤",
+            "value": 2.0,
+            "upperValue": 3.0,
+            "unit": "מ\"מ",
+            "raw": "≤ 2–3 מ\"מ"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 9,
+        "subStage": null,
+        "section": "קבלה — מדידות עם סרגל אלומיניום 2 מ' ופלס",
+        "phaseKind": "after",
+        "text": "בדיקת אור מלוכסן (פנס צמוד לקיר) — \"גלים\" = ליקוי; בדיקת הקשה — צליל חלול = ניתוק",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 10,
+        "subStage": null,
+        "section": "קבלה — מדידות עם סרגל אלומיניום 2 מ' ופלס",
+        "phaseKind": "after",
+        "text": "אין סדקים מעל 0.1–0.3 מ\"מ; סדקים קוסמטיים מתועדים",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      }
+    ],
+    "commonDefects": [
+      {
+        "subStage": null,
+        "text": "סדקים במפגשים ללא רשת",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "ניתוק טיח (הקשה חלולה)",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "גלים באור צד",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "חוסר אף מים ← נזילות וכתמים",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "שליכט מנומר מהפסקות עבודה",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      }
+    ],
+    "holdPoints": []
+  },
+  {
+    "stageNo": 10,
+    "title": "אלומיניום — חלונות, דלתות, תריסים",
+    "standards": [
+      {
+        "text": "ת\"י 1068 — חלונות ותריסים",
+        "subStage": null
+      },
+      {
+        "text": "ת\"י 1099 — זיגוג בטיחות",
+        "subStage": null
+      },
+      {
+        "text": "ת\"י 1476 ח\"2 / 938 — המטרה",
+        "subStage": null
+      }
+    ],
+    "notes": [
+      {
+        "subStage": null,
+        "text": "בדיקת המטרה (ת\"י 1476 ח\"2): המטרת מים על החלון והמפגש חלון–קיר — מדגמית + כל חלון חשוד. בדיקה פנימית: אין חדירה במשקוף, בפינות הזיגוג ומתחת לאדן. חלופה מעשית בפיקוח פרטי: צינור גינה 15–30 דקות על כל חלון, לפני צבע הפנים."
+      }
+    ],
+    "items": [
+      {
+        "sortOrder": 0,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "רשימת אלומיניום מאושרת: מידות, כיווני פתיחה, גוון, פרופיל, זיגוג; מדידת ביצוע של הספק אחרי טיח",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 1,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "משקופים עיוורים (בליינדים) מפח מגולוון הותקנו בשלב הטיח — מפולסים ומעוגנים",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 2,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "פרופילים עם תו תקן 1068 ממפעל מוסמך; זיגוג בידודית לפי המפרט התרמי",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 3,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "זכוכית מחוסמת/רבודה (טריפלקס) חובה בדלתות, ויטרינות עד רצפה ומקומות בטיחות (ת\"י 1099) — לוודא חותמת קבועה בפינת הזכוכית",
+        "standardRef": "ת\"י 1099",
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 4,
+        "subStage": null,
+        "section": "התקנה",
+        "phaseKind": "during",
+        "text": "משקוף מפולס ואנכי: סטייה ≤ 2 מ\"מ למטר; הפרש אלכסונים ≤ 3 מ\"מ; עיגון בברגים — לא קצף בלבד",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≤",
+            "value": 2.0,
+            "upperValue": null,
+            "unit": "מ\"מ",
+            "raw": "≤ 2 מ\"מ"
+          },
+          {
+            "op": "≤",
+            "value": 3.0,
+            "upperValue": null,
+            "unit": "מ\"מ",
+            "raw": "≤ 3 מ\"מ"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 5,
+        "subStage": null,
+        "section": "התקנה",
+        "phaseKind": "during",
+        "text": "איטום היקפי כפול: קצף PU בין משקוף לבניין + מסטיק חיצוני רציף ללא חורים + איטום פנימי",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 6,
+        "subStage": null,
+        "section": "התקנה",
+        "phaseKind": "during",
+        "text": "אדן חלון: שיפוע החוצה, אף מים תחתון, בליטה ≥ 2–3 ס\"מ מהקיר, אטום בקצוות",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≥",
+            "value": 2.0,
+            "upperValue": 3.0,
+            "unit": "ס\"מ",
+            "raw": "≥ 2–3 ס\"מ"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 7,
+        "subStage": null,
+        "section": "התקנה",
+        "phaseKind": "during",
+        "text": "חורי ניקוז (וונטים) במסילות פתוחים כלפי חוץ — בדיקה בשפיכת כוס מים למסילה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 8,
+        "subStage": null,
+        "section": "התקנה",
+        "phaseKind": "during",
+        "text": "כנפיים: פתיחה חלקה ללא שפשוף, נעילה רב-נקודתית, ללא חופש בכנף סגורה; גומיות EPDM רציפות; רשתות תקינות",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 9,
+        "subStage": null,
+        "section": "התקנה",
+        "phaseKind": "during",
+        "text": "תריסים: גלילה מלאה ישרה, עצירה בקצה, מנוע שקט + גיבוי ידני, גומי תחתון מגיע לסף",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 10,
+        "subStage": null,
+        "section": "התקנה",
+        "phaseKind": "during",
+        "text": "מעקות: זכוכית רבודה ≥ 12 מ\"מ, גובה 1.05 מ', עיגון תקני",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≥",
+            "value": 12.0,
+            "upperValue": null,
+            "unit": "מ\"מ",
+            "raw": "≥ 12 מ\"מ"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      }
+    ],
+    "commonDefects": [
+      {
+        "subStage": null,
+        "text": "מסטיק חיצוני מקוטע",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "וונטים סתומים ← הצפת מסילה פנימה",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "אדן ללא אף מים ← נזילה בקיר",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "זכוכית לא מחוסמת בדלת",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "תריס עולה עקום",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      }
+    ],
+    "holdPoints": []
+  },
+  {
+    "stageNo": 11,
+    "title": "ריצוף וחיפוי",
+    "standards": [
+      {
+        "text": "ת\"י 1555 — ריצוף וחיפוי",
+        "subStage": null
+      },
+      {
+        "text": "ת\"י 314 — אריחים",
+        "subStage": null
+      },
+      {
+        "text": "ת\"י 2279 — התנגדות להחלקה",
+        "subStage": null
+      }
+    ],
+    "notes": [],
+    "items": [
+      {
+        "sortOrder": 0,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "צנרת הרצפה נבדקה בלחץ; הצפת האיטום ברטובים תקינה ומתועדת; בידוד אקוסטי/תרמי אם נדרש",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 1,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "מפלסי אפס סומנו בלייזר בכל הבית; תואמו עוביי גמר שונים (פרקט/אבן/קרמיקה)",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 2,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "תוכנית ריצוף: נקודת התחלה, כיוון, חיתוכים בפינות נסתרות, מיקום תפרי התפשטות",
+        "standardRef": null,
+        "itemType": "document",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 3,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "אריחים: ספיגות ≤ 3% (פורצלן), עמידות שחיקה, עמידות כפור בחוץ; אצווה אחת (Shade/Caliber זהים) + עודף 5–10%",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≤",
+            "value": 3.0,
+            "upperValue": null,
+            "unit": "%",
+            "raw": "≤ 3%"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 4,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "דבק C2/C2TE-S1 לרטוב ולחוץ (C1 מותר רק ביבש פנים), בתוקף; חול מצע ≤ 6% רטיבות; חול מיוצב 100 ק\"ג צמנט למ\"ק",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≤",
+            "value": 6.0,
+            "upperValue": null,
+            "unit": "%",
+            "raw": "≤ 6%"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 5,
+        "subStage": null,
+        "section": "ביצוע — מדדים מדידים",
+        "phaseKind": "during",
+        "text": "טיט 1.5–3 ס\"מ או דבק במסרק מתאים; מריחה כפולה באריחים ≥ 33×33 בחוץ וברטוב",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≥",
+            "value": 33.0,
+            "upperValue": null,
+            "unit": null,
+            "raw": "≥ 33"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 6,
+        "subStage": null,
+        "section": "ביצוע — מדדים מדידים",
+        "phaseKind": "during",
+        "text": "כיסוי טיט בגב האריח ≥ 85% (ברטוב ~100%) — בדיקת הרמת אריח אקראי בזמן הביצוע",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≥",
+            "value": 85.0,
+            "upperValue": null,
+            "unit": "%",
+            "raw": "≥ 85%"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 7,
+        "subStage": null,
+        "section": "ביצוע — מדדים מדידים",
+        "phaseKind": "during",
+        "text": "פוגות ≥ 3 מ\"מ אחידות (נמדדות ב-3 נקודות למישק); \"שן\" בין אריחים ≤ 1 מ\"מ; מישוריות ≤ 3–4 מ\"מ לסרגל 2 מ'",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≥",
+            "value": 3.0,
+            "upperValue": null,
+            "unit": "מ\"מ",
+            "raw": "≥ 3 מ\"מ"
+          },
+          {
+            "op": "≤",
+            "value": 1.0,
+            "upperValue": null,
+            "unit": "מ\"מ",
+            "raw": "≤ 1 מ\"מ"
+          },
+          {
+            "op": "≤",
+            "value": 3.0,
+            "upperValue": 4.0,
+            "unit": "מ\"מ",
+            "raw": "≤ 3–4 מ\"מ"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 8,
+        "subStage": null,
+        "section": "ביצוע — מדדים מדידים",
+        "phaseKind": "during",
+        "text": "שיפועים ברטובים 1%–2% לכיוון המחסום; במרפסות 1.5%–2% — בדיקה בפלס דיגיטלי + שפיכת מים בפועל",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 9,
+        "subStage": null,
+        "section": "ביצוע — מדדים מדידים",
+        "phaseKind": "during",
+        "text": "מפלס חדר רטוב נמוך ~1–2 ס\"מ מהחדר הסמוך, או סף מפריד",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 10,
+        "subStage": null,
+        "section": "ביצוע — מדדים מדידים",
+        "phaseKind": "during",
+        "text": "תפרי התפשטות: גמישים בהיקף (מתחת לפנלים), בכל ~25–30 מ\"ר, ובכל מפגש עם אלמנט אנכי",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 11,
+        "subStage": null,
+        "section": "ביצוע — מדדים מדידים",
+        "phaseKind": "during",
+        "text": "חיפוי קירות: אנכיות ≤ 2–3 מ\"מ לסרגל 2 מ', פינות בגרונג או פרופיל, פוגות מיושרות עם הרצפה אם תוכנן",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≤",
+            "value": 2.0,
+            "upperValue": 3.0,
+            "unit": "מ\"מ",
+            "raw": "≤ 2–3 מ\"מ"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 12,
+        "subStage": null,
+        "section": "ביצוע — מדדים מדידים",
+        "phaseKind": "during",
+        "text": "רובה רק אחרי ≥ 10 ימים מגמר הריצוף; ברטובים — רובה אקרילית/אפוקסית עמידת עובש; מילוי מלא לעומק",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≥",
+            "value": 10.0,
+            "upperValue": null,
+            "unit": "ימים",
+            "raw": "≥ 10 ימים"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 13,
+        "subStage": null,
+        "section": "ביצוע — מדדים מדידים",
+        "phaseKind": "during",
+        "text": "פנלים צמודים לקיר (מרווח ≤ 1 מ\"מ), מילוי אקרילי אחיד",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≤",
+            "value": 1.0,
+            "upperValue": null,
+            "unit": "מ\"מ",
+            "raw": "≤ 1 מ\"מ"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 14,
+        "subStage": null,
+        "section": "קבלה",
+        "phaseKind": "after",
+        "text": "בדיקת הקשה על 100% מהאריחים ברטובים ומדגמית ביבשים — חלול ברטוב פסול לחלוטין; ביבש נפסל חלל מעל ~10–20% משטח האריח",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 15,
+        "subStage": null,
+        "section": "קבלה",
+        "phaseKind": "after",
+        "text": "בדיקת שיפועים עם מים בכל חדר רטוב ומרפסת — זרימה מלאה למחסום ללא שלוליות",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 16,
+        "subStage": null,
+        "section": "קבלה",
+        "phaseKind": "after",
+        "text": "אין אריחים סדוקים/מוכתמים; חיתוכי צנרת מכוסים ברוזטות; התנגדות להחלקה באזורים נדרשים",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 17,
+        "subStage": null,
+        "section": "קבלה",
+        "phaseKind": "after",
+        "text": "מדרגות: רום ושלח קבועים (סטייה ≤ 5 מ\"מ), אף מדרגה אחיד, פסים נגד החלקה",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≤",
+            "value": 5.0,
+            "upperValue": null,
+            "unit": "מ\"מ",
+            "raw": "≤ 5 מ\"מ"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      }
+    ],
+    "commonDefects": [
+      {
+        "subStage": null,
+        "text": "אריחים חלולים",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "\"שן\" בין אריחים",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "פוגות צרות מ-3 מ\"מ",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "שיפוע הפוך במקלחת",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "רובה סדוקה",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "היעדר תפרי התפשטות ← \"קפיצת מרצפות\"",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "הבדלי גוון בין אצוות",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      }
+    ],
+    "holdPoints": []
+  },
+  {
+    "stageNo": 12,
+    "title": "חיפוי אבן חוץ וגג רעפים",
+    "standards": [
+      {
+        "text": "ת\"י 2378 ח\"1–4",
+        "subStage": "חיפוי אבן (ת\"י 2378)"
+      },
+      {
+        "text": "ת\"י 5566 — אבן",
+        "subStage": "חיפוי אבן (ת\"י 2378)"
+      },
+      {
+        "text": "ת\"י 1872 — עוגנים",
+        "subStage": "חיפוי אבן (ת\"י 2378)"
+      }
+    ],
+    "notes": [
+      {
+        "subStage": "חיפוי אבן (ת\"י 2378)",
+        "text": "בדיקת שליפה במעבדה מוסמכת (מדגמית, לפי דרישת התקן והמפרט) — התעודה נשמרת בתיק המבנה. הבדיקה משלימה ואינה מחליפה ביצוע לפי פרטי התקן."
+      }
+    ],
+    "items": [
+      {
+        "sortOrder": 0,
+        "subStage": "חיפוי אבן (ת\"י 2378)",
+        "section": null,
+        "phaseKind": "general",
+        "text": "תכנון מהנדס: שיטת קיבוע, פריסה, פרטי עוגנים — אין \"הדבקה בלבד\" לאבן טבעית; חלק 4 מחייב שילוב קיבוע מכני",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 1,
+        "subStage": "חיפוי אבן (ת\"י 2378)",
+        "section": null,
+        "phaseKind": "general",
+        "text": "חומרים: אבן בעובי לפי התקן (בד\"כ ≥ 3 ס\"מ), תעודות מחצבה; עוגנים וחוטי קשירה מנירוסטה 316 בלבד",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≥",
+            "value": 3.0,
+            "upperValue": null,
+            "unit": "ס\"מ",
+            "raw": "≥ 3 ס\"מ"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 2,
+        "subStage": "חיפוי אבן (ת\"י 2378)",
+        "section": null,
+        "phaseKind": "general",
+        "text": "כל אבן קשורה לרשת (רטוב) או מעוגנת פרטנית (דבק + פין מכני); מילוי גב מלא — בדיקת הקשה מדגמית",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 3,
+        "subStage": "חיפוי אבן (ת\"י 2378)",
+        "section": null,
+        "phaseKind": "general",
+        "text": "מישקים ≥ 5 מ\"מ עם רובה — אין \"מישק אפס\" בחוץ; מישוריות ≤ 3–5 מ\"מ לסרגל 2 מ'",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≥",
+            "value": 5.0,
+            "upperValue": null,
+            "unit": "מ\"מ",
+            "raw": "≥ 5 מ\"מ"
+          },
+          {
+            "op": "≤",
+            "value": 3.0,
+            "upperValue": 5.0,
+            "unit": "מ\"מ",
+            "raw": "≤ 3–5 מ\"מ"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 4,
+        "subStage": "חיפוי אבן (ת\"י 2378)",
+        "section": null,
+        "phaseKind": "general",
+        "text": "תפרי התפשטות כל ~9–12 מ' ובמפגשי אגפים; קופינג ואף מים בראש קירות; פלשונגים מעל פתחים",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 5,
+        "subStage": "חיפוי אבן (ת\"י 2378)",
+        "section": null,
+        "phaseKind": "general",
+        "text": "תיעוד צילומי של הקשירה לפני מילוי הגב — שלב שנקבר",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 6,
+        "subStage": "גג רעפים (ת\"י 1556)",
+        "section": null,
+        "phaseKind": "general",
+        "text": "תוכנית קונסטרוקציית גג מאושרת; עץ בלחות < 18–20% עם אימפרגנציה בלחץ + תעודות",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "<",
+            "value": 18.0,
+            "upperValue": 20.0,
+            "unit": "%",
+            "raw": "< 18–20%"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 7,
+        "subStage": "גג רעפים (ת\"י 1556)",
+        "section": null,
+        "phaseKind": "general",
+        "text": "שיפוע לפי סוג הרעף (ת\"י 1556): ללא יריעות — חרס 40%, בטון 35%; עם יריעות איטום — 20% (10% עם ביטומני מולחם)",
+        "standardRef": "ת\"י 1556",
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 8,
+        "subStage": "גג רעפים (ת\"י 1556)",
+        "section": null,
+        "phaseKind": "general",
+        "text": "עיגון אגדים לחגורת הבטון בעוגנים לפי תוכנית — לא מסמרים בלבד; מרחקי לטות אחידים",
+        "standardRef": null,
+        "itemType": "document",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 9,
+        "subStage": "גג רעפים (ת\"י 1556)",
+        "section": null,
+        "phaseKind": "general",
+        "text": "יריעה נושמת מתחת ללטות: חפיפות ≥ 10–15 ס\"מ, עולה על קירות, ללא קרעים",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≥",
+            "value": 10.0,
+            "upperValue": 15.0,
+            "unit": "ס\"מ",
+            "raw": "≥ 10–15 ס\"מ"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 10,
+        "subStage": "גג רעפים (ת\"י 1556)",
+        "section": null,
+        "phaseKind": "general",
+        "text": "קיבוע רעפים חובה — לא הנחה בלבד: לפחות כל שורה שנייה + כל רעפי השפה, הרכס וסביב הפתחים",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 11,
+        "subStage": "גג רעפים (ת\"י 1556)",
+        "section": null,
+        "phaseKind": "general",
+        "text": "רוכבים בברגים/קליפסים + איטום גמיש — לא מלט קשיח (נסדק); פלשונג סביב ארובות וקירות נצמדים",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 12,
+        "subStage": "גג רעפים (ת\"י 1556)",
+        "section": null,
+        "phaseKind": "general",
+        "text": "מרזבים בשיפוע רציף, ווים כל 60–90 ס\"מ; רשתות אוורור בקצוות; בידוד שלא חוסם אוורור רכס",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 13,
+        "subStage": "גג רעפים (ת\"י 1556)",
+        "section": null,
+        "phaseKind": "general",
+        "text": "קבלה: המטרה / גשם ראשון מתועד — פנים עליית הגג יבש לחלוטין",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      }
+    ],
+    "commonDefects": [
+      {
+        "subStage": "חיפוי אבן (ת\"י 2378)",
+        "text": "אבנים ללא קשירה ← נשירת אבן (סכנת חיים)",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": "חיפוי אבן (ת\"י 2378)",
+        "text": "חללים בגב",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": "חיפוי אבן (ת\"י 2378)",
+        "text": "חוטים מגולוונים שנרקבו",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": "חיפוי אבן (ת\"י 2378)",
+        "text": "היעדר תפרים ← סדיקה",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": "חיפוי אבן (ת\"י 2378)",
+        "text": "אין אף מים ← נגר מלכלך חזית",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      }
+    ],
+    "holdPoints": []
+  },
+  {
+    "stageNo": 13,
+    "title": "צבע",
+    "standards": [
+      {
+        "text": "ת\"י 1922 — התאמת צבעים",
+        "subStage": null
+      },
+      {
+        "text": "המפרט הכללי פרק 11",
+        "subStage": null
+      }
+    ],
+    "notes": [],
+    "items": [
+      {
+        "sortOrder": 0,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "טיח יבש לחלוטין: המתנה ~3–4 שבועות מטיח חדש, מד לחות < 5%",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "<",
+            "value": 5.0,
+            "upperValue": null,
+            "unit": "%",
+            "raw": "< 5%"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 1,
+        "subStage": null,
+        "section": "לפני",
+        "phaseKind": "before",
+        "text": "כל העבודות הרטובות הסתיימו; חלונות מזוגגים; שפכטל לוטש ונקי מאבק; הגנות על ריצוף ואלומיניום",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 2,
+        "subStage": null,
+        "section": "שכבות",
+        "phaseKind": "during",
+        "text": "יסוד מקשר (בונדרול) חובה על טיח חדש לפני הצבע הראשון",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 3,
+        "subStage": null,
+        "section": "שכבות",
+        "phaseKind": "during",
+        "text": "פנים: יסוד + 2 שכבות גמר לפחות; רחיץ באזורי שימוש; נגד עובש בחדרים רטובים",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 4,
+        "subStage": null,
+        "section": "שכבות",
+        "phaseKind": "during",
+        "text": "חוץ: אקרילי/סיליקוני גמיש עמיד UV, 2 שכבות, גוון מאצווה אחת",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 5,
+        "subStage": null,
+        "section": "שכבות",
+        "phaseKind": "during",
+        "text": "מתכת: יסוד אנטי-קורוזיבי + 2 עליון; עץ: יסוד סינטטי + 2; המתנה בין שכבות לפי היצרן",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 6,
+        "subStage": null,
+        "section": "קבלה",
+        "phaseKind": "after",
+        "text": "בדיקה באלכסון ממרחק 0.5 מ' באור יום: גוון אחיד, ללא \"עננים\", סימני רולר, נזילות או שקיעות שפכטל",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 7,
+        "subStage": null,
+        "section": "קבלה",
+        "phaseKind": "after",
+        "text": "כיסוי מלא ללא שקיפות רקע; קווי הפרדה ישרים (≤ 1–2 מ\"מ); אין קילופים ושלפוחיות",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≤",
+            "value": 1.0,
+            "upperValue": 2.0,
+            "unit": "מ\"מ",
+            "raw": "≤ 1–2 מ\"מ"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 8,
+        "subStage": null,
+        "section": "קבלה",
+        "phaseKind": "after",
+        "text": "ניקיון: אין נתזי צבע על ריצוף, אלומיניום, פרזול ושיש",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      }
+    ],
+    "commonDefects": [
+      {
+        "subStage": null,
+        "text": "צביעה על טיח לח ← קילופים ועובש",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "דילוג על יסוד",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "שכבה אחת במקום שתיים",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      },
+      {
+        "subStage": null,
+        "text": "הבדלי גוון בין תיקונים לקיר",
+        "costMinMinor": null,
+        "costMaxMinor": null
+      }
+    ],
+    "holdPoints": []
+  },
+  {
+    "stageNo": 14,
+    "title": "דלתות פנים, נגרות ומטבח",
+    "standards": [
+      {
+        "text": "ת\"י 23 — דלתות עץ",
+        "subStage": null
+      },
+      {
+        "text": "ת\"י 5044 — דלת ממ\"ד",
+        "subStage": null
+      }
+    ],
+    "notes": [],
+    "items": [
+      {
+        "sortOrder": 0,
+        "subStage": "דלתות פנים",
+        "section": null,
+        "phaseKind": "general",
+        "text": "לפני: ריצוף ופנלים גמורים; מידת פתח מול הזמנה (פתח = כנף + ~9–10 ס\"מ); סביבה יבשה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 1,
+        "subStage": "דלתות פנים",
+        "section": null,
+        "phaseKind": "general",
+        "text": "משקוף מפולס בשני צירים (≤ 2 מ\"מ), אלכסונים שווים; קיבוע בקצף + ברגים דרך הצירים",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≤",
+            "value": 2.0,
+            "upperValue": null,
+            "unit": "מ\"מ",
+            "raw": "≤ 2 מ\"מ"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 2,
+        "subStage": "דלתות פנים",
+        "section": null,
+        "phaseKind": "general",
+        "text": "מרווח כנף–משקוף 2–3 מ\"מ אחיד (פס אור אחיד); מרווח תחתון 6–10 מ\"מ מעל הריצוף",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 3,
+        "subStage": "דלתות פנים",
+        "section": null,
+        "phaseKind": "general",
+        "text": "הדלת נשארת בכל זווית פתיחה — לא נסגרת מעצמה (עדות לפילוס); סגירה חלקה ללא שפשוף; לשונית ננעלת בלי להרים את הכנף",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 4,
+        "subStage": "דלתות פנים",
+        "section": null,
+        "phaseKind": "general",
+        "text": "3 צירים לכנף; מנעול תפוס-פנוי עם פתיחת חירום בחדרי רחצה; הלבשות צמודות (≤ 1 מ\"מ) עם גרונגים סגורים",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≤",
+            "value": 1.0,
+            "upperValue": null,
+            "unit": "מ\"מ",
+            "raw": "≤ 1 מ\"מ"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 5,
+        "subStage": "דלתות פנים",
+        "section": null,
+        "phaseKind": "general",
+        "text": "בחדרים רטובים: כנף עמידת לחות + הגנת תחתית למשקוף — עץ רגיל בתחתית מקלחת הוא ליקוי",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 6,
+        "subStage": "דלתות פנים",
+        "section": null,
+        "phaseKind": "general",
+        "text": "דלת כניסה: נעילה רב-בריחית, עינית, סף אטום, מחזיר; ללא נזקי הובלה בכל הכנפיים",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 7,
+        "subStage": "ארונות ונגרות מובנית",
+        "section": null,
+        "phaseKind": "general",
+        "text": "מפולסים; דלתות בקו אחד; צירי טריקה שקטה מכוונים; מגירות טלסקופיות בשליפה מלאה ללא נפילה",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 8,
+        "subStage": "ארונות ונגרות מובנית",
+        "section": null,
+        "phaseKind": "general",
+        "text": "גב עמיד (לא קרטון); פתחי שירות סביב צנרת עם רוזטות",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 9,
+        "subStage": "מטבח",
+        "section": null,
+        "phaseKind": "general",
+        "text": "מדידת שטח סופית של ספק המטבח אחרי טיח, ריצוף וחשמל; אימות נקודות מים/ניקוז/חשמל/גז מול שרטוט המטבח; קיר גב ישר",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 10,
+        "subStage": "מטבח",
+        "section": null,
+        "phaseKind": "general",
+        "text": "ארונות תחתונים מפולסים לכל האורך (≤ 2 מ\"מ למטר) על רגליים מתכווננות; עליונים מעוגנים לפי סוג הקיר + בדיקת משיכה",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≤",
+            "value": 2.0,
+            "upperValue": null,
+            "unit": "מ\"מ",
+            "raw": "≤ 2 מ\"מ"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 11,
+        "subStage": "מטבח",
+        "section": null,
+        "phaseKind": "general",
+        "text": "שיש: ללא סדקים וכתמים, תפרים מלוטשים, מרווח לקיר ≤ 3 מ\"מ סגור בסיליקון; חיזוק תחתון בכיורים גדולים",
+        "standardRef": null,
+        "itemType": "measurement",
+        "thresholds": [
+          {
+            "op": "≤",
+            "value": 3.0,
+            "upperValue": null,
+            "unit": "מ\"מ",
+            "raw": "≤ 3 מ\"מ"
+          }
+        ],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 12,
+        "subStage": "מטבח",
+        "section": null,
+        "phaseKind": "general",
+        "text": "הצפת כיור: מילוי וריקון עם נייר יבש מתחת לסיפון — אפס נזילות",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 13,
+        "subStage": "מטבח",
+        "section": null,
+        "phaseKind": "general",
+        "text": "חיבור גז על ידי טכנאי מוסמך + בדיקת אטימות מתועדת; קולט אדים מנוקז החוצה בצינור קשיח + מדף אל-חוזר",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 14,
+        "subStage": "מטבח",
+        "section": null,
+        "phaseKind": "general",
+        "text": "קבלה: הפעלת כל המכשירים, מים חמים/קרים, פרוטוקול מסירת ספק + תעודות אחריות",
+        "standardRef": null,
+        "itemType": "document",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      }
+    ],
+    "commonDefects": [],
+    "holdPoints": []
+  },
+  {
+    "stageNo": 15,
+    "title": "פיתוח חצר",
+    "standards": [],
+    "notes": [
+      {
+        "subStage": null,
+        "text": "רץ במקביל לגמר הפנים. פיתוח בסיסי (גישה בטוחה, מספר בית, פינוי פסולת) הוא בדרך כלל תנאי לטופס 4; פיתוח מלא — תנאי לתעודת גמר."
+      }
+    ],
+    "items": [
+      {
+        "sortOrder": 0,
+        "subStage": null,
+        "section": null,
+        "phaseKind": "general",
+        "text": "קירות תומכים וגדרות לפי ההיתר (גובה חורג דורש היתר); ניקוז מאחורי קירות תומכים (חצץ + נקזים)",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 1,
+        "subStage": null,
+        "section": null,
+        "phaseKind": "general",
+        "text": "שיפועי ניקוז מגרש מתוכננים הרחק מהבית — ללא הצפת מבנה או שכנים; תיאום מפלסים עם המדרכה והרחוב",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 2,
+        "subStage": null,
+        "section": null,
+        "phaseKind": "general",
+        "text": "חניה ומשטחים: מצע מהודק עם בדיקות, שיפועים, ריצוף חוץ נגד החלקה עמיד כפור",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 3,
+        "subStage": null,
+        "section": null,
+        "phaseKind": "general",
+        "text": "מדרגות חוץ אחידות עם מאחז יד כנדרש; מעקות בגבהים תקניים (ת\"י 1142)",
+        "standardRef": "ת\"י 1142",
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 4,
+        "subStage": null,
+        "section": null,
+        "phaseKind": "general",
+        "text": "תשתיות חוץ: תאורת גן, שער חשמלי, השקיה, ברזי גן — על התשתית שהוכנה בשלב השלד",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 5,
+        "subStage": null,
+        "section": null,
+        "phaseKind": "general",
+        "text": "פילר חשמל/מים/תקשורת בגבול המגרש לפי דרישות הרשות והחברות",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      },
+      {
+        "sortOrder": 6,
+        "subStage": null,
+        "section": null,
+        "phaseKind": "general",
+        "text": "איטום וניקוז מרפסות וגגות פיתוח שמעל חללים; אין אדמת גינה צמודה לקיר בית מעל רום האיטום",
+        "standardRef": null,
+        "itemType": "visual",
+        "thresholds": [],
+        "requiresBeforeCoverPhoto": false
+      }
+    ],
+    "commonDefects": [],
+    "holdPoints": []
+  }
+]

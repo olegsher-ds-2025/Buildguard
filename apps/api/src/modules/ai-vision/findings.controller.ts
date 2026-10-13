@@ -4,6 +4,7 @@ import { FindingsService } from "./findings.service";
 import { ApproveFindingDto } from "./dto/approve-finding.dto";
 import { JwtAuthGuard } from "../identity/guards/jwt-auth.guard";
 import { ProjectRoleGuard } from "../identity/guards/project-role.guard";
+import { NON_CONTRACTOR_ROLES, WRITE_ROLES, Roles } from "../identity/decorators/roles.decorator";
 import { CurrentUser } from "../identity/decorators/current-user.decorator";
 import type { JwtPayload } from "../identity/jwt-payload";
 
@@ -13,11 +14,13 @@ export class FindingsController {
   constructor(private readonly findings: FindingsService) {}
 
   @Get()
+  @Roles(...NON_CONTRACTOR_ROLES)
   list(@Param("projectId") projectId: string): Promise<FindingSummary[]> {
     return this.findings.list(projectId);
   }
 
   @Post(":detectionId/approve")
+  @Roles(...WRITE_ROLES)
   approve(
     @Param("projectId") projectId: string,
     @Param("detectionId") detectionId: string,
@@ -28,6 +31,7 @@ export class FindingsController {
   }
 
   @Post(":detectionId/dismiss")
+  @Roles(...WRITE_ROLES)
   dismiss(
     @Param("projectId") projectId: string,
     @Param("detectionId") detectionId: string,

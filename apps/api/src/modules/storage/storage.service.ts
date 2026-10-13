@@ -13,30 +13,44 @@ const DOWNLOAD_URL_TTL_SECONDS = 5 * 60;
  */
 @Injectable()
 export class StorageService {
+  /** Talks to storage from inside the deployment (HEAD, GET). */
   private readonly client: S3Client;
+  /** Only signs URLs handed to browsers, so its endpoint must be one a browser can reach. */
+  private readonly signer: S3Client;
   private readonly bucket: string;
 
   constructor(config: ConfigService) {
     this.bucket = config.getOrThrow<string>("S3_BUCKET");
-    this.client = new S3Client({
-      endpoint: config.getOrThrow<string>("S3_ENDPOINT"),
-      region: "us-east-1",
-      forcePathStyle: true,
-      credentials: {
-        accessKeyId: config.getOrThrow<string>("S3_ACCESS_KEY"),
-        secretAccessKey: config.getOrThrow<string>("S3_SECRET_KEY"),
-      },
-    });
+    const endpoint = config.getOrThrow<string>("S3_ENDPOINT");
+    const credentials = {
+      accessKeyId: config.getOrThrow<string>("S3_ACCESS_KEY"),
+      secretAccessKey: config.getOrThrow<string>("S3_SECRET_KEY"),
+    };
+    const make = (url: string) => new S3Client({ endpoint: url, region: "us-east-1", forcePathStyle: true, credentials });
+    this.client = make(endpoint);
+    // In a container network the internal host (e.g. http://minio:9000) means nothing to a browser.
+    this.signer = make(config.get<string>("S3_PUBLIC_ENDPOINT") ?? endpoint);
   }
 
   getUploadUrl(objectKey: string, contentType: string): Promise<string> {
     const command = new PutObjectCommand({ Bucket: this.bucket, Key: objectKey, ContentType: contentType });
-    return getSignedUrl(this.client, command, { expiresIn: UPLOAD_URL_TTL_SECONDS });
+    return getSignedUrl(this.signer, command, { expiresIn: UPLOAD_URL_TTL_SECONDS });
   }
 
   getDownloadUrl(objectKey: string): Promise<string> {
     const command = new GetObjectCommand({ Bucket: this.bucket, Key: objectKey });
-    return getSignedUrl(this.client, command, { expiresIn: DOWNLOAD_URL_TTL_SECONDS });
+    return getSignedUrl(this.signer, command, { expiresIn: DOWNLOAD_URL_TTL_SECONDS });
+  }
+
+  /** Whole object as a buffer, or null if it is missing. Used when building reports and the building file. */
+  async getObjectBuffer(objectKey: string): Promise<Buffer | null> {
+    try {
+      const res = await this.client.send(new GetObjectCommand({ Bucket: this.bucket, Key: objectKey }));
+      return res.Body ? Buffer.from(await res.Body.transformToByteArray()) : null;
+    } catch {
+      // A missing or unreadable file must not sink a whole export; callers list what they could not read.
+      return null;
+    }
   }
 
   /** Used by "confirm" endpoints to verify a claimed upload actually happened before persisting anything. */

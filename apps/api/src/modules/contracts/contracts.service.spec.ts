@@ -2,6 +2,7 @@ import { BadRequestException, NotFoundException } from "@nestjs/common";
 import { ContractsService } from "./contracts.service";
 import type { PrismaService } from "../../prisma/prisma.service";
 import type { AuditService } from "../audit/audit.service";
+import type { HoldPointsService } from "../hold-points/hold-points.service";
 
 describe("ContractsService", () => {
   const tender = { id: "tender-1", projectId: "proj-1", status: "invited_bidding" };
@@ -69,7 +70,8 @@ describe("ContractsService", () => {
       }),
     } as unknown as PrismaService;
     const audit = { record: jest.fn().mockResolvedValue(undefined) } as unknown as AuditService;
-    return { service: new ContractsService(prisma, audit), prisma, audit };
+    const holdPoints = { assertNoOpenHoldPoints: jest.fn() } as unknown as HoldPointsService;
+    return { service: new ContractsService(prisma, audit, holdPoints), prisma, audit };
   }
 
   it("selectWinner() rejects a tender that isn't awaiting a winner", async () => {

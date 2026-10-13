@@ -1,6 +1,7 @@
 import { ExecutionContext, ForbiddenException, NotFoundException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { ProjectRoleGuard } from "./project-role.guard";
+import { ROLES_KEY } from "../decorators/roles.decorator";
 import type { PrismaService } from "../../../prisma/prisma.service";
 import type { JwtPayload } from "../jwt-payload";
 
@@ -9,6 +10,7 @@ function contextFor(user: JwtPayload, projectId: string | undefined): ExecutionC
   return {
     switchToHttp: () => ({ getRequest: () => request }),
     getHandler: () => function handler() {},
+    getClass: () => class Controller {},
   } as unknown as ExecutionContext;
 }
 
@@ -19,7 +21,7 @@ describe("ProjectRoleGuard", () => {
     const prisma = {
       projectMember: { findUnique: jest.fn().mockResolvedValue(findUniqueResult) },
     } as unknown as PrismaService;
-    const reflector = { get: jest.fn().mockReturnValue(requiredRoles) } as unknown as Reflector;
+    const reflector = { getAllAndOverride: jest.fn().mockReturnValue(requiredRoles) } as unknown as Reflector;
     return new ProjectRoleGuard(reflector, prisma);
   }
 
@@ -46,5 +48,32 @@ describe("ProjectRoleGuard", () => {
   it("allows access when the member's role is in the required set", async () => {
     const guard = makeGuard({ projectId: "project-1", userId: "user-1", role: "owner" }, ["owner", "project_manager"]);
     await expect(guard.canActivate(contextFor(user, "project-1"))).resolves.toBe(true);
+  });
+
+  describe("with real @Roles metadata", () => {
+    const member = (role: string) => ({ findUnique: jest.fn().mockResolvedValue({ projectId: "project-1", userId: "user-1", role }) });
+    const guardFor = (role: string) => new ProjectRoleGuard(new Reflector(), { projectMember: member(role) } as unknown as PrismaService);
+
+    function contextWith(handlerRoles?: string[], classRoles?: string[]): ExecutionContext {
+      class Controller {}
+      function handler() {}
+      if (classRoles) Reflect.defineMetadata(ROLES_KEY, classRoles, Controller);
+      if (handlerRoles) Reflect.defineMetadata(ROLES_KEY, handlerRoles, handler);
+      return {
+        switchToHttp: () => ({ getRequest: () => ({ user, params: { projectId: "project-1" } }) }),
+        getHandler: () => handler,
+        getClass: () => Controller,
+      } as unknown as ExecutionContext;
+    }
+
+    it("enforces roles declared on the controller class", async () => {
+      await expect(guardFor("inspector").canActivate(contextWith(undefined, ["owner", "project_manager"]))).rejects.toThrow(ForbiddenException);
+      await expect(guardFor("owner").canActivate(contextWith(undefined, ["owner", "project_manager"]))).resolves.toBe(true);
+    });
+
+    it("lets a route's own @Roles override the class default", async () => {
+      await expect(guardFor("inspector").canActivate(contextWith(["inspector"], ["owner"]))).resolves.toBe(true);
+      await expect(guardFor("owner").canActivate(contextWith(["inspector"], ["owner"]))).rejects.toThrow(ForbiddenException);
+    });
   });
 });

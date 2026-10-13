@@ -36,7 +36,11 @@ export class ProjectRoleGuard implements CanActivate {
       throw new NotFoundException();
     }
 
-    const requiredRoles = this.reflector.get<ProjectRole[] | undefined>(ROLES_KEY, context.getHandler());
+    // Handler-level roles win over class-level ones, so a controller can set a default and a route can narrow it.
+    const requiredRoles = this.reflector.getAllAndOverride<ProjectRole[] | undefined>(ROLES_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
     if (requiredRoles && requiredRoles.length > 0 && !requiredRoles.includes(membership.role)) {
       throw new ForbiddenException();
     }

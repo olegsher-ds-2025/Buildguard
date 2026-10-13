@@ -1,14 +1,16 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import type { ContractPaymentMilestoneSummary, ContractSummary } from "@buildguard/shared-types";
 import type { Prisma } from "@prisma/client";
 import { PrismaService } from "../../prisma/prisma.service";
 import { AuditService } from "../audit/audit.service";
+import { HoldPointsService } from "../hold-points/hold-points.service";
 
 @Injectable()
 export class ContractsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
+    private readonly holdPoints: HoldPointsService,
   ) {}
 
   /**
@@ -109,6 +111,50 @@ export class ContractsService {
   }
 
   /**
+   * Releases a milestone's payment. A phase-linked milestone needs the phase
+   * approved by the supervisor and no open hold point, checked in the same
+   * transaction as the write. Phase-less contracts have nothing to gate on.
+   */
+  async releasePaymentMilestone(
+    projectId: string,
+    contractId: string,
+    milestoneId: string,
+    ownerUserId: string,
+  ): Promise<ContractPaymentMilestoneSummary> {
+    const contract = await this.findOwnedContract(projectId, contractId);
+    if (contract.status !== "signed" && contract.status !== "active") {
+      throw new BadRequestException(`Payments cannot be released on a ${contract.status} contract`);
+    }
+    const existing = await this.prisma.contractPaymentMilestone.findFirst({ where: { id: milestoneId, contractId } });
+    if (!existing) throw new NotFoundException();
+    if (existing.status !== "pending") throw new BadRequestException("Milestone payment was already released");
+
+    const released = await this.prisma.$transaction(async (tx) => {
+      if (existing.phaseId) {
+        const phase = await tx.phase.findUnique({ where: { id: existing.phaseId } });
+        if (phase?.status !== "verified") {
+          throw new ConflictException("The phase has not been approved by the supervisor yet");
+        }
+        await this.holdPoints.assertNoOpenHoldPoints(tx, existing.phaseId);
+      }
+      return tx.contractPaymentMilestone.update({
+        where: { id: milestoneId },
+        data: { status: "released", releasedAt: new Date() },
+      });
+    });
+    await this.audit.record({
+      actorUserId: ownerUserId,
+      actorType: "customer",
+      action: "payment_milestone_released",
+      entityType: "contract_payment_milestone",
+      entityId: milestoneId,
+      projectId,
+      metadata: { contractId, phaseId: existing.phaseId, amountMinor: existing.amountMinor.toString() },
+    });
+    return this.toMilestoneSummary(released);
+  }
+
+  /**
    * v1 simplification (build plan §9): the owner can't yet define a custom
    * payment schedule, so this defaults to one milestone per project phase,
    * proportioned by that phase's planned-budget share of the total. This is
@@ -173,6 +219,7 @@ export class ContractsService {
   private toMilestoneSummary(milestone: {
     id: string;
     sequenceNo: number;
+    phaseId: string | null;
     description: string;
     amountMinor: bigint;
     currency: string;
@@ -182,6 +229,7 @@ export class ContractsService {
     return {
       id: milestone.id,
       sequenceNo: milestone.sequenceNo,
+      phaseId: milestone.phaseId,
       description: milestone.description,
       amountMinor: milestone.amountMinor.toString(),
       currency: milestone.currency,
@@ -205,6 +253,7 @@ export class ContractsService {
     milestones: {
       id: string;
       sequenceNo: number;
+      phaseId: string | null;
       description: string;
       amountMinor: bigint;
       currency: string;

@@ -3,6 +3,7 @@ import type { ProjectDashboardResponse, ProjectSummary } from "@buildguard/share
 import { ProjectsService } from "./projects.service";
 import { JwtAuthGuard } from "../identity/guards/jwt-auth.guard";
 import { ProjectRoleGuard } from "../identity/guards/project-role.guard";
+import { NON_CONTRACTOR_ROLES, Roles } from "../identity/decorators/roles.decorator";
 import { CurrentUser } from "../identity/decorators/current-user.decorator";
 import type { JwtPayload } from "../identity/jwt-payload";
 
@@ -17,6 +18,7 @@ export class ProjectsController {
   }
 
   @Get(":projectId/dashboard")
+  @Roles(...NON_CONTRACTOR_ROLES)
   @UseGuards(ProjectRoleGuard)
   dashboard(@Param("projectId") projectId: string): Promise<ProjectDashboardResponse> {
     return this.projects.getDashboard(projectId);

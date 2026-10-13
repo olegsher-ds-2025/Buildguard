@@ -5,6 +5,7 @@ import { CreateSiteCaptureUploadDto } from "./dto/create-site-capture-upload.dto
 import { ConfirmSiteCaptureUploadDto } from "./dto/confirm-site-capture-upload.dto";
 import { JwtAuthGuard } from "../identity/guards/jwt-auth.guard";
 import { ProjectRoleGuard } from "../identity/guards/project-role.guard";
+import { WRITE_ROLES, Roles } from "../identity/decorators/roles.decorator";
 import { CurrentUser } from "../identity/decorators/current-user.decorator";
 import type { JwtPayload } from "../identity/jwt-payload";
 
@@ -14,6 +15,7 @@ export class SiteCapturesController {
   constructor(private readonly siteCaptures: SiteCapturesService) {}
 
   @Post()
+  @Roles(...WRITE_ROLES)
   createUpload(
     @Param("projectId") projectId: string,
     @Body() dto: CreateSiteCaptureUploadDto,
@@ -22,6 +24,7 @@ export class SiteCapturesController {
   }
 
   @Post(":siteCaptureId/confirm")
+  @Roles(...WRITE_ROLES)
   confirmUpload(
     @Param("projectId") projectId: string,
     @Param("siteCaptureId") siteCaptureId: string,

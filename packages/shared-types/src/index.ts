@@ -392,6 +392,7 @@ export interface SelectWinnerRequest {
 export interface ContractPaymentMilestoneSummary {
   id: string;
   sequenceNo: number;
+  phaseId: string | null;
   description: string;
   amountMinor: AmountMinorWire;
   currency: string;
@@ -619,4 +620,557 @@ export interface MeasurementSummary {
 export interface CreateMeasurementRequest {
   kind: MeasurementKind;
   points: PlanPoint[];
+}
+
+// --- Supervision checklists ---
+
+export type ChecklistPhaseKind = "before" | "during" | "after" | "general";
+
+export type ChecklistItemType = "visual" | "measurement" | "lab_test" | "document" | "written_approval";
+
+export interface ChecklistThreshold {
+  op: "≥" | "≤" | "<" | ">";
+  value: number;
+  upperValue: number | null;
+  unit: string | null;
+  raw: string;
+}
+
+export interface ChecklistTemplateSummary {
+  id: string;
+  stageNo: number;
+  title: string;
+  version: number;
+  isSystem: boolean;
+  basedOnTemplateId: string | null;
+  itemCount: number;
+  holdPointCount: number;
+}
+
+export interface ChecklistTextBlock {
+  text: string;
+  subStage: string | null;
+}
+
+export interface ChecklistItemSummary {
+  id: string;
+  sortOrder: number;
+  subStage: string | null;
+  section: string | null;
+  phaseKind: ChecklistPhaseKind;
+  text: string;
+  standardRef: string | null;
+  itemType: ChecklistItemType;
+  mandatory: boolean;
+  thresholds: ChecklistThreshold[];
+  thresholdsReviewed: boolean;
+  requiresBeforeCoverPhoto: boolean;
+}
+
+export interface ChecklistHoldPointSummary {
+  id: string;
+  sortOrder: number;
+  subStage: string | null;
+  text: string;
+}
+
+export interface CommonDefectSummary {
+  id: string;
+  subStage: string | null;
+  text: string;
+  costMinMinor: AmountMinorWire | null;
+  costMaxMinor: AmountMinorWire | null;
+}
+
+export interface ChecklistTemplateDetail extends ChecklistTemplateSummary {
+  standards: ChecklistTextBlock[];
+  notes: ChecklistTextBlock[];
+  items: ChecklistItemSummary[];
+  holdPoints: ChecklistHoldPointSummary[];
+  commonDefects: CommonDefectSummary[];
+}
+
+// --- Inspections & defects ---
+
+export type InspectionStatus = "open" | "completed";
+export type InspectionOutcome = "ok" | "fail" | "na";
+export type DefectSource = "ai_vision" | "checklist" | "manual";
+
+export interface InspectionSummary {
+  id: string;
+  phaseId: string;
+  phaseName: string;
+  templateId: string;
+  stageNo: number;
+  title: string;
+  inspectorUserId: string;
+  status: InspectionStatus;
+  startedAt: string;
+  completedAt: string | null;
+  answeredCount: number;
+  itemCount: number;
+}
+
+export interface InspectionItemState extends ChecklistItemSummary {
+  outcome: InspectionOutcome | null;
+  numericValue: number | null;
+  outOfThreshold: boolean;
+  note: string | null;
+  defectId: string | null;
+  beforeCoverPhotoCount: number;
+}
+
+export interface InspectionDetail extends InspectionSummary {
+  items: InspectionItemState[];
+  holdPoints: ChecklistHoldPointSummary[];
+}
+
+export interface CreateInspectionRequest {
+  phaseId: string;
+  templateId: string;
+}
+
+export interface RecordInspectionResultRequest {
+  checklistItemId: string;
+  outcome: InspectionOutcome;
+  numericValue?: number;
+  note?: string;
+  /** Severity for the defect a failed item opens; 1 (cosmetic) – 5 (critical). Defaults to 3. */
+  severity?: number;
+}
+
+export interface DefectSummary {
+  id: string;
+  title: string;
+  severity: number;
+  status: DefectStatus;
+  source: DefectSource;
+  phaseId: string | null;
+  assignedToUserId: string | null;
+  assigneeName: string | null;
+  dueDate: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AssignDefectRequest {
+  assigneeUserId: string;
+  dueDate?: string;
+}
+
+export type DefectAction = "start" | "fix" | "verify" | "reopen";
+
+export interface DefectActionRequest {
+  note?: string;
+}
+
+// --- Photos ---
+
+export type PhotoTag = "defect" | "inspection" | "approval" | "before_cover" | "after";
+
+/** Coordinates are fractions (0–1) of the image width/height so markup survives any display size. */
+export type PhotoMarkupShape =
+  | { type: "arrow"; x1: number; y1: number; x2: number; y2: number }
+  | { type: "circle"; x: number; y: number; r: number }
+  | { type: "text"; x: number; y: number; text: string };
+
+export interface PhotoLinks {
+  phaseId?: string;
+  inspectionId?: string;
+  checklistItemId?: string;
+  defectId?: string;
+}
+
+export interface CreatePhotoUploadRequest {
+  contentType: string;
+}
+
+export interface CreatePhotoUploadResponse {
+  photoId: string;
+  uploadUrl: string;
+}
+
+export interface ConfirmPhotoUploadRequest extends PhotoLinks {
+  tag: PhotoTag;
+  markup?: PhotoMarkupShape[];
+  gpsLat?: number;
+  gpsLng?: number;
+  takenAt?: string;
+}
+
+export interface PhotoSummary extends PhotoLinks {
+  id: string;
+  tag: PhotoTag;
+  url: string;
+  markup: PhotoMarkupShape[];
+  gpsLat: number | null;
+  gpsLng: number | null;
+  takenAt: string | null;
+  uploadedByUserId: string;
+  createdAt: string;
+}
+
+// --- Checklist template editing ---
+
+export interface ChecklistThresholdInput {
+  op: ChecklistThreshold["op"];
+  value: number;
+  upperValue?: number;
+  unit?: string;
+  raw?: string;
+}
+
+export interface UpdateChecklistTemplateRequest {
+  title: string;
+}
+
+export interface UpdateChecklistItemRequest {
+  text?: string;
+  subStage?: string;
+  section?: string;
+  phaseKind?: ChecklistPhaseKind;
+  itemType?: ChecklistItemType;
+  standardRef?: string;
+  mandatory?: boolean;
+  requiresBeforeCoverPhoto?: boolean;
+  thresholds?: ChecklistThresholdInput[];
+  thresholdsReviewed?: boolean;
+}
+
+export interface CreateChecklistItemRequest extends UpdateChecklistItemRequest {
+  text: string;
+  phaseKind: ChecklistPhaseKind;
+  itemType: ChecklistItemType;
+  /** Insert after this item; appended at the end when omitted. */
+  afterItemId?: string;
+}
+
+export interface SaveChecklistHoldPointRequest {
+  text: string;
+  subStage?: string;
+}
+
+// --- Hold points & stage gate ---
+
+export type HoldPointState = "open" | "signed" | "bypassed";
+export type HoldPointSignerCapacity = "engineer" | "soil_consultant" | "inspector" | "lab" | "other";
+
+export interface HoldPointSummary {
+  id: string;
+  phaseId: string;
+  phaseName: string;
+  text: string;
+  subStage: string | null;
+  state: HoldPointState;
+  closedAt: string | null;
+  signerName: string | null;
+  signerCapacity: HoldPointSignerCapacity | null;
+  /** Mandatory justification when state is "bypassed". */
+  reason: string | null;
+  photoId: string | null;
+  documentId: string | null;
+}
+
+export interface SignHoldPointRequest {
+  signerName: string;
+  signerCapacity: HoldPointSignerCapacity;
+  /** At least one attachment is required: the approval document or a photo. */
+  photoId?: string;
+  documentId?: string;
+  note?: string;
+}
+
+export interface BypassHoldPointRequest {
+  reason: string;
+}
+
+export interface InstantiateHoldPointsRequest {
+  templateId: string;
+}
+
+export interface ReopenHoldPointRequest {
+  note?: string;
+}
+
+// --- Lab tests, timed tests & notifications ---
+
+export type ConcreteResultVerdict = "pass" | "fail";
+export type FormworkStatus = "removed" | "ready" | "too_early" | "span_unknown" | "blocked_failed_cubes";
+
+export interface ConcreteResultSummary {
+  id: string;
+  ageDays: number;
+  strengthMpa: number;
+  verdict: ConcreteResultVerdict;
+  testedAt: string | null;
+  note: string | null;
+  createdAt: string;
+}
+
+export interface ConcretePourSummary {
+  id: string;
+  phaseId: string | null;
+  element: string;
+  concreteGrade: string;
+  requiredMpa28: number;
+  deliveryNote: string | null;
+  slumpCm: number | null;
+  spanMeters: number | null;
+  cantileverMeters: number | null;
+  castAt: string;
+  /** Latest result per age (7 and 28 days). */
+  results: ConcreteResultSummary[];
+  result7DueAt: string;
+  result28DueAt: string;
+  earliestFormworkRemovalAt: string | null;
+  formworkStatus: FormworkStatus;
+  formworkRemovedAt: string | null;
+}
+
+export interface CreateConcretePourRequest {
+  element: string;
+  concreteGrade: string;
+  /** Required unless the grade is one the checklist gives a figure for (ב-30). */
+  requiredMpa28?: number;
+  deliveryNote?: string;
+  slumpCm?: number;
+  spanMeters?: number;
+  cantileverMeters?: number;
+  castAt: string;
+  phaseId?: string;
+}
+
+export interface RecordConcreteResultRequest {
+  ageDays: 7 | 28;
+  strengthMpa: number;
+  testedAt?: string;
+  note?: string;
+}
+
+export type TimedTestKind = "pressure" | "flood";
+export type TimedTestOutcome = "passed" | "failed";
+export type TimedTestStatus = "running" | "due" | "passed" | "failed";
+
+export interface TimedTestSummary {
+  id: string;
+  kind: TimedTestKind;
+  phaseId: string | null;
+  location: string;
+  startedAt: string;
+  durationHours: number;
+  dueAt: string;
+  unit: string;
+  startReading: number | null;
+  endReading: number | null;
+  status: TimedTestStatus;
+  outcome: TimedTestOutcome | null;
+  note: string | null;
+  completedAt: string | null;
+}
+
+export interface StartTimedTestRequest {
+  kind: TimedTestKind;
+  location: string;
+  startedAt?: string;
+  durationHours?: number;
+  startReading?: number;
+  phaseId?: string;
+  startPhotoId?: string;
+}
+
+export interface CompleteTimedTestRequest {
+  outcome: TimedTestOutcome;
+  endReading?: number;
+  note?: string;
+  endPhotoId?: string;
+}
+
+export interface NotificationSummary {
+  id: string;
+  projectId: string | null;
+  /** lab_result_due | cube_failed | timed_test_due | pour_coordination */
+  type: string;
+  payload: Record<string, unknown>;
+  readAt: string | null;
+  createdAt: string;
+}
+
+// --- Daily logs ---
+
+export interface HeadcountEntry {
+  name: string;
+  workers: number;
+}
+
+export type DailyLogStatus = "draft" | "locked";
+
+export interface DailyLogSummary {
+  id: string;
+  /** YYYY-MM-DD */
+  logDate: string;
+  status: DailyLogStatus;
+  weatherCode: number | null;
+  temperatureC: number | null;
+  headcount: HeadcountEntry[];
+  workDone: string;
+  safetyOk: boolean | null;
+  safetyNotes: string | null;
+  /** Pours scheduled or cast on this date (Asia/Jerusalem), read from the lab-test records. */
+  pours: { id: string; element: string; concreteGrade: string }[];
+  approvedAt: string | null;
+  contentHash: string | null;
+}
+
+export interface SaveDailyLogRequest {
+  weatherCode?: number | null;
+  temperatureC?: number | null;
+  headcount?: HeadcountEntry[];
+  workDone?: string;
+  safetyOk?: boolean | null;
+  safetyNotes?: string | null;
+}
+
+export interface CreateDailyLogRequest extends SaveDailyLogRequest {
+  /** YYYY-MM-DD */
+  logDate: string;
+}
+
+/** WMO weather-interpretation codes (as returned by Open-Meteo), grouped for a site log. */
+export function weatherLabelHe(code: number | null): string {
+  if (code === null) return "—";
+  if (code === 0) return "בהיר";
+  if (code <= 3) return "מעונן חלקית";
+  if (code === 45 || code === 48) return "ערפל";
+  if (code >= 51 && code <= 57) return "טפטוף";
+  if (code >= 61 && code <= 67) return "גשם";
+  if (code >= 71 && code <= 77) return "שלג";
+  if (code >= 80 && code <= 82) return "ממטרים";
+  if (code >= 95) return "סופת רעמים";
+  return "—";
+}
+
+/** Representative codes for the manual weather picker, in display order. */
+export const WEATHER_CHOICES: number[] = [0, 2, 45, 53, 63, 81, 95];
+
+// --- Form 4 readiness ---
+
+export const FORM4_REQUIREMENTS: { key: string; titleHe: string }[] = [
+  { key: "plumbing_lab", titleHe: 'בדיקת מעבדה לאינסטלציה (ת"י 1205)' },
+  { key: "electrical_inspector", titleHe: "אישור בודק חשמל מוסמך" },
+  { key: "gas_tightness", titleHe: 'בדיקת אטימות גז (ת"י 158)' },
+  { key: "mamad_seal", titleHe: 'בדיקת אטימות ממ"ד' },
+  { key: "solar_heater", titleHe: 'דוד שמש (ת"י 579)' },
+  { key: "statutory_foundations_report", titleHe: "דיווח סטטוטורי — גמר יסודות" },
+  { key: "statutory_structure_report", titleHe: "דיווח סטטוטורי — גמר שלד" },
+  { key: "as_made_drawings", titleHe: "מדידות ותוכניות As-Made" },
+  { key: "basic_development", titleHe: "פיתוח בסיסי" },
+];
+
+export interface Form4ItemSummary {
+  key: string;
+  satisfied: boolean;
+  documentId: string | null;
+  documentTitle: string | null;
+  note: string | null;
+  satisfiedAt: string | null;
+}
+
+export interface Form4Readiness {
+  items: Form4ItemSummary[];
+  satisfiedCount: number;
+  totalCount: number;
+  readinessPct: number;
+  /** Things that should be settled before the file goes to the authority. */
+  blockers: { openHoldPoints: number; unapprovedPhases: number; failedConcreteResults: number };
+}
+
+export interface SaveForm4ItemRequest {
+  satisfied: boolean;
+  /** Required when marking an item satisfied. */
+  documentId?: string;
+  note?: string;
+}
+
+// --- AI quote comparison ---
+
+export type QuoteStatus = "uploaded" | "extracted" | "failed";
+
+/** What the model read from one quote document. Null means the document does not say; nothing is guessed. */
+export interface ExtractedQuote {
+  supplierName: string | null;
+  totalAmountIls: number | null;
+  vatIncluded: boolean | null;
+  scopeItems: string[];
+  exclusions: string[];
+  payment: { advancePct: number | null; schedule: string | null };
+  warranty: { years: number | null; notes: string | null };
+  timelineDays: number | null;
+  notes: string | null;
+}
+
+export type QuoteRiskCode = "high_advance" | "missing_warranty" | "vague_scope" | "no_total" | "price_unusually_low";
+
+/** Computed by the server from the extracted fields, not by the model. */
+export interface QuoteRisk {
+  code: QuoteRiskCode;
+  severity: "warning" | "critical";
+  detail: string | null;
+}
+
+export interface QuoteSummary {
+  id: string;
+  filename: string;
+  contentType: string;
+  supplierName: string | null;
+  status: QuoteStatus;
+  extraction: ExtractedQuote | null;
+  risks: QuoteRisk[];
+  error: string | null;
+}
+
+export type ScopeCoverage = "included" | "missing" | "unclear";
+export type RequirementCoverage = "covered" | "missing" | "unclear";
+
+export interface QuoteComparisonAnalysis {
+  /** Quote ids in the order the coverage arrays below follow. */
+  quoteIds: string[];
+  scopeMatrix: { item: string; coverage: ScopeCoverage[] }[];
+  /** The stage's professional requirements (from the supervision checklist) checked against each quote. */
+  requirementCoverage: { requirement: string; coverage: RequirementCoverage[] }[];
+  recommendedQuoteId: string | null;
+  rationale: string;
+  questions: string[];
+  negotiationTips: string[];
+}
+
+export interface QuoteComparisonSummary {
+  id: string;
+  title: string;
+  stageNo: number | null;
+  quotes: QuoteSummary[];
+  analysis: QuoteComparisonAnalysis | null;
+  analyzedAt: string | null;
+  createdAt: string;
+}
+
+export interface CreateQuoteComparisonRequest {
+  title: string;
+  /** Checklist stage 1-15 to cross-check quotes against. */
+  stageNo?: number;
+}
+
+export interface CreateQuoteUploadRequest {
+  filename: string;
+  contentType: string;
+}
+
+export interface CreateQuoteUploadResponse {
+  quoteId: string;
+  uploadUrl: string;
+}
+
+export interface ConfirmQuoteUploadRequest {
+  filename: string;
+  contentType: string;
+  supplierName?: string;
 }

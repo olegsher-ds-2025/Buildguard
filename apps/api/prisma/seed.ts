@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import * as argon2 from "argon2";
+import { seedChecklistTemplates } from "./seed-checklists";
 
 const prisma = new PrismaClient();
 
@@ -16,6 +17,7 @@ async function main() {
   const ownerPasswordHash = await argon2.hash("owner-password-123");
   const staffPasswordHash = await argon2.hash("staff-password-123");
   const contractorPasswordHash = await argon2.hash("contractor-password-123");
+  const inspectorPasswordHash = await argon2.hash("inspector-password-123");
 
   const owner = await prisma.user.upsert({
     where: { email: "owner@buildguard.dev" },
@@ -37,6 +39,17 @@ async function main() {
       displayName: "T. Barak (Ops)",
       userType: "staff",
       staffProfile: { create: { staffRole: "trust_safety_admin" } },
+    },
+  });
+
+  const inspector = await prisma.user.upsert({
+    where: { email: "inspector@buildguard.dev" },
+    update: {},
+    create: {
+      email: "inspector@buildguard.dev",
+      passwordHash: inspectorPasswordHash,
+      displayName: "R. Levi (Inspector)",
+      userType: "customer",
     },
   });
 
@@ -108,6 +121,8 @@ async function main() {
       },
     });
   }
+  // Kfar Saba; lets the daily log look up the day's weather.
+  await prisma.project.update({ where: { id: project.id }, data: { latitude: 32.178, longitude: 34.907 } });
 
   await prisma.projectMember.upsert({
     where: { projectId_userId: { projectId: project.id, userId: owner.id } },
@@ -118,6 +133,12 @@ async function main() {
     where: { projectId_userId: { projectId: project.id, userId: amirUser.id } },
     update: {},
     create: { projectId: project.id, userId: amirUser.id, role: "contractor", acceptedAt: new Date() },
+  });
+
+  await prisma.projectMember.upsert({
+    where: { projectId_userId: { projectId: project.id, userId: inspector.id } },
+    update: {},
+    create: { projectId: project.id, userId: inspector.id, role: "inspector", acceptedAt: new Date() },
   });
 
   const phaseSpecs = [
@@ -507,7 +528,30 @@ async function main() {
     },
   });
 
+  const checklistTemplatesCreated = await seedChecklistTemplates(prisma);
+
+  // Demo state: the Structure phase is mid-supervision, so its stage-3 hold points are open.
+  const structureTemplate = await prisma.checklistTemplate.findFirstOrThrow({
+    where: { ownerUserId: null, stageNo: 3 },
+    include: { holdPoints: true },
+  });
+  const structurePhaseId = `${project.id}-2`;
+  for (const h of structureTemplate.holdPoints) {
+    await prisma.holdPoint.upsert({
+      where: { phaseId_sourceHoldPointId: { phaseId: structurePhaseId, sourceHoldPointId: h.id } },
+      update: {},
+      create: {
+        projectId: project.id,
+        phaseId: structurePhaseId,
+        sourceHoldPointId: h.id,
+        text: h.text,
+        subStage: h.subStage,
+      },
+    });
+  }
+
   console.log("Seed complete:", {
+    checklistTemplatesCreated,
     project: project.name,
     owner: owner.email,
     staff: staff.email,

@@ -4,6 +4,7 @@ import { CadService } from "./cad.service";
 import { CreateMeasurementDto } from "./dto/create-measurement.dto";
 import { JwtAuthGuard } from "../identity/guards/jwt-auth.guard";
 import { ProjectRoleGuard } from "../identity/guards/project-role.guard";
+import { NON_CONTRACTOR_ROLES, WRITE_ROLES, Roles } from "../identity/decorators/roles.decorator";
 import { CurrentUser } from "../identity/decorators/current-user.decorator";
 import type { JwtPayload } from "../identity/jwt-payload";
 
@@ -13,6 +14,7 @@ export class CadController {
   constructor(private readonly cad: CadService) {}
 
   @Get("viewer")
+  @Roles(...NON_CONTRACTOR_ROLES)
   getViewer(
     @Param("projectId") projectId: string,
     @Param("documentId") documentId: string,
@@ -21,6 +23,7 @@ export class CadController {
   }
 
   @Get("measurements")
+  @Roles(...NON_CONTRACTOR_ROLES)
   listMeasurements(
     @Param("projectId") projectId: string,
     @Param("documentId") documentId: string,
@@ -29,6 +32,7 @@ export class CadController {
   }
 
   @Post("measurements")
+  @Roles(...WRITE_ROLES)
   createMeasurement(
     @Param("projectId") projectId: string,
     @Param("documentId") documentId: string,

@@ -62,28 +62,41 @@ model User {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  staffProfile          StaffProfile?
-  contractorProfile     ContractorProfile? @relation("ContractorUser")
-  ownedProjects         Project[]          @relation("ProjectOwner")
-  projectMemberships    ProjectMember[]
-  verifiedContractors   ContractorProfile[] @relation("VerifiedBy")
-  verifiedMilestones     Milestone[]        @relation("MilestoneVerifiedBy")
-  uploadedPlanVersions  PlanVersion[]      @relation("PlanVersionUploadedBy")
-  approvedInvoices      Invoice[]          @relation("InvoiceApprovedBy")
-  uploadedSiteCaptures  SiteCapture[]      @relation("SiteCaptureUploadedBy")
-  reviewedDetections    Detection[]        @relation("DetectionReviewedBy")
-  assignedDefects       Defect[]           @relation("DefectAssignedTo")
-  defectEvents          DefectEvent[]      @relation("DefectEventActor")
-  notifications         Notification[]
-  auditEntries          AuditEntry[]       @relation("AuditActor")
-  createdTenders        Tender[]           @relation("TenderCreatedBy")
-  signedContracts       Contract[]         @relation("ContractSignedBy")
-  authoredReviews       Review[]           @relation("ReviewAuthor")
-  raisedDisputes        Dispute[]          @relation("DisputeRaisedBy")
-  resolvedDisputes      Dispute[]          @relation("DisputeResolvedBy")
-  createdConversations  Conversation[]     @relation("ConversationCreatedBy")
-  authoredMessages      Message[]          @relation("MessageAuthor")
-  createdMeasurements   Measurement[]      @relation("MeasurementCreatedBy")
+  staffProfile            StaffProfile?
+  contractorProfile       ContractorProfile?  @relation("ContractorUser")
+  ownedProjects           Project[]           @relation("ProjectOwner")
+  projectMemberships      ProjectMember[]
+  verifiedContractors     ContractorProfile[] @relation("VerifiedBy")
+  verifiedMilestones      Milestone[]         @relation("MilestoneVerifiedBy")
+  uploadedPlanVersions    PlanVersion[]       @relation("PlanVersionUploadedBy")
+  approvedInvoices        Invoice[]           @relation("InvoiceApprovedBy")
+  uploadedSiteCaptures    SiteCapture[]       @relation("SiteCaptureUploadedBy")
+  reviewedDetections      Detection[]         @relation("DetectionReviewedBy")
+  assignedDefects         Defect[]            @relation("DefectAssignedTo")
+  defectEvents            DefectEvent[]       @relation("DefectEventActor")
+  notifications           Notification[]
+  auditEntries            AuditEntry[]        @relation("AuditActor")
+  createdTenders          Tender[]            @relation("TenderCreatedBy")
+  signedContracts         Contract[]          @relation("ContractSignedBy")
+  authoredReviews         Review[]            @relation("ReviewAuthor")
+  raisedDisputes          Dispute[]           @relation("DisputeRaisedBy")
+  resolvedDisputes        Dispute[]           @relation("DisputeResolvedBy")
+  createdConversations    Conversation[]      @relation("ConversationCreatedBy")
+  authoredMessages        Message[]           @relation("MessageAuthor")
+  createdMeasurements     Measurement[]       @relation("MeasurementCreatedBy")
+  checklistTemplates      ChecklistTemplate[] @relation("ChecklistTemplateOwner")
+  inspections             Inspection[]        @relation("InspectionInspector")
+  inspectionResults       InspectionResult[]  @relation("InspectionResultRecordedBy")
+  uploadedPhotos          Photo[]             @relation("PhotoUploadedBy")
+  holdPointEvents         HoldPointEvent[]    @relation("HoldPointEventActor")
+  concretePours           ConcretePour[]      @relation("ConcretePourCreatedBy")
+  concreteResults         ConcreteResult[]    @relation("ConcreteResultRecordedBy")
+  timedTestsStarted       TimedTest[]         @relation("TimedTestStartedBy")
+  timedTestsCompleted     TimedTest[]         @relation("TimedTestCompletedBy")
+  dailyLogsCreated        DailyLog[]          @relation("DailyLogCreatedBy")
+  dailyLogsApproved       DailyLog[]          @relation("DailyLogApprovedBy")
+  form4Satisfied          Form4Item[]         @relation("Form4SatisfiedBy")
+  quoteComparisonsCreated QuoteComparison[]   @relation("QuoteComparisonCreatedBy")
 
   @@map("users")
 }
@@ -99,28 +112,28 @@ model StaffProfile {
 }
 
 model ContractorProfile {
-  id                   String                       @id @default(uuid())
-  userId               String?                      @unique @map("user_id")
-  companyName          String                       @map("company_name")
-  licenseNumber        String?                      @map("license_number")
-  licenseExpiryDate    DateTime?                    @map("license_expiry_date")
-  insuranceExpiryDate  DateTime?                    @map("insurance_expiry_date")
-  verificationStatus   ContractorVerificationStatus @default(unverified) @map("verification_status")
-  verifiedAt           DateTime?                    @map("verified_at")
-  verifiedByStaffUserId String?                     @map("verified_by_staff_user_id")
+  id                    String                       @id @default(uuid())
+  userId                String?                      @unique @map("user_id")
+  companyName           String                       @map("company_name")
+  licenseNumber         String?                      @map("license_number")
+  licenseExpiryDate     DateTime?                    @map("license_expiry_date")
+  insuranceExpiryDate   DateTime?                    @map("insurance_expiry_date")
+  verificationStatus    ContractorVerificationStatus @default(unverified) @map("verification_status")
+  verifiedAt            DateTime?                    @map("verified_at")
+  verifiedByStaffUserId String?                      @map("verified_by_staff_user_id")
   // Stand-in for a real availability calendar (see modules/tenders/matching) —
   // a single toggle the contractor controls on their own profile.
-  currentlyAvailable   Boolean                      @default(true) @map("currently_available")
-  createdAt            DateTime                     @default(now()) @map("created_at")
-  updatedAt            DateTime                     @updatedAt @map("updated_at")
+  currentlyAvailable    Boolean                      @default(true) @map("currently_available")
+  createdAt             DateTime                     @default(now()) @map("created_at")
+  updatedAt             DateTime                     @updatedAt @map("updated_at")
 
-  user           User? @relation("ContractorUser", fields: [userId], references: [id])
-  verifiedByStaff User? @relation("VerifiedBy", fields: [verifiedByStaffUserId], references: [id])
-  categories     ContractorCategory[]
+  user              User?                @relation("ContractorUser", fields: [userId], references: [id])
+  verifiedByStaff   User?                @relation("VerifiedBy", fields: [verifiedByStaffUserId], references: [id])
+  categories        ContractorCategory[]
   tenderInvitations TenderInvitation[]
-  bids           Bid[]
-  contracts      Contract[]
-  reviews        Review[]
+  bids              Bid[]
+  contracts         Contract[]
+  reviews           Review[]
 
   @@map("contractor_profiles")
 }
@@ -130,30 +143,41 @@ model ContractorProfile {
 // ---------------------------------------------------------------------------
 
 model Project {
-  id                     String    @id @default(uuid())
-  name                   String
-  address                String
-  projectType            String    @map("project_type")
-  ownerUserId            String    @map("owner_user_id")
-  status                 String    @default("active")
-  startDate              DateTime? @map("start_date")
-  targetCompletionDate   DateTime? @map("target_completion_date")
-  createdAt              DateTime  @default(now()) @map("created_at")
-  updatedAt              DateTime  @updatedAt @map("updated_at")
+  id                   String    @id @default(uuid())
+  name                 String
+  address              String
+  projectType          String    @map("project_type")
+  ownerUserId          String    @map("owner_user_id")
+  status               String    @default("active")
+  startDate            DateTime? @map("start_date")
+  targetCompletionDate DateTime? @map("target_completion_date")
+  // For the automatic weather lookup on daily logs.
+  latitude             Decimal?  @db.Decimal(9, 6)
+  longitude            Decimal?  @db.Decimal(9, 6)
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
 
-  owner        User            @relation("ProjectOwner", fields: [ownerUserId], references: [id])
-  members      ProjectMember[]
-  phases       Phase[]
-  budget       Budget?
-  documents    Document[]
-  siteCaptures SiteCapture[]
-  defects      Defect[]
-  notifications Notification[]
-  auditEntries AuditEntry[]
-  tenders      Tender[]
-  contracts    Contract[]
-  reviews      Review[]
-  conversation Conversation?
+  owner            User              @relation("ProjectOwner", fields: [ownerUserId], references: [id])
+  members          ProjectMember[]
+  phases           Phase[]
+  budget           Budget?
+  documents        Document[]
+  siteCaptures     SiteCapture[]
+  defects          Defect[]
+  notifications    Notification[]
+  auditEntries     AuditEntry[]
+  tenders          Tender[]
+  contracts        Contract[]
+  reviews          Review[]
+  conversation     Conversation?
+  inspections      Inspection[]
+  photos           Photo[]
+  holdPoints       HoldPoint[]
+  concretePours    ConcretePour[]
+  timedTests       TimedTest[]
+  dailyLogs        DailyLog[]
+  form4Items       Form4Item[]
+  quoteComparisons QuoteComparison[]
 
   @@map("projects")
 }
@@ -184,23 +208,29 @@ model Phase {
   createdAt          DateTime @default(now()) @map("created_at")
   updatedAt          DateTime @updatedAt @map("updated_at")
 
-  project     Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  tasks       Task[]
-  milestones  Milestone[]
-  budgetLines BudgetLine[]
+  project       Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  tasks         Task[]
+  milestones    Milestone[]
+  budgetLines   BudgetLine[]
+  defects       Defect[]
+  inspections   Inspection[]
+  photos        Photo[]
+  holdPoints    HoldPoint[]
+  concretePours ConcretePour[]
+  timedTests    TimedTest[]
 
   @@map("phases")
 }
 
 model Task {
-  id               String    @id @default(uuid())
-  phaseId          String    @map("phase_id")
-  name             String
-  weight           Decimal   @default(1) @db.Decimal(6, 3)
-  percentComplete  Decimal   @default(0) @map("percent_complete") @db.Decimal(5, 2)
-  plannedStart     DateTime? @map("planned_start")
-  plannedEnd       DateTime? @map("planned_end")
-  status           String    @default("not_started")
+  id              String    @id @default(uuid())
+  phaseId         String    @map("phase_id")
+  name            String
+  weight          Decimal   @default(1) @db.Decimal(6, 3)
+  percentComplete Decimal   @default(0) @map("percent_complete") @db.Decimal(5, 2)
+  plannedStart    DateTime? @map("planned_start")
+  plannedEnd      DateTime? @map("planned_end")
+  status          String    @default("not_started")
 
   phase Phase @relation(fields: [phaseId], references: [id], onDelete: Cascade)
 
@@ -215,17 +245,17 @@ enum MilestoneStatus {
 }
 
 model Milestone {
-  id                  String          @id @default(uuid())
-  phaseId             String          @map("phase_id")
-  name                String
-  dueDate             DateTime?       @map("due_date")
-  status              MilestoneStatus @default(pending)
-  verifiedAt          DateTime?       @map("verified_at")
-  verifiedByUserId    String?         @map("verified_by_user_id")
-  evidenceDocumentId  String?         @map("evidence_document_id")
+  id                 String          @id @default(uuid())
+  phaseId            String          @map("phase_id")
+  name               String
+  dueDate            DateTime?       @map("due_date")
+  status             MilestoneStatus @default(pending)
+  verifiedAt         DateTime?       @map("verified_at")
+  verifiedByUserId   String?         @map("verified_by_user_id")
+  evidenceDocumentId String?         @map("evidence_document_id")
 
-  phase          Phase     @relation(fields: [phaseId], references: [id], onDelete: Cascade)
-  verifiedByUser User?     @relation("MilestoneVerifiedBy", fields: [verifiedByUserId], references: [id])
+  phase            Phase     @relation(fields: [phaseId], references: [id], onDelete: Cascade)
+  verifiedByUser   User?     @relation("MilestoneVerifiedBy", fields: [verifiedByUserId], references: [id])
   evidenceDocument Document? @relation(fields: [evidenceDocumentId], references: [id])
 
   @@map("milestones")
@@ -244,12 +274,12 @@ enum InvoiceStatus {
 }
 
 model Budget {
-  id            String   @id @default(uuid())
-  projectId     String   @unique @map("project_id")
-  currency      String
-  tolerancePct  Decimal  @default(0.10) @map("tolerance_pct") @db.Decimal(4, 3)
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
+  id           String   @id @default(uuid())
+  projectId    String   @unique @map("project_id")
+  currency     String
+  tolerancePct Decimal  @default(0.10) @map("tolerance_pct") @db.Decimal(4, 3)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
   project     Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
   budgetLines BudgetLine[]
@@ -283,33 +313,33 @@ model BudgetLine {
 // is maintained by application code (FinanceService only ever writes a real
 // invoice id), not the database.
 model Invoice {
-  id                   String        @id @default(uuid())
-  budgetLineId         String        @map("budget_line_id")
-  amountMinor          BigInt        @map("amount_minor")
-  currency             String
-  vendorName           String        @map("vendor_name")
-  status               InvoiceStatus @default(submitted)
-  submittedAt          DateTime      @default(now()) @map("submitted_at")
-  approvedAt           DateTime?     @map("approved_at")
-  approvedByUserId     String?       @map("approved_by_user_id")
-  supersedesInvoiceId  String?       @unique @map("supersedes_invoice_id")
-  createdAt            DateTime      @default(now()) @map("created_at")
+  id                  String        @id @default(uuid())
+  budgetLineId        String        @map("budget_line_id")
+  amountMinor         BigInt        @map("amount_minor")
+  currency            String
+  vendorName          String        @map("vendor_name")
+  status              InvoiceStatus @default(submitted)
+  submittedAt         DateTime      @default(now()) @map("submitted_at")
+  approvedAt          DateTime?     @map("approved_at")
+  approvedByUserId    String?       @map("approved_by_user_id")
+  supersedesInvoiceId String?       @unique @map("supersedes_invoice_id")
+  createdAt           DateTime      @default(now()) @map("created_at")
 
-  budgetLine        BudgetLine @relation(fields: [budgetLineId], references: [id])
-  approvedByUser    User?      @relation("InvoiceApprovedBy", fields: [approvedByUserId], references: [id])
+  budgetLine     BudgetLine @relation(fields: [budgetLineId], references: [id])
+  approvedByUser User?      @relation("InvoiceApprovedBy", fields: [approvedByUserId], references: [id])
 
   @@map("invoices")
 }
 
 // Append-only.
 model Payment {
-  id           String   @id @default(uuid())
-  invoiceId    String   @map("invoice_id")
-  amountMinor  BigInt   @map("amount_minor")
-  currency     String
-  paidAt       DateTime @map("paid_at")
-  method       String
-  createdAt    DateTime @default(now()) @map("created_at")
+  id          String   @id @default(uuid())
+  invoiceId   String   @map("invoice_id")
+  amountMinor BigInt   @map("amount_minor")
+  currency    String
+  paidAt      DateTime @map("paid_at")
+  method      String
+  createdAt   DateTime @default(now()) @map("created_at")
 
   @@map("payments")
 }
@@ -328,16 +358,18 @@ model Payment {
 // derived by querying for the highest version_no — the same
 // compute-don't-sync approach already used for phase progress.
 model Document {
-  id               String   @id @default(uuid())
-  projectId        String   @map("project_id")
-  kind             String
-  title            String
-  createdAt        DateTime @default(now()) @map("created_at")
+  id        String   @id @default(uuid())
+  projectId String   @map("project_id")
+  kind      String
+  title     String
+  createdAt DateTime @default(now()) @map("created_at")
 
-  project        Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  versions       PlanVersion[]
-  milestones     Milestone[]
-  measurements   Measurement[]
+  project         Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  versions        PlanVersion[]
+  milestones      Milestone[]
+  measurements    Measurement[]
+  holdPointEvents HoldPointEvent[]
+  form4Items      Form4Item[]
 
   @@map("documents")
 }
@@ -422,22 +454,36 @@ enum DefectStatus {
 // A Defect is only ever created by approving a Detection (see ai-vision
 // module) — never written directly. This is the Detection vs Defect
 // separation the design doc's advisory-AI principle depends on.
-model Defect {
-  id               String       @id @default(uuid())
-  detectionId      String       @unique @map("detection_id")
-  projectId        String       @map("project_id")
-  title            String
-  severity         Int
-  assignedToUserId String?      @map("assigned_to_user_id")
-  dueDate          DateTime?    @map("due_date")
-  status           DefectStatus @default(open)
-  createdAt        DateTime     @default(now()) @map("created_at")
-  updatedAt        DateTime     @updatedAt @map("updated_at")
+enum DefectSource {
+  ai_vision
+  checklist
+  manual
+}
 
-  detection      Detection     @relation(fields: [detectionId], references: [id])
-  project        Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  assignedToUser User?         @relation("DefectAssignedTo", fields: [assignedToUserId], references: [id])
-  events         DefectEvent[]
+model Defect {
+  id                 String       @id @default(uuid())
+  // Null for defects that did not come from an AI detection (e.g. a failed checklist item).
+  detectionId        String?      @unique @map("detection_id")
+  source             DefectSource @default(ai_vision)
+  phaseId            String?      @map("phase_id")
+  // Plain column, not an FK: inspection_results is append-only (see the note on InspectionResult).
+  inspectionResultId String?      @map("inspection_result_id")
+  projectId          String       @map("project_id")
+  title              String
+  severity           Int
+  assignedToUserId   String?      @map("assigned_to_user_id")
+  dueDate            DateTime?    @map("due_date")
+  status             DefectStatus @default(open)
+  createdAt          DateTime     @default(now()) @map("created_at")
+  updatedAt          DateTime     @updatedAt @map("updated_at")
+
+  detection         Detection?         @relation(fields: [detectionId], references: [id])
+  phase             Phase?             @relation(fields: [phaseId], references: [id])
+  project           Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  inspectionResults InspectionResult[]
+  photos            Photo[]
+  assignedToUser    User?              @relation("DefectAssignedTo", fields: [assignedToUserId], references: [id])
+  events            DefectEvent[]
 
   @@map("defects")
 }
@@ -508,28 +554,28 @@ enum TenderStatus {
 // happened and when" trail lives in AuditEntry, the same as Milestone
 // verification.
 model Tender {
-  id                String       @id @default(uuid())
-  projectId         String       @map("project_id")
-  workCategoryId    String       @map("work_category_id")
-  title             String
-  scopeDescription  Json         @map("scope_description")
-  budgetMinMinor    BigInt       @map("budget_min_minor")
-  budgetMaxMinor    BigInt       @map("budget_max_minor")
-  currency          String
-  plannedStartDate  DateTime?    @map("planned_start_date")
-  plannedEndDate    DateTime?    @map("planned_end_date")
-  status            TenderStatus @default(draft)
-  createdByUserId   String       @map("created_by_user_id")
-  publishedAt       DateTime?    @map("published_at")
-  createdAt         DateTime     @default(now()) @map("created_at")
-  updatedAt         DateTime     @updatedAt @map("updated_at")
+  id               String       @id @default(uuid())
+  projectId        String       @map("project_id")
+  workCategoryId   String       @map("work_category_id")
+  title            String
+  scopeDescription Json         @map("scope_description")
+  budgetMinMinor   BigInt       @map("budget_min_minor")
+  budgetMaxMinor   BigInt       @map("budget_max_minor")
+  currency         String
+  plannedStartDate DateTime?    @map("planned_start_date")
+  plannedEndDate   DateTime?    @map("planned_end_date")
+  status           TenderStatus @default(draft)
+  createdByUserId  String       @map("created_by_user_id")
+  publishedAt      DateTime?    @map("published_at")
+  createdAt        DateTime     @default(now()) @map("created_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
 
-  project      Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  workCategory WorkCategory       @relation(fields: [workCategoryId], references: [id])
-  createdByUser User              @relation("TenderCreatedBy", fields: [createdByUserId], references: [id])
-  invitations  TenderInvitation[]
-  bids         Bid[]
-  contract     Contract?
+  project       Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  workCategory  WorkCategory       @relation(fields: [workCategoryId], references: [id])
+  createdByUser User               @relation("TenderCreatedBy", fields: [createdByUserId], references: [id])
+  invitations   TenderInvitation[]
+  bids          Bid[]
+  contract      Contract?
 
   @@map("tenders")
 }
@@ -545,13 +591,13 @@ enum TenderInvitationStatus {
 // Mutable — output of the matching engine, status changes as the contractor
 // responds. matchScore is stored for transparency/debugging of the ranking.
 model TenderInvitation {
-  id                  String                  @id @default(uuid())
-  tenderId            String                  @map("tender_id")
-  contractorProfileId String                  @map("contractor_profile_id")
-  matchScore          Decimal                 @map("match_score") @db.Decimal(5, 4)
-  status              TenderInvitationStatus  @default(invited)
-  invitedAt           DateTime                @default(now()) @map("invited_at")
-  respondedAt         DateTime?               @map("responded_at")
+  id                  String                 @id @default(uuid())
+  tenderId            String                 @map("tender_id")
+  contractorProfileId String                 @map("contractor_profile_id")
+  matchScore          Decimal                @map("match_score") @db.Decimal(5, 4)
+  status              TenderInvitationStatus @default(invited)
+  invitedAt           DateTime               @default(now()) @map("invited_at")
+  respondedAt         DateTime?              @map("responded_at")
 
   tender            Tender            @relation(fields: [tenderId], references: [id], onDelete: Cascade)
   contractorProfile ContractorProfile @relation(fields: [contractorProfileId], references: [id], onDelete: Cascade)
@@ -599,12 +645,12 @@ model Bid {
 
 // Append-only, child of an append-only parent — same treatment as Bid.
 model BidLineItem {
-  id             String  @id @default(uuid())
-  bidId          String  @map("bid_id")
-  description    String
-  quantity       Decimal @db.Decimal(12, 3)
-  unitAmountMinor BigInt @map("unit_amount_minor")
-  currency       String
+  id              String  @id @default(uuid())
+  bidId           String  @map("bid_id")
+  description     String
+  quantity        Decimal @db.Decimal(12, 3)
+  unitAmountMinor BigInt  @map("unit_amount_minor")
+  currency        String
 
   bid Bid @relation(fields: [bidId], references: [id], onDelete: Cascade)
 
@@ -626,23 +672,23 @@ enum ContractStatus {
 // enforced as DB-level append-only — there's nothing to supersede, since
 // @@unique(tenderId) means exactly one Contract per Tender.
 model Contract {
-  id                   String         @id @default(uuid())
-  tenderId             String         @unique @map("tender_id")
-  projectId            String         @map("project_id")
-  contractorProfileId  String         @map("contractor_profile_id")
-  winningBidId         String         @map("winning_bid_id")
-  totalAmountMinor     BigInt         @map("total_amount_minor")
-  currency             String
-  status               ContractStatus @default(draft)
-  signedAt             DateTime?      @map("signed_at")
-  signedByOwnerUserId  String?        @map("signed_by_owner_user_id")
-  createdAt            DateTime       @default(now()) @map("created_at")
-  updatedAt            DateTime       @updatedAt @map("updated_at")
+  id                  String         @id @default(uuid())
+  tenderId            String         @unique @map("tender_id")
+  projectId           String         @map("project_id")
+  contractorProfileId String         @map("contractor_profile_id")
+  winningBidId        String         @map("winning_bid_id")
+  totalAmountMinor    BigInt         @map("total_amount_minor")
+  currency            String
+  status              ContractStatus @default(draft)
+  signedAt            DateTime?      @map("signed_at")
+  signedByOwnerUserId String?        @map("signed_by_owner_user_id")
+  createdAt           DateTime       @default(now()) @map("created_at")
+  updatedAt           DateTime       @updatedAt @map("updated_at")
 
-  tender            Tender               @relation(fields: [tenderId], references: [id])
-  project           Project              @relation(fields: [projectId], references: [id])
-  contractorProfile ContractorProfile    @relation(fields: [contractorProfileId], references: [id])
-  signedByOwnerUser User?                @relation("ContractSignedBy", fields: [signedByOwnerUserId], references: [id])
+  tender            Tender                     @relation(fields: [tenderId], references: [id])
+  project           Project                    @relation(fields: [projectId], references: [id])
+  contractorProfile ContractorProfile          @relation(fields: [contractorProfileId], references: [id])
+  signedByOwnerUser User?                      @relation("ContractSignedBy", fields: [signedByOwnerUserId], references: [id])
   paymentMilestones ContractPaymentMilestone[]
   reviews           Review[]
 
@@ -716,7 +762,7 @@ model Review {
   reviewerUserId      String       @map("reviewer_user_id")
   contractId          String       @map("contract_id")
   rating              Int
-  comment              String?
+  comment             String?
   status              ReviewStatus @default(published)
   createdAt           DateTime     @default(now()) @map("created_at")
 
@@ -748,19 +794,19 @@ enum DisputeStatus {
 // otherwise implies; see TrustScoreService for how the Disputes component
 // is approximated instead.
 model Dispute {
-  id                  String        @id @default(uuid())
-  reviewId            String        @unique @map("review_id")
-  raisedByUserId      String        @map("raised_by_user_id")
-  reason              String
-  status              DisputeStatus @default(open)
-  resolvedByStaffUserId String?     @map("resolved_by_staff_user_id")
-  resolvedAt          DateTime?     @map("resolved_at")
-  resolutionNote      String?       @map("resolution_note")
-  createdAt           DateTime      @default(now()) @map("created_at")
+  id                    String        @id @default(uuid())
+  reviewId              String        @unique @map("review_id")
+  raisedByUserId        String        @map("raised_by_user_id")
+  reason                String
+  status                DisputeStatus @default(open)
+  resolvedByStaffUserId String?       @map("resolved_by_staff_user_id")
+  resolvedAt            DateTime?     @map("resolved_at")
+  resolutionNote        String?       @map("resolution_note")
+  createdAt             DateTime      @default(now()) @map("created_at")
 
-  review           Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
-  raisedByUser     User   @relation("DisputeRaisedBy", fields: [raisedByUserId], references: [id])
-  resolvedByStaff  User?  @relation("DisputeResolvedBy", fields: [resolvedByStaffUserId], references: [id])
+  review          Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  raisedByUser    User   @relation("DisputeRaisedBy", fields: [raisedByUserId], references: [id])
+  resolvedByStaff User?  @relation("DisputeResolvedBy", fields: [resolvedByStaffUserId], references: [id])
 
   @@map("disputes")
 }
@@ -793,9 +839,9 @@ model Conversation {
   createdByUserId String   @map("created_by_user_id")
   createdAt       DateTime @default(now()) @map("created_at")
 
-  project         Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  createdByUser   User      @relation("ConversationCreatedBy", fields: [createdByUserId], references: [id])
-  messages        Message[]
+  project       Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdByUser User      @relation("ConversationCreatedBy", fields: [createdByUserId], references: [id])
+  messages      Message[]
 
   @@map("conversations")
 }
@@ -846,8 +892,8 @@ model Measurement {
   createdByUserId String          @map("created_by_user_id")
   createdAt       DateTime        @default(now()) @map("created_at")
 
-  document       Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
-  createdByUser  User     @relation("MeasurementCreatedBy", fields: [createdByUserId], references: [id])
+  document      Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  createdByUser User     @relation("MeasurementCreatedBy", fields: [createdByUserId], references: [id])
 
   @@map("measurements")
 }
@@ -912,4 +958,476 @@ model IdempotencyKey {
   createdAt    DateTime @default(now()) @map("created_at")
 
   @@map("idempotency_keys")
+}
+
+// ---------------------------------------------------------------------------
+// Supervision checklists (Hebrew construction-supervision edition)
+//
+// One template per stage (1–15). System templates have ownerUserId = null and
+// come from prisma/seed-data/checklist.he.json; an inspector clones one into a
+// private copy (ownerUserId set, basedOnTemplateId pointing at the original).
+// ---------------------------------------------------------------------------
+
+enum ChecklistPhaseKind {
+  before
+  during
+  after
+  general
+}
+
+enum ChecklistItemType {
+  visual
+  measurement
+  lab_test
+  document
+  written_approval
+}
+
+model ChecklistTemplate {
+  id                String   @id @default(uuid())
+  stageNo           Int      @map("stage_no")
+  title             String
+  version           Int      @default(1)
+  ownerUserId       String?  @map("owner_user_id")
+  basedOnTemplateId String?  @map("based_on_template_id")
+  // [{ text, subStage }] — the "תקנים:" lines.
+  standards         Json     @default("[]")
+  // [{ text, subStage }] — free-text guidance paragraphs from the source checklist.
+  notes             Json     @default("[]")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  owner         User?                @relation("ChecklistTemplateOwner", fields: [ownerUserId], references: [id], onDelete: Cascade)
+  basedOn       ChecklistTemplate?   @relation("ChecklistTemplateClones", fields: [basedOnTemplateId], references: [id], onDelete: SetNull)
+  clones        ChecklistTemplate[]  @relation("ChecklistTemplateClones")
+  items         ChecklistItem[]
+  holdPoints    ChecklistHoldPoint[]
+  commonDefects CommonDefect[]
+  inspections   Inspection[]
+
+  @@index([ownerUserId, stageNo])
+  @@map("checklist_templates")
+}
+
+model ChecklistItem {
+  id                       String             @id @default(uuid())
+  templateId               String             @map("template_id")
+  sortOrder                Int                @map("sort_order")
+  subStage                 String?            @map("sub_stage")
+  // Verbatim heading the item sat under in the source (e.g. "לפני היציקה").
+  section                  String?
+  phaseKind                ChecklistPhaseKind @map("phase_kind")
+  text                     String
+  standardRef              String?            @map("standard_ref")
+  itemType                 ChecklistItemType  @map("item_type")
+  mandatory                Boolean            @default(true)
+  // [{ op, value, upperValue, unit, raw }] — extracted candidates; enforce
+  // only once thresholdsReviewed is true.
+  thresholds               Json               @default("[]")
+  thresholdsReviewed       Boolean            @default(false) @map("thresholds_reviewed")
+  // Marking the item "ok" needs a before_cover photo on the inspection.
+  requiresBeforeCoverPhoto Boolean            @default(false) @map("requires_before_cover_photo")
+
+  template ChecklistTemplate  @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  results  InspectionResult[]
+  photos   Photo[]
+
+  @@index([templateId, sortOrder])
+  @@map("checklist_items")
+}
+
+// Template-level hold point (🛑). The per-project, signable instance is a
+// separate model introduced with the hold-point engine.
+model ChecklistHoldPoint {
+  id         String  @id @default(uuid())
+  templateId String  @map("template_id")
+  sortOrder  Int     @map("sort_order")
+  subStage   String? @map("sub_stage")
+  text       String
+
+  template ChecklistTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@index([templateId, sortOrder])
+  @@map("checklist_hold_points")
+}
+
+model CommonDefect {
+  id           String  @id @default(uuid())
+  templateId   String  @map("template_id")
+  subStage     String? @map("sub_stage")
+  text         String
+  costMinMinor BigInt? @map("cost_min_minor")
+  costMaxMinor BigInt? @map("cost_max_minor")
+
+  template ChecklistTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@index([templateId])
+  @@map("common_defects")
+}
+
+// ---------------------------------------------------------------------------
+// Inspections
+// ---------------------------------------------------------------------------
+
+enum InspectionStatus {
+  open
+  completed
+}
+
+enum InspectionOutcome {
+  ok
+  fail
+  na
+}
+
+model Inspection {
+  id              String           @id @default(uuid())
+  projectId       String           @map("project_id")
+  phaseId         String           @map("phase_id")
+  templateId      String           @map("template_id")
+  inspectorUserId String           @map("inspector_user_id")
+  status          InspectionStatus @default(open)
+  startedAt       DateTime         @default(now()) @map("started_at")
+  completedAt     DateTime?        @map("completed_at")
+
+  project   Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  phase     Phase              @relation(fields: [phaseId], references: [id])
+  template  ChecklistTemplate  @relation(fields: [templateId], references: [id])
+  inspector User               @relation("InspectionInspector", fields: [inspectorUserId], references: [id])
+  results   InspectionResult[]
+  photos    Photo[]
+
+  @@index([projectId, startedAt])
+  @@map("inspections")
+}
+
+// Append-only: re-marking an item inserts a new row that supersedes the old
+// one; the current answer for an item is its latest row. Nothing may FK into
+// this table (a referencing FK needs UPDATE on it), so Defect points back
+// with a plain column.
+model InspectionResult {
+  id                 String            @id @default(uuid())
+  inspectionId       String            @map("inspection_id")
+  checklistItemId    String            @map("checklist_item_id")
+  outcome            InspectionOutcome
+  numericValue       Decimal?          @map("numeric_value") @db.Decimal(12, 3)
+  // True when the value broke a reviewed threshold.
+  outOfThreshold     Boolean           @default(false) @map("out_of_threshold")
+  note               String?
+  defectId           String?           @map("defect_id")
+  supersedesResultId String?           @map("supersedes_result_id")
+  recordedByUserId   String            @map("recorded_by_user_id")
+  createdAt          DateTime          @default(now()) @map("created_at")
+
+  inspection    Inspection    @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
+  checklistItem ChecklistItem @relation(fields: [checklistItemId], references: [id])
+  defect        Defect?       @relation(fields: [defectId], references: [id])
+  recordedBy    User          @relation("InspectionResultRecordedBy", fields: [recordedByUserId], references: [id])
+
+  @@index([inspectionId, checklistItemId, createdAt])
+  @@map("inspection_results")
+}
+
+// ---------------------------------------------------------------------------
+// Field photos
+// ---------------------------------------------------------------------------
+
+enum PhotoTag {
+  defect
+  inspection
+  approval
+  before_cover
+  after
+}
+
+// Evidence photo, written once at upload confirmation. Separate from
+// SiteCapture, which feeds the AI detection pipeline.
+model Photo {
+  id               String    @id
+  projectId        String    @map("project_id")
+  tag              PhotoTag
+  phaseId          String?   @map("phase_id")
+  inspectionId     String?   @map("inspection_id")
+  checklistItemId  String?   @map("checklist_item_id")
+  defectId         String?   @map("defect_id")
+  objectKey        String    @map("object_key")
+  // [{ type: "arrow" | "circle" | "text", ... }] in image-relative 0–1 coordinates.
+  markup           Json      @default("[]")
+  gpsLat           Decimal?  @map("gps_lat") @db.Decimal(9, 6)
+  gpsLng           Decimal?  @map("gps_lng") @db.Decimal(9, 6)
+  takenAt          DateTime? @map("taken_at")
+  uploadedByUserId String    @map("uploaded_by_user_id")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  project         Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  phase           Phase?           @relation(fields: [phaseId], references: [id])
+  inspection      Inspection?      @relation(fields: [inspectionId], references: [id])
+  checklistItem   ChecklistItem?   @relation(fields: [checklistItemId], references: [id])
+  defect          Defect?          @relation(fields: [defectId], references: [id])
+  uploadedBy      User             @relation("PhotoUploadedBy", fields: [uploadedByUserId], references: [id])
+  holdPointEvents HoldPointEvent[]
+
+  @@index([projectId, tag])
+  @@index([inspectionId, checklistItemId])
+  @@index([defectId])
+  @@map("photos")
+}
+
+// ---------------------------------------------------------------------------
+// Hold points (🛑) — per-phase, signable instances
+//
+// Instantiated from a template's hold points when an inspection starts for the
+// phase (or explicitly). The current state is derived from the latest event:
+// no event or "reopened" = open; "signed" or "bypassed" = closed. Open hold
+// points block approving the phase and releasing its payment milestone.
+// ---------------------------------------------------------------------------
+
+enum HoldPointEventKind {
+  signed
+  bypassed
+  reopened
+}
+
+model HoldPoint {
+  id                String   @id @default(uuid())
+  projectId         String   @map("project_id")
+  phaseId           String   @map("phase_id")
+  // Plain column: template hold points are editable and deletable.
+  sourceHoldPointId String?  @map("source_hold_point_id")
+  text              String
+  subStage          String?  @map("sub_stage")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  project Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  phase   Phase            @relation(fields: [phaseId], references: [id], onDelete: Cascade)
+  events  HoldPointEvent[]
+
+  @@unique([phaseId, sourceHoldPointId])
+  @@index([projectId, phaseId])
+  @@map("hold_points")
+}
+
+// Append-only (see 20260809190935_enforce_append_only for the mechanism).
+model HoldPointEvent {
+  id             String             @id @default(uuid())
+  holdPointId    String             @map("hold_point_id")
+  kind           HoldPointEventKind
+  actorUserId    String             @map("actor_user_id")
+  // Who vouched for it: a typed signature and capacity, since engineers and
+  // consultants are usually not app users.
+  signerName     String?            @map("signer_name")
+  signerCapacity String?            @map("signer_capacity")
+  // Required for "bypassed" (owner only); optional note otherwise.
+  reason         String?
+  photoId        String?            @map("photo_id")
+  documentId     String?            @map("document_id")
+  createdAt      DateTime           @default(now()) @map("created_at")
+
+  holdPoint HoldPoint @relation(fields: [holdPointId], references: [id], onDelete: Cascade)
+  actor     User      @relation("HoldPointEventActor", fields: [actorUserId], references: [id])
+  photo     Photo?    @relation(fields: [photoId], references: [id])
+  document  Document? @relation(fields: [documentId], references: [id])
+
+  @@index([holdPointId, createdAt])
+  @@map("hold_point_events")
+}
+
+// ---------------------------------------------------------------------------
+// Lab tests & timed field tests
+// ---------------------------------------------------------------------------
+
+model ConcretePour {
+  id                      String    @id @default(uuid())
+  projectId               String    @map("project_id")
+  phaseId                 String?   @map("phase_id")
+  element                 String
+  concreteGrade           String    @map("concrete_grade")
+  // 28-day strength the grade must reach. Not derived from the grade name.
+  requiredMpa28           Decimal   @map("required_mpa_28") @db.Decimal(6, 2)
+  deliveryNote            String?   @map("delivery_note")
+  slumpCm                 Decimal?  @map("slump_cm") @db.Decimal(5, 1)
+  // Longest span, and cantilever length (counted double for formwork removal).
+  spanMeters              Decimal?  @map("span_meters") @db.Decimal(6, 2)
+  cantileverMeters        Decimal?  @map("cantilever_meters") @db.Decimal(6, 2)
+  // Scheduled or actual pour time; a future value means "planned".
+  castAt                  DateTime  @map("cast_at")
+  formworkRemovedAt       DateTime? @map("formwork_removed_at")
+  formworkRemovedByUserId String?   @map("formwork_removed_by_user_id")
+  createdByUserId         String    @map("created_by_user_id")
+  createdAt               DateTime  @default(now()) @map("created_at")
+
+  project   Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  phase     Phase?           @relation(fields: [phaseId], references: [id])
+  createdBy User             @relation("ConcretePourCreatedBy", fields: [createdByUserId], references: [id])
+  results   ConcreteResult[]
+
+  @@index([projectId, castAt])
+  @@map("concrete_pours")
+}
+
+// Append-only lab results. A retest (or cores the engineer asks for) is a new
+// row for the same age; the latest row per age is the current answer.
+model ConcreteResult {
+  id               String    @id @default(uuid())
+  pourId           String    @map("pour_id")
+  ageDays          Int       @map("age_days")
+  strengthMpa      Decimal   @map("strength_mpa") @db.Decimal(6, 2)
+  testedAt         DateTime? @map("tested_at")
+  note             String?
+  recordedByUserId String    @map("recorded_by_user_id")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  pour       ConcretePour @relation(fields: [pourId], references: [id], onDelete: Cascade)
+  recordedBy User         @relation("ConcreteResultRecordedBy", fields: [recordedByUserId], references: [id])
+
+  @@index([pourId, ageDays, createdAt])
+  @@map("concrete_results")
+}
+
+enum TimedTestKind {
+  pressure
+  flood
+}
+
+enum TimedTestOutcome {
+  passed
+  failed
+}
+
+model TimedTest {
+  id                String            @id @default(uuid())
+  projectId         String            @map("project_id")
+  phaseId           String?           @map("phase_id")
+  kind              TimedTestKind
+  location          String
+  startedAt         DateTime          @map("started_at")
+  durationHours     Int               @map("duration_hours")
+  // Pressure in atm, flood level in cm.
+  unit              String
+  startReading      Decimal?          @map("start_reading") @db.Decimal(8, 2)
+  endReading        Decimal?          @map("end_reading") @db.Decimal(8, 2)
+  startPhotoId      String?           @map("start_photo_id")
+  endPhotoId        String?           @map("end_photo_id")
+  outcome           TimedTestOutcome?
+  note              String?
+  completedAt       DateTime?         @map("completed_at")
+  startedByUserId   String            @map("started_by_user_id")
+  completedByUserId String?           @map("completed_by_user_id")
+  createdAt         DateTime          @default(now()) @map("created_at")
+
+  project     Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  phase       Phase?  @relation(fields: [phaseId], references: [id])
+  startedBy   User    @relation("TimedTestStartedBy", fields: [startedByUserId], references: [id])
+  completedBy User?   @relation("TimedTestCompletedBy", fields: [completedByUserId], references: [id])
+
+  @@index([projectId, startedAt])
+  @@map("timed_tests")
+}
+
+// ---------------------------------------------------------------------------
+// Daily logs & Form 4 readiness
+// ---------------------------------------------------------------------------
+
+enum DailyLogStatus {
+  draft
+  locked
+}
+
+model DailyLog {
+  id               String         @id @default(uuid())
+  projectId        String         @map("project_id")
+  logDate          DateTime       @map("log_date") @db.Date
+  status           DailyLogStatus @default(draft)
+  // WMO weather code (see weatherLabelHe in shared-types); entered by hand or fetched.
+  weatherCode      Int?           @map("weather_code")
+  temperatureC     Decimal?       @map("temperature_c") @db.Decimal(4, 1)
+  // [{ name, workers }] — headcount per contractor/trade.
+  headcount        Json           @default("[]")
+  workDone         String         @default("") @map("work_done")
+  safetyOk         Boolean?       @map("safety_ok")
+  safetyNotes      String?        @map("safety_notes")
+  createdByUserId  String         @map("created_by_user_id")
+  approvedByUserId String?        @map("approved_by_user_id")
+  approvedAt       DateTime?      @map("approved_at")
+  // SHA-256 of the content at approval, printed on the PDF as an integrity stamp.
+  contentHash      String?        @map("content_hash")
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @map("updated_at")
+
+  project    Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdBy  User    @relation("DailyLogCreatedBy", fields: [createdByUserId], references: [id])
+  approvedBy User?   @relation("DailyLogApprovedBy", fields: [approvedByUserId], references: [id])
+
+  @@unique([projectId, logDate])
+  @@map("daily_logs")
+}
+
+// One row per Form 4 requirement a project has touched; the requirement keys
+// and Hebrew titles live in shared-types (FORM4_REQUIREMENTS).
+model Form4Item {
+  id                String    @id @default(uuid())
+  projectId         String    @map("project_id")
+  key               String
+  satisfied         Boolean   @default(false)
+  documentId        String?   @map("document_id")
+  note              String?
+  satisfiedAt       DateTime? @map("satisfied_at")
+  satisfiedByUserId String?   @map("satisfied_by_user_id")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  document    Document? @relation(fields: [documentId], references: [id])
+  satisfiedBy User?     @relation("Form4SatisfiedBy", fields: [satisfiedByUserId], references: [id])
+
+  @@unique([projectId, key])
+  @@map("form4_items")
+}
+
+// ---------------------------------------------------------------------------
+// AI quote comparison — external quotes (PDF / photo) read and compared by a model
+// ---------------------------------------------------------------------------
+
+enum QuoteStatus {
+  uploaded
+  extracted
+  failed
+}
+
+model QuoteComparison {
+  id              String    @id @default(uuid())
+  projectId       String    @map("project_id")
+  title           String
+  // Checklist stage (1-15) whose professional requirements each quote is checked against.
+  stageNo         Int?      @map("stage_no")
+  // Model comparison output; null until analysed. Includes the server-computed risk flags per quote.
+  analysis        Json?
+  analyzedAt      DateTime? @map("analyzed_at")
+  createdByUserId String    @map("created_by_user_id")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdBy User    @relation("QuoteComparisonCreatedBy", fields: [createdByUserId], references: [id])
+  quotes    Quote[]
+
+  @@index([projectId, createdAt])
+  @@map("quote_comparisons")
+}
+
+model Quote {
+  id           String      @id
+  comparisonId String      @map("comparison_id")
+  filename     String
+  contentType  String      @map("content_type")
+  objectKey    String      @map("object_key")
+  supplierName String?     @map("supplier_name")
+  status       QuoteStatus @default(uploaded)
+  // Structured fields the model read from the document.
+  extraction   Json?
+  error        String?
+  createdAt    DateTime    @default(now()) @map("created_at")
+
+  comparison QuoteComparison @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
+
+  @@index([comparisonId])
+  @@map("quotes")
 }
