@@ -3,7 +3,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { CACHE_STORE, QUEUE_STORE, dbClear, dbGetAll } from "./db";
 import { hydrateQueries, startPersisting } from "./persist";
-import { enqueue, listOps, retryOp, subscribeToQueue } from "./queue";
+import { enqueue, listOps, newId, retryOp, subscribeToQueue } from "./queue";
 import { classify, processQueue, type SyncApi } from "./sync";
 
 const USER = "user-1";
@@ -57,6 +57,17 @@ describe("queue", () => {
     stop();
     await enqueue(resultOp("b"));
     expect(listener).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("newId", () => {
+  it("still produces a v4 UUID where crypto.randomUUID is unavailable (insecure context)", () => {
+    const real = globalThis.crypto;
+    vi.stubGlobal("crypto", { getRandomValues: real.getRandomValues.bind(real) });
+    const id = newId();
+    vi.unstubAllGlobals();
+    expect(id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+    expect(newId()).not.toBe(newId());
   });
 });
 
