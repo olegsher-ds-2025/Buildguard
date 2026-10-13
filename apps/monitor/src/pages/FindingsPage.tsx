@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import type { FindingSummary } from "@buildguard/shared-types";
 import { api } from "../api";
 import { formatMoney } from "../format";
+import { t } from "../i18n/he";
 
 function sevClass(sev: number) {
   return sev >= 4 ? "high" : sev === 3 ? "med" : "low";
@@ -51,28 +52,28 @@ export function FindingsPage() {
         headers: { "Content-Type": file.type || "application/octet-stream" },
         body: file,
       });
-      if (!putRes.ok) throw new Error(`Upload to storage failed (${putRes.status})`);
+      if (!putRes.ok) throw new Error(`${t("findings.storageFailed")} (${putRes.status})`);
       await api.confirmSiteCaptureUpload(projectId, created.siteCaptureId);
       if (fileInput.current) fileInput.current.value = "";
       invalidate();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Analysis failed.");
+      setError(err instanceof Error ? err.message : t("findings.analysisFailed"));
     } finally {
       setAnalyzing(false);
     }
   }
 
-  if (findings.isLoading) return <div className="page-loading">Loading findings…</div>;
-  if (findings.isError) return <div className="page-error">Could not load findings.</div>;
+  if (findings.isLoading) return <div className="page-loading">{t("findings.loading")}</div>;
+  if (findings.isError) return <div className="page-error">{t("findings.error")}</div>;
 
   const open = (findings.data ?? []).filter((f) => f.status === "suggested");
   const resolved = (findings.data ?? []).filter((f) => f.status !== "suggested");
 
   return (
     <div className="wrap">
-      <h1>AI Vision Inspector</h1>
+      <h1>{t("findings.title")}</h1>
       <p className="sub">
-        Findings are <strong>suggested</strong> only — nothing becomes a tracked defect without your approval.
+        {t("findings.subtitle")}
       </p>
 
       <section className="section">
@@ -80,7 +81,7 @@ export function FindingsPage() {
           <input ref={fileInput} type="file" accept="image/*" />
           {error && <p className="form-error">{error}</p>}
           <button className="primary" onClick={onAnalyze} disabled={analyzing}>
-            {analyzing ? "Analyzing…" : "Upload site photo"}
+            {analyzing ? t("findings.analyzing") : t("findings.uploadPhoto")}
           </button>
         </div>
       </section>
@@ -88,7 +89,7 @@ export function FindingsPage() {
       <section className="section">
         <div className="card">
           {findings.data?.length === 0 ? (
-            <p className="hint">No findings yet.</p>
+            <p className="hint">{t("findings.empty")}</p>
           ) : (
             <>
               {open.map((f) => (
@@ -127,11 +128,11 @@ function FindingRow({
       <div className="finding-body">
         <div className="finding-title">{finding.description}</div>
         <div className="finding-meta">
-          <span className={`sev ${sevClass(finding.severity)}`}>severity {finding.severity}/5</span>{" "}
-          confidence {Math.round(finding.confidence * 100)}%
+          <span className={`sev ${sevClass(finding.severity)}`}>{t("findings.severity")} {finding.severity}/5</span>{" "}
+          {t("findings.confidence")} {Math.round(finding.confidence * 100)}%
           {finding.estimatedCostMinMinor && finding.estimatedCostMaxMinor && finding.currency && (
             <>
-              {" · est. "}
+              {` · ${t("findings.estimate")}: `}
               {formatMoney(finding.estimatedCostMinMinor, finding.currency)}–
               {formatMoney(finding.estimatedCostMaxMinor, finding.currency)}
             </>
@@ -140,15 +141,15 @@ function FindingRow({
         {finding.status === "suggested" ? (
           <div className="finding-actions">
             <button className="primary" onClick={onApprove} disabled={busy}>
-              Approve as defect
+              {t("findings.approve")}
             </button>
             <button onClick={onDismiss} disabled={busy}>
-              Dismiss
+              {t("findings.dismiss")}
             </button>
           </div>
         ) : (
           <div className={`resolved ${finding.status}`}>
-            {finding.status === "approved" ? "✓ Tracked as a defect" : "✕ Dismissed"}
+            {finding.status === "approved" ? `✓ ${t("findings.approved")}` : `✕ ${t("findings.dismissed")}`}
           </div>
         )}
       </div>

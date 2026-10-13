@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import { ApiError } from "@buildguard/api-client";
 import { api } from "../api";
 import { useAuth } from "../auth";
+import { t } from "../i18n/he";
 
 export function LoginPage() {
   const { token, login } = useAuth();
@@ -21,7 +22,7 @@ export function LoginPage() {
       const res = await api.loginCustomer({ email, password });
       login(res.accessToken, res.user);
     } catch (err) {
-      setError(err instanceof ApiError ? "Invalid email or password." : "Could not reach the server.");
+      setError(err instanceof ApiError ? t("login.invalid") : t("login.unreachable"));
     } finally {
       setSubmitting(false);
     }
@@ -33,9 +34,9 @@ export function LoginPage() {
         <div className="logo">
           Build<span>Guard</span>
         </div>
-        <p className="sub">Sign in to monitor your project</p>
+        <p className="sub">{t("login.subtitle")}</p>
         <label>
-          Email
+          {t("login.email")}
           <input
             type="email"
             value={email}
@@ -45,7 +46,7 @@ export function LoginPage() {
           />
         </label>
         <label>
-          Password
+          {t("login.password")}
           <input
             type="password"
             value={password}
@@ -56,7 +57,7 @@ export function LoginPage() {
         </label>
         {error && <p className="form-error">{error}</p>}
         <button type="submit" className="primary" disabled={submitting}>
-          {submitting ? "Signing in…" : "Sign in"}
+          {submitting ? t("login.submitting") : t("login.submit")}
         </button>
       </form>
     </div>

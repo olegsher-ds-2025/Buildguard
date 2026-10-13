@@ -1,6 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../api";
+import { formatAmount, formatDate } from "../format";
+import { t, type MessageKey } from "../i18n/he";
+
+const bidStatusKeys: Record<string, MessageKey> = {
+  submitted: "bids.status.submitted",
+  withdrawn: "bids.status.withdrawn",
+  accepted: "bids.status.accepted",
+  rejected: "bids.status.rejected",
+};
+const bidStatusLabel = (v: string) => (bidStatusKeys[v] ? t(bidStatusKeys[v]) : v);
 
 function TrustScoreBadge({ contractorProfileId }: { contractorProfileId: string }) {
   const score = useQuery({
@@ -10,7 +20,7 @@ function TrustScoreBadge({ contractorProfileId }: { contractorProfileId: string 
   if (score.isLoading) return <span className="hint">…</span>;
   if (score.isError || !score.data) return <span className="hint">—</span>;
   return (
-    <span title={`Based on ${score.data.sampleSize} contract(s), confidence ${(score.data.confidence * 100).toFixed(0)}%`}>
+    <span title={`${t("bids.trustTooltipBasedOn")} ${score.data.sampleSize} ${t("bids.trustTooltipContracts")} ${(score.data.confidence * 100).toFixed(0)}%`}>
       {score.data.score.toFixed(0)}/100
     </span>
   );
@@ -35,28 +45,28 @@ export function BidComparisonPage() {
     },
   });
 
-  if (bids.isLoading) return <div className="page-loading">Loading bids…</div>;
-  if (bids.isError) return <div className="page-error">Could not load bids.</div>;
+  if (bids.isLoading) return <div className="page-loading">{t("bids.loading")}</div>;
+  if (bids.isError) return <div className="page-error">{t("bids.loadError")}</div>;
 
   return (
     <div className="wrap">
-      <h1>Compare bids</h1>
-      <p className="sub">Current bid per contractor (a revised bid replaces an earlier one).</p>
+      <h1>{t("bids.title")}</h1>
+      <p className="sub">{t("bids.subtitle")}</p>
 
       <section className="section">
         {bids.data?.length === 0 ? (
-          <p className="hint">No bids submitted yet.</p>
+          <p className="hint">{t("bids.empty")}</p>
         ) : (
           <div className="card">
             <table>
               <thead>
                 <tr>
-                  <th>Contractor</th>
-                  <th>Trust score</th>
-                  <th>Amount</th>
-                  <th>Schedule</th>
-                  <th>Payment terms</th>
-                  <th>Status</th>
+                  <th>{t("bids.col.contractor")}</th>
+                  <th>{t("bids.col.trustScore")}</th>
+                  <th>{t("bids.col.amount")}</th>
+                  <th>{t("bids.col.schedule")}</th>
+                  <th>{t("bids.col.paymentTerms")}</th>
+                  <th>{t("bids.col.status")}</th>
                   <th></th>
                 </tr>
               </thead>
@@ -68,14 +78,14 @@ export function BidComparisonPage() {
                       <TrustScoreBadge contractorProfileId={b.contractorProfileId} />
                     </td>
                     <td>
-                      {(Number(b.totalAmountMinor) / 100).toLocaleString()} {b.currency}
+                      {formatAmount(b.totalAmountMinor)} {b.currency}
                     </td>
                     <td>
-                      {b.proposedStartDate ? new Date(b.proposedStartDate).toLocaleDateString() : "—"} –{" "}
-                      {b.proposedEndDate ? new Date(b.proposedEndDate).toLocaleDateString() : "—"}
+                      {b.proposedStartDate ? formatDate(b.proposedStartDate) : "—"} –{" "}
+                      {b.proposedEndDate ? formatDate(b.proposedEndDate) : "—"}
                     </td>
                     <td>{b.paymentTermsDescription}</td>
-                    <td>{b.status}</td>
+                    <td>{bidStatusLabel(b.status)}</td>
                     <td>
                       {b.status === "submitted" && (
                         <button
@@ -83,7 +93,7 @@ export function BidComparisonPage() {
                           onClick={() => selectWinner.mutate(b.id)}
                           disabled={selectWinner.isPending}
                         >
-                          Select winner
+                          {t("bids.selectWinner")}
                         </button>
                       )}
                     </td>

@@ -4,6 +4,16 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { ApiError } from "@buildguard/api-client";
 import { api } from "../api";
 import { useAuth } from "../auth";
+import { formatAmount } from "../format";
+import { invitationStatusLabel, t, tenderStatusLabel, type MessageKey } from "../i18n/he";
+
+const bidStatusKeys: Record<string, MessageKey> = {
+  submitted: "bids.status.submitted",
+  withdrawn: "bids.status.withdrawn",
+  accepted: "bids.status.accepted",
+  rejected: "bids.status.rejected",
+};
+const bidStatusLabel = (v: string) => (bidStatusKeys[v] ? t(bidStatusKeys[v]) : v);
 
 export function TenderDetailPage() {
   const { projectId, tenderId } = useParams<{ projectId: string; tenderId: string }>();
@@ -60,8 +70,8 @@ export function TenderDetailPage() {
     onError: (err) => {
       setError(
         err instanceof ApiError
-          ? "Could not submit your bid (are you invited and verified?)."
-          : "Could not reach the server.",
+          ? t("tenderDetail.submitError")
+          : t("tenderDetail.unreachable"),
       );
     },
   });
@@ -71,8 +81,8 @@ export function TenderDetailPage() {
     submitBid.mutate();
   }
 
-  if (detail.isLoading) return <div className="page-loading">Loading tender…</div>;
-  if (detail.isError || !detail.data) return <div className="page-error">Could not load this tender.</div>;
+  if (detail.isLoading) return <div className="page-loading">{t("tenderDetail.loading")}</div>;
+  if (detail.isError || !detail.data) return <div className="page-error">{t("tenderDetail.loadError")}</div>;
 
   const { tender, invitations, myBid } = detail.data;
 
@@ -80,8 +90,8 @@ export function TenderDetailPage() {
     <div className="wrap">
       <h1>{tender.title}</h1>
       <p className="sub">
-        {tender.workCategory.name} · {tender.status.replace("_", " ")} · budget{" "}
-        {(Number(tender.budgetMinMinor) / 100).toLocaleString()}–{(Number(tender.budgetMaxMinor) / 100).toLocaleString()}{" "}
+        {tender.workCategory.name} · {tenderStatusLabel(tender.status)} · {t("tenderDetail.budget")}{" "}
+        {formatAmount(tender.budgetMinMinor)}–{formatAmount(tender.budgetMaxMinor)}{" "}
         {tender.currency}
       </p>
 
@@ -96,16 +106,16 @@ export function TenderDetailPage() {
           <div className="card" style={{ display: "flex", gap: ".6rem" }}>
             {tender.status === "draft" && (
               <button className="primary" onClick={() => publish.mutate()} disabled={publish.isPending}>
-                {publish.isPending ? "Publishing…" : "Publish (invite matched contractors)"}
+                {publish.isPending ? t("tenderDetail.publishing") : t("tenderDetail.publish")}
               </button>
             )}
             {(tender.status === "draft" || tender.status === "invited_bidding") && (
               <button onClick={() => cancel.mutate()} disabled={cancel.isPending}>
-                Cancel tender
+                {t("tenderDetail.cancel")}
               </button>
             )}
             {tender.status === "invited_bidding" && (
-              <Link to={`/projects/${projectId}/tenders/${tenderId}/bids`}>Compare bids →</Link>
+              <Link to={`/projects/${projectId}/tenders/${tenderId}/bids`}>{t("tenderDetail.compareBids")}</Link>
             )}
           </div>
         </section>
@@ -113,14 +123,14 @@ export function TenderDetailPage() {
 
       {canManageTenders && invitations.length > 0 && (
         <section className="section">
-          <h2>Invited contractors</h2>
+          <h2>{t("tenderDetail.invited")}</h2>
           <div className="card">
             <table>
               <thead>
                 <tr>
-                  <th>Company</th>
-                  <th>Match score</th>
-                  <th>Status</th>
+                  <th>{t("tenderDetail.col.company")}</th>
+                  <th>{t("tenderDetail.col.matchScore")}</th>
+                  <th>{t("tenderDetail.col.status")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -128,7 +138,7 @@ export function TenderDetailPage() {
                   <tr key={inv.contractorProfileId}>
                     <td>{inv.companyName}</td>
                     <td>{(inv.matchScore * 100).toFixed(0)}%</td>
-                    <td>{inv.status.replace("_", " ")}</td>
+                    <td>{invitationStatusLabel(inv.status)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -139,11 +149,11 @@ export function TenderDetailPage() {
 
       {isContractor && (
         <section className="section">
-          <h2>Your bid</h2>
+          <h2>{t("tenderDetail.yourBid")}</h2>
           {myBid ? (
             <div className="card">
               <p>
-                {(Number(myBid.totalAmountMinor) / 100).toLocaleString()} {myBid.currency} — {myBid.status}
+                {formatAmount(myBid.totalAmountMinor)} {myBid.currency} — {bidStatusLabel(myBid.status)}
               </p>
               <p className="hint">{myBid.paymentTermsDescription}</p>
             </div>
@@ -152,7 +162,7 @@ export function TenderDetailPage() {
               <form onSubmit={onSubmitBid} style={{ display: "flex", gap: ".6rem", flexWrap: "wrap" }}>
                 <input
                   type="number"
-                  placeholder="Total bid amount"
+                  placeholder={t("tenderDetail.bidAmount")}
                   value={totalAmountMinor ? Number(totalAmountMinor) / 100 : ""}
                   onChange={(e) => setTotalAmountMinor(String(Math.round(Number(e.target.value) * 100)))}
                   required
@@ -160,28 +170,28 @@ export function TenderDetailPage() {
                 />
                 <input
                   type="text"
-                  placeholder="Payment terms"
+                  placeholder={t("tenderDetail.paymentTerms")}
                   value={paymentTermsDescription}
                   onChange={(e) => setPaymentTermsDescription(e.target.value)}
                   required
                   style={{ flex: 1, minWidth: "12rem" }}
                 />
                 <button type="submit" className="primary" disabled={submitBid.isPending}>
-                  {submitBid.isPending ? "Submitting…" : "Submit bid"}
+                  {submitBid.isPending ? t("tenderDetail.submitting") : t("tenderDetail.submitBid")}
                 </button>
               </form>
               {error && <p className="form-error">{error}</p>}
             </div>
           ) : (
-            <p className="hint">This tender is not currently open for bids.</p>
+            <p className="hint">{t("tenderDetail.notOpen")}</p>
           )}
         </section>
       )}
 
       {tender.status === "awarded" && (
         <p className="hint">
-          A winner was selected for this tender. See it from the{" "}
-          <button onClick={() => navigate(`/projects/${projectId}/tenders/${tenderId}/bids`)}>bid comparison page</button>.
+          {t("tenderDetail.awardedPrefix")}
+          <button onClick={() => navigate(`/projects/${projectId}/tenders/${tenderId}/bids`)}>{t("tenderDetail.comparisonPage")}</button>.
         </p>
       )}
     </div>

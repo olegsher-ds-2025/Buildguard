@@ -1,5 +1,6 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import type { MeResponse } from "@buildguard/shared-types";
+import { UNAUTHORIZED_EVENT } from "./api";
 
 const TOKEN_KEY = "bg_monitor_access_token";
 const USER_KEY = "bg_monitor_user";
@@ -19,6 +20,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const raw = localStorage.getItem(USER_KEY);
     return raw ? (JSON.parse(raw) as MeResponse) : null;
   });
+
+  // An expired or rejected token ends the session; RequireAuth then sends the user to the login screen.
+  useEffect(() => {
+    const endSession = () => {
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+      setToken(null);
+      setUser(null);
+    };
+    window.addEventListener(UNAUTHORIZED_EVENT, endSession);
+    return () => window.removeEventListener(UNAUTHORIZED_EVENT, endSession);
+  }, []);
 
   const value = useMemo<AuthState>(
     () => ({

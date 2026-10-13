@@ -3,6 +3,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import type { MeasurementKind, PlanPoint } from "@buildguard/shared-types";
 import { api } from "../api";
+import { he, t, type MessageKey } from "../i18n/he";
+
+const kindLabel = (k: string) => {
+  const key = `cad.kind.${k}`;
+  return key in he ? t(key as MessageKey) : k;
+};
 
 export function CadViewerPage() {
   const { projectId, documentId } = useParams<{ projectId: string; documentId: string }>();
@@ -63,17 +69,16 @@ export function CadViewerPage() {
 
   const minPoints = kind === "area" ? 3 : 2;
 
-  if (viewer.isLoading) return <div className="page-loading">Loading plan…</div>;
-  if (viewer.isError || !viewer.data) return <div className="page-error">Could not load this plan.</div>;
+  if (viewer.isLoading) return <div className="page-loading">{t("cad.loading")}</div>;
+  if (viewer.isError || !viewer.data) return <div className="page-error">{t("cad.error")}</div>;
 
   const data = viewer.data;
 
   return (
     <div className="wrap">
-      <h1>Plan viewer</h1>
+      <h1>{t("cad.title")}</h1>
       <p className="sub">
-        Demo drawing — real DWG/DXF conversion isn't wired up yet (see README). Layers and measurements below are
-        fully functional against this canned plan.
+        {t("cad.subtitle")}
       </p>
 
       <section className="section" style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap" }}>
@@ -117,7 +122,7 @@ export function CadViewerPage() {
 
         <div style={{ flex: "0 0 260px" }}>
           <div className="card">
-            <h3 style={{ marginTop: 0 }}>Layers</h3>
+            <h3 style={{ marginTop: 0 }}>{t("cad.layers")}</h3>
             {data.layers.map((l) => (
               <label key={l.id} style={{ display: "flex", alignItems: "center", gap: ".4rem", marginBottom: ".3rem" }}>
                 <input
@@ -132,37 +137,37 @@ export function CadViewerPage() {
           </div>
 
           <div className="card" style={{ marginTop: "1rem" }}>
-            <h3 style={{ marginTop: 0 }}>Measure</h3>
+            <h3 style={{ marginTop: 0 }}>{t("cad.measure")}</h3>
             <select value={kind} onChange={(e) => { setKind(e.target.value as MeasurementKind); setPendingPoints([]); }}>
-              <option value="length">Length</option>
-              <option value="area">Area</option>
+              <option value="length">{kindLabel("length")}</option>
+              <option value="area">{kindLabel("area")}</option>
             </select>
             <p className="hint">
-              Click on the plan to place {minPoints}+ points ({pendingPoints.length} so far).
+              {t("cad.hint")} {minPoints} {t("cad.points")} ({t("cad.pointsSoFar")}: {pendingPoints.length}).
             </p>
             <div className="row-actions">
               <button onClick={() => setPendingPoints([])} disabled={pendingPoints.length === 0}>
-                Clear
+                {t("cad.clear")}
               </button>
               <button
                 className="primary"
                 onClick={() => createMeasurement.mutate()}
                 disabled={pendingPoints.length < minPoints || createMeasurement.isPending}
               >
-                {createMeasurement.isPending ? "Saving…" : "Save measurement"}
+                {createMeasurement.isPending ? t("cad.saving") : t("cad.save")}
               </button>
             </div>
           </div>
 
           <div className="card" style={{ marginTop: "1rem" }}>
-            <h3 style={{ marginTop: 0 }}>Saved measurements</h3>
+            <h3 style={{ marginTop: 0 }}>{t("cad.saved")}</h3>
             {measurements.data?.length === 0 ? (
-              <p className="hint">None yet.</p>
+              <p className="hint">{t("cad.none")}</p>
             ) : (
-              <ul style={{ paddingLeft: "1.1rem" }}>
+              <ul style={{ paddingInlineStart: "1.1rem" }}>
                 {measurements.data?.map((m) => (
                   <li key={m.id}>
-                    {m.kind}: {m.valueMeters} {m.kind === "length" ? m.unit : `${m.unit}²`}
+                    {kindLabel(m.kind)}: {m.valueMeters} {m.kind === "length" ? m.unit : `${m.unit}²`}
                   </li>
                 ))}
               </ul>

@@ -5,6 +5,7 @@ import { ApiError } from "@buildguard/api-client";
 import type { ProjectRole } from "@buildguard/shared-types";
 import { api } from "../api";
 import { useAuth } from "../auth";
+import { roleLabel, t } from "../i18n/he";
 
 const ROLES: ProjectRole[] = ["owner", "project_manager", "contractor", "inspector", "viewer"];
 
@@ -38,8 +39,8 @@ export function TeamPage() {
         err instanceof ApiError
           ? typeof err.body === "object" && err.body && "message" in err.body
             ? String((err.body as { message: unknown }).message)
-            : "Could not add that member."
-          : "Could not reach the server.",
+            : t("team.addFailed")
+          : t("team.unreachable"),
       );
     },
   });
@@ -60,15 +61,15 @@ export function TeamPage() {
     invite.mutate();
   }
 
-  if (members.isLoading) return <div className="page-loading">Loading team…</div>;
-  if (members.isError) return <div className="page-error">Could not load the team.</div>;
+  if (members.isLoading) return <div className="page-loading">{t("team.loading")}</div>;
+  if (members.isError) return <div className="page-error">{t("team.error")}</div>;
 
   const isOwner = members.data?.some((m) => m.userId === user?.id && m.isOwner) ?? false;
 
   return (
     <div className="wrap">
-      <h1>Team</h1>
-      <p className="sub">Who has access to this project, and what they can do.</p>
+      <h1>{t("team.title")}</h1>
+      <p className="sub">{t("team.subtitle")}</p>
 
       {isOwner && (
         <section className="section">
@@ -76,7 +77,7 @@ export function TeamPage() {
             <form onSubmit={onInviteSubmit} style={{ display: "flex", gap: ".6rem", flex: 1, flexWrap: "wrap" }}>
               <input
                 type="email"
-                placeholder="Email of an existing BuildGuard account"
+                placeholder={t("team.emailPlaceholder")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -85,12 +86,12 @@ export function TeamPage() {
               <select value={role} onChange={(e) => setRole(e.target.value as ProjectRole)}>
                 {ROLES.map((r) => (
                   <option key={r} value={r}>
-                    {r.replace("_", " ")}
+                    {roleLabel(r)}
                   </option>
                 ))}
               </select>
               <button type="submit" className="primary" disabled={invite.isPending}>
-                {invite.isPending ? "Adding…" : "Add to project"}
+                {invite.isPending ? t("team.adding") : t("team.add")}
               </button>
             </form>
           </div>
@@ -103,9 +104,9 @@ export function TeamPage() {
           <table>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
+                <th>{t("team.name")}</th>
+                <th>{t("team.email")}</th>
+                <th>{t("team.role")}</th>
                 {isOwner && <th></th>}
               </tr>
             </thead>
@@ -125,19 +126,19 @@ export function TeamPage() {
                       >
                         {ROLES.map((r) => (
                           <option key={r} value={r}>
-                            {r.replace("_", " ")}
+                            {roleLabel(r)}
                           </option>
                         ))}
                       </select>
                     ) : (
-                      <span>{m.role.replace("_", " ")}</span>
+                      <span>{roleLabel(m.role)}</span>
                     )}
                   </td>
                   {isOwner && (
                     <td>
                       {!m.isOwner && (
                         <button onClick={() => remove.mutate(m.userId)} disabled={remove.isPending}>
-                          Remove
+                          {t("team.remove")}
                         </button>
                       )}
                     </td>

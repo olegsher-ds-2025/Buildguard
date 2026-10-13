@@ -4,6 +4,8 @@ import { Link, useParams } from "react-router-dom";
 import { ApiError } from "@buildguard/api-client";
 import { api } from "../api";
 import { useAuth } from "../auth";
+import { formatAmount } from "../format";
+import { t, tenderStatusLabel } from "../i18n/he";
 
 export function TendersPage() {
   const { projectId } = useParams<{ projectId: string }>();
@@ -57,7 +59,7 @@ export function TendersPage() {
       queryClient.invalidateQueries({ queryKey: ["tenders", projectId] });
     },
     onError: (err) => {
-      setError(err instanceof ApiError ? "Could not create the tender." : "Could not reach the server.");
+      setError(err instanceof ApiError ? t("tenders.createError") : t("tenders.unreachable"));
     },
   });
 
@@ -66,13 +68,13 @@ export function TendersPage() {
     create.mutate();
   }
 
-  if (tenders.isLoading) return <div className="page-loading">Loading tenders…</div>;
-  if (tenders.isError) return <div className="page-error">Could not load tenders.</div>;
+  if (tenders.isLoading) return <div className="page-loading">{t("tenders.loading")}</div>;
+  if (tenders.isError) return <div className="page-error">{t("tenders.loadError")}</div>;
 
   return (
     <div className="wrap">
-      <h1>Tenders</h1>
-      <p className="sub">Publish work packages and compare contractor bids.</p>
+      <h1>{t("tenders.title")}</h1>
+      <p className="sub">{t("tenders.subtitle")}</p>
 
       {canManageTenders && (
         <section className="section">
@@ -80,7 +82,7 @@ export function TendersPage() {
             <form onSubmit={onSubmit} style={{ display: "flex", gap: ".6rem", flexWrap: "wrap" }}>
               <input
                 type="text"
-                placeholder="Title"
+                placeholder={t("tenders.form.title")}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
@@ -88,7 +90,7 @@ export function TendersPage() {
               />
               <select value={workCategoryId} onChange={(e) => setWorkCategoryId(e.target.value)} required>
                 <option value="" disabled>
-                  Category…
+                  {t("tenders.form.category")}
                 </option>
                 {workCategories.data?.map((c) => (
                   <option key={c.id} value={c.id}>
@@ -98,7 +100,7 @@ export function TendersPage() {
               </select>
               <input
                 type="number"
-                placeholder="Budget min"
+                placeholder={t("tenders.form.budgetMin")}
                 value={budgetMinMinor ? Number(budgetMinMinor) / 100 : ""}
                 onChange={(e) => setBudgetMinMinor(String(Math.round(Number(e.target.value) * 100)))}
                 required
@@ -106,7 +108,7 @@ export function TendersPage() {
               />
               <input
                 type="number"
-                placeholder="Budget max"
+                placeholder={t("tenders.form.budgetMax")}
                 value={budgetMaxMinor ? Number(budgetMaxMinor) / 100 : ""}
                 onChange={(e) => setBudgetMaxMinor(String(Math.round(Number(e.target.value) * 100)))}
                 required
@@ -114,14 +116,14 @@ export function TendersPage() {
               />
               <input value={currency} onChange={(e) => setCurrency(e.target.value)} style={{ width: "5rem" }} />
               <textarea
-                placeholder="Scope of work"
+                placeholder={t("tenders.form.scope")}
                 value={scopeDescription}
                 onChange={(e) => setScopeDescription(e.target.value)}
                 required
                 style={{ flexBasis: "100%" }}
               />
               <button type="submit" className="primary" disabled={create.isPending}>
-                {create.isPending ? "Creating…" : "Create tender"}
+                {create.isPending ? t("tenders.form.creating") : t("tenders.form.create")}
               </button>
             </form>
             {error && <p className="form-error">{error}</p>}
@@ -131,31 +133,31 @@ export function TendersPage() {
 
       <section className="section">
         {tenders.data?.length === 0 ? (
-          <p className="hint">No tenders yet.</p>
+          <p className="hint">{t("tenders.empty")}</p>
         ) : (
           <div className="card">
             <table>
               <thead>
                 <tr>
-                  <th>Title</th>
-                  <th>Category</th>
-                  <th>Budget</th>
-                  <th>Status</th>
+                  <th>{t("tenders.col.title")}</th>
+                  <th>{t("tenders.col.category")}</th>
+                  <th>{t("tenders.col.budget")}</th>
+                  <th>{t("tenders.col.status")}</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
-                {tenders.data?.map((t) => (
-                  <tr key={t.id}>
-                    <td>{t.title}</td>
-                    <td>{t.workCategory.name}</td>
+                {tenders.data?.map((tender) => (
+                  <tr key={tender.id}>
+                    <td>{tender.title}</td>
+                    <td>{tender.workCategory.name}</td>
                     <td>
-                      {(Number(t.budgetMinMinor) / 100).toLocaleString()}–
-                      {(Number(t.budgetMaxMinor) / 100).toLocaleString()} {t.currency}
+                      {formatAmount(tender.budgetMinMinor)}–
+                      {formatAmount(tender.budgetMaxMinor)} {tender.currency}
                     </td>
-                    <td>{t.status.replace("_", " ")}</td>
+                    <td>{tenderStatusLabel(tender.status)}</td>
                     <td>
-                      <Link to={`/projects/${projectId}/tenders/${t.id}`}>View</Link>
+                      <Link to={`/projects/${projectId}/tenders/${tender.id}`}>{t("tenders.view")}</Link>
                     </td>
                   </tr>
                 ))}

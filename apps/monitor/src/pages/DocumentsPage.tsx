@@ -3,6 +3,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 import type { DocumentKind } from "@buildguard/shared-types";
 import { api } from "../api";
+import { formatDate } from "../format";
+import { he, t, type MessageKey } from "../i18n/he";
+
+const kindLabel = (k: string) => {
+  const key = `documents.kind.${k}`;
+  return key in he ? t(key as MessageKey) : k;
+};
 
 export function DocumentsPage() {
   const { projectId } = useParams<{ projectId: string }>();
@@ -46,7 +53,7 @@ export function DocumentsPage() {
         headers: { "Content-Type": file.type || "application/octet-stream" },
         body: file,
       });
-      if (!putRes.ok) throw new Error(`Upload to storage failed (${putRes.status})`);
+      if (!putRes.ok) throw new Error(`${t("documents.storageFailed")} (${putRes.status})`);
 
       // 3. Confirm — the API independently verifies the object exists before persisting anything.
       await api.confirmDocumentUpload(projectId, created.documentId, created.versionId, {
@@ -58,54 +65,54 @@ export function DocumentsPage() {
       if (fileInput.current) fileInput.current.value = "";
       await queryClient.invalidateQueries({ queryKey: ["documents", projectId] });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Upload failed.");
+      setError(err instanceof Error ? err.message : t("documents.uploadFailed"));
     } finally {
       setUploading(false);
     }
   }
 
-  if (documents.isLoading) return <div className="page-loading">Loading documents…</div>;
-  if (documents.isError) return <div className="page-error">Could not load documents.</div>;
+  if (documents.isLoading) return <div className="page-loading">{t("documents.loading")}</div>;
+  if (documents.isError) return <div className="page-error">{t("documents.error")}</div>;
 
   return (
     <div className="wrap">
-      <h1>Documents</h1>
-      <p className="sub">Plans, contracts and other project files.</p>
+      <h1>{t("documents.title")}</h1>
+      <p className="sub">{t("documents.subtitle")}</p>
 
       <section className="section">
         <div className="card upload-card">
           <input
             type="text"
-            placeholder="Title (defaults to filename)"
+            placeholder={t("documents.titlePlaceholder")}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
           <select value={kind} onChange={(e) => setKind(e.target.value as DocumentKind)}>
-            <option value="plan">Plan</option>
-            <option value="cad">CAD</option>
-            <option value="contract">Contract</option>
-            <option value="other">Other</option>
+            <option value="plan">{kindLabel("plan")}</option>
+            <option value="cad">{kindLabel("cad")}</option>
+            <option value="contract">{kindLabel("contract")}</option>
+            <option value="other">{kindLabel("other")}</option>
           </select>
           <input ref={fileInput} type="file" />
           {error && <p className="form-error">{error}</p>}
           <button className="primary" onClick={onUpload} disabled={uploading}>
-            {uploading ? "Uploading…" : "Upload document"}
+            {uploading ? t("documents.uploading") : t("documents.upload")}
           </button>
         </div>
       </section>
 
       <section className="section">
         {documents.data?.length === 0 ? (
-          <p className="hint">No documents yet.</p>
+          <p className="hint">{t("documents.empty")}</p>
         ) : (
           <div className="card">
             <table>
               <thead>
                 <tr>
-                  <th>Title</th>
-                  <th>Kind</th>
-                  <th>Version</th>
-                  <th>Uploaded</th>
+                  <th>{t("documents.col.title")}</th>
+                  <th>{t("documents.col.kind")}</th>
+                  <th>{t("documents.col.version")}</th>
+                  <th>{t("documents.col.uploaded")}</th>
                   <th></th>
                 </tr>
               </thead>
@@ -113,18 +120,18 @@ export function DocumentsPage() {
                 {documents.data?.map((doc) => (
                   <tr key={doc.id}>
                     <td>{doc.title}</td>
-                    <td>{doc.kind}</td>
+                    <td>{kindLabel(doc.kind)}</td>
                     <td>{doc.currentVersion ? `v${doc.currentVersion.versionNo}` : "—"}</td>
                     <td>
-                      {doc.currentVersion ? new Date(doc.currentVersion.uploadedAt).toLocaleDateString() : "—"}
+                      {doc.currentVersion ? formatDate(doc.currentVersion.uploadedAt) : "—"}
                     </td>
                     <td>
                       <div className="row-actions">
                         <button onClick={() => download.mutate(doc.id)} disabled={!doc.currentVersion}>
-                          Download
+                          {t("documents.download")}
                         </button>
                         {(doc.kind === "plan" || doc.kind === "cad") && (
-                          <Link to={`/projects/${projectId}/documents/${doc.id}/cad`}>CAD viewer</Link>
+                          <Link to={`/projects/${projectId}/documents/${doc.id}/cad`}>{t("documents.cadViewer")}</Link>
                         )}
                       </div>
                     </td>

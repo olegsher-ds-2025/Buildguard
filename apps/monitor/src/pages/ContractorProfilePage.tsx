@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "../api";
+import { t, type MessageKey } from "../i18n/he";
 
 /** Not project-scoped — a contractor's own categories/availability, used by the matching engine on every tender. */
 export function ContractorProfilePage() {
@@ -21,8 +22,8 @@ export function ContractorProfilePage() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["contractor-profile-me"] }),
   });
 
-  if (profile.isLoading) return <div className="page-loading">Loading your profile…</div>;
-  if (profile.isError || !profile.data) return <div className="page-error">Could not load your contractor profile.</div>;
+  if (profile.isLoading) return <div className="page-loading">{t("contractorProfile.loading")}</div>;
+  if (profile.isError || !profile.data) return <div className="page-error">{t("contractorProfile.error")}</div>;
 
   const selectedIds = new Set(profile.data.categories.map((c) => c.id));
 
@@ -36,7 +37,11 @@ export function ContractorProfilePage() {
   return (
     <div className="wrap">
       <h1>{profile.data.companyName}</h1>
-      <p className="sub">Verification: {profile.data.verificationStatus}</p>
+      <p className="sub">
+        {t("contractorProfile.verification")}:{" "}
+        {t(`contractorProfile.verification.${profile.data.verificationStatus}` as MessageKey) ||
+          profile.data.verificationStatus}
+      </p>
 
       <section className="section">
         <div className="card">
@@ -47,14 +52,14 @@ export function ContractorProfilePage() {
               onChange={(e) => update.mutate({ currentlyAvailable: e.target.checked })}
               disabled={update.isPending}
             />
-            Currently available for new tenders
+            {t("contractorProfile.available")}
           </label>
         </div>
       </section>
 
       <section className="section">
-        <h2>Work categories</h2>
-        <p className="hint">Used by the matching engine to invite you to relevant tenders.</p>
+        <h2>{t("contractorProfile.categories")}</h2>
+        <p className="hint">{t("contractorProfile.categoriesHint")}</p>
         <div className="card" style={{ display: "flex", gap: ".8rem", flexWrap: "wrap" }}>
           {workCategories.data?.map((c) => (
             <label key={c.id} style={{ display: "flex", alignItems: "center", gap: ".4rem" }}>
