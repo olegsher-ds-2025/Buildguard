@@ -60,55 +60,34 @@ Optional configuration (all unset by default):
 | `WEATHER_PROVIDER=open-meteo` | Fill daily-log weather automatically from the project's coordinates. |
 | `S3_PUBLIC_ENDPOINT` | Address browsers use for presigned upload/download URLs when it differs from `S3_ENDPOINT` (set in `docker-compose.yml`). |
 
-## Quick start — Docker Compose
+## Deploy to the Raspberry Pi (MVP/POC)
 
-Requires Docker + the Compose plugin (`docker compose version`). No other local setup —
-Node, Postgres and MinIO all run inside containers.
+`infra/deploy-pi.sh` builds arm64 images on this machine, ships them to the Pi over SSH and starts
+`infra/docker-compose.pi.yml` there (nothing is compiled on the Pi; re-run it to update). Defaults:
+`PI_HOST=10.0.0.100`, directory `~/projects/buildguard`; secrets are generated on the Pi into `.env`.
 
-```bash
-docker compose -f infra/docker-compose.yml up --build
-```
+| URL | What |
+|---|---|
+| `http://10.0.0.100:8110` | monitor |
+| `http://10.0.0.100:8111` | admin |
+| `http://10.0.0.100:8112/api/v1/health` | API |
+| `http://10.0.0.100:8113` | object storage (browsers use it for presigned URLs) |
 
-This builds the API and both frontend images, then brings services up in dependency order:
-Postgres and MinIO start and wait for their healthchecks, a one-shot `migrate` service runs
-`prisma migrate deploy && prisma db seed` against Postgres and exits, MinIO's bucket +
-browser-CORS are provisioned, and only then do the API and the two frontends start. First run
-takes a few minutes (image builds); subsequent runs are fast since layers are cached.
+The demo runs behind Nginx Proxy Manager on the Pi, which terminates TLS (so the PWA and offline mode work):
 
-Once it settles (the `api`, `monitor` and `admin` containers report healthy):
+| Public name | Forwards to |
+|---|---|
+| `buildguard.sher.biz` | `10.0.0.100:8110`, plus a custom location `/api/` → `10.0.0.100:8112` |
+| `bg-files.sher.biz` | `10.0.0.100:8113` (object storage; Advanced tab: `client_max_body_size 50m;`) |
 
-- Monitor: http://localhost:5173
-- Admin: http://localhost:5174
-- API: http://localhost:3000/api/v1/health
-- MinIO console: http://localhost:9001 (`buildguard` / `buildguard123`)
+Forward to the Pi's LAN address, not a container IP: NPM is on a different Docker network and a container IP times out.
+`infra/deploy-pi.sh` takes `PUBLIC_URL` and `FILES_URL` (defaults above); they set the API address baked into the
+frontends and `S3_PUBLIC_ENDPOINT`/`CORS_ORIGINS` in the Pi's `.env`. The plain-HTTP ports above stay reachable on the LAN.
+The seeded demo accounts below exist there too, with known passwords. Change them before sharing the URL.
+MinIO no longer publishes images on Docker Hub, so the Pi stack uses `cgr.dev/chainguard/minio`
+(the dev `docker-compose.yml` still references `minio/minio` and needs the same swap on a fresh machine).
 
-Useful variants:
-
-```bash
-docker compose -f infra/docker-compose.yml up -d --build   # detached — reclaim the terminal
-docker compose -f infra/docker-compose.yml logs -f api      # tail one service's logs
-docker compose -f infra/docker-compose.yml down             # stop everything, keep data volumes
-docker compose -f infra/docker-compose.yml down -v          # stop and wipe Postgres/MinIO data too
-```
-
-After pulling schema or seed changes, re-run `up --build` — the `migrate` service re-applies
-any new migrations and the seed script is idempotent (safe to run again; it upserts/skips
-rows that already exist rather than duplicating the "Villa Sharon" fixture).
-
-Seeded accounts (see [`apps/api/prisma/seed.ts`](apps/api/prisma/seed.ts) for the full
-"Villa Sharon" fixture — phases, budget, findings, contractors in mixed verification states,
-a tender with live bids, an already-signed contract with a review, and a demo CAD plan):
-
-| Role | Email | Password |
-|---|---|---|
-| Owner (Monitor) | `owner@buildguard.dev` | `owner-password-123` |
-| Inspector (Monitor) | `inspector@buildguard.dev` | `inspector-password-123` |
-| Staff (Admin) | `staff@buildguard.dev` | `staff-password-123` |
-| Contractor (Monitor) | `amir@amir-cohen-construction.example` | `contractor-password-123` |
-
-`Sharon Earthworks` and `Levi Plumbing & Systems` are also seeded as contractors (verified and
-pending, respectively) but have no login — they exist to populate bids/reviews/matching data
-without needing a second browser session.
+Day-to-day use of the supervision features is in [docs/user-guide.md](docs/user-guide.md).
 
 ## Using the application
 

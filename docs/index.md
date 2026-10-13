@@ -15,6 +15,8 @@ core differentiators.
   architecture, data model, AI layer, non-functional requirements, phased roadmap,
   risks and open decisions.
 
+- [User guide]({{ '/user-guide' | relative_url }}) — using the Hebrew supervision edition, by role.
+
 ## Prototype
 
 - [MVP demo]({{ '/demo/' | relative_url }}) — an interactive prototype of the phase 1

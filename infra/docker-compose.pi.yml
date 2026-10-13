@@ -1,0 +1,130 @@
+# Raspberry Pi deployment (MVP/POC): runs prebuilt arm64 images — nothing is built on the Pi.
+# Created and updated by infra/deploy-pi.sh; secrets live in the .env next to this file on the Pi.
+#
+# Ports (LAN only; the router does not forward them):
+#   8110 monitor · 8111 admin · 8112 api · 8113 MinIO S3 (browsers use it for presigned uploads)
+# mem_limit values are the intended budget. The Pi's kernel currently has memory cgroups off, so Docker
+# ignores them until `cgroup_enable=memory cgroup_memory=1` is added to /boot/firmware/cmdline.txt and it reboots.
+
+name: buildguard
+
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: buildguard
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: buildguard
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "buildguard"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    mem_limit: 384m
+
+  # MinIO no longer publishes images on Docker Hub or Quay; Chainguard's maintained build is the same server.
+  minio:
+    image: cgr.dev/chainguard/minio:latest
+    restart: unless-stopped
+    command: ["server", "/data", "--console-address", ":9001"]
+    # The image runs as a non-root user, which cannot write to a fresh named volume.
+    user: "0:0"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      # Browsers PUT/GET via presigned URLs, which needs CORS for the frontend origins.
+      MINIO_API_CORS_ALLOW_ORIGIN: ${CORS_ORIGINS}
+    ports:
+      - "8113:9000"
+    volumes:
+      - minio-data:/data
+    mem_limit: 256m
+
+  bucket-init:
+    image: buildguard-api:pi
+    restart: "no"
+    depends_on:
+      - minio
+    working_dir: /repo/apps/api
+    entrypoint: ["node", "/repo/apps/api/create-bucket.js"]
+    command: []
+    environment:
+      S3_ENDPOINT: http://minio:9000
+      S3_BUCKET: buildguard
+      S3_ACCESS_KEY: ${MINIO_ROOT_USER}
+      S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - ./create-bucket.js:/repo/apps/api/create-bucket.js:ro
+    mem_limit: 128m
+
+  migrate:
+    image: buildguard-api:pi
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://buildguard:${POSTGRES_PASSWORD}@db:5432/buildguard
+    working_dir: /repo/apps/api
+    entrypoint: ["sh", "-c", "npx prisma migrate deploy && npx prisma db seed"]
+    command: []
+    mem_limit: 512m
+
+  api:
+    image: buildguard-api:pi
+    restart: unless-stopped
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      bucket-init:
+        condition: service_completed_successfully
+    environment:
+      PORT: 3000
+      NODE_OPTIONS: --max-old-space-size=384
+      DATABASE_URL: postgresql://buildguard:${POSTGRES_PASSWORD}@db:5432/buildguard
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      S3_ENDPOINT: http://minio:9000
+      S3_PUBLIC_ENDPOINT: ${S3_PUBLIC_ENDPOINT}
+      S3_BUCKET: buildguard
+      S3_ACCESS_KEY: ${MINIO_ROOT_USER}
+      S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+      WEATHER_PROVIDER: ${WEATHER_PROVIDER:-}
+      QUOTE_ANALYSIS_PROVIDER: ${QUOTE_ANALYSIS_PROVIDER:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    ports:
+      - "8112:3000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/v1/health',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    mem_limit: 512m
+
+  monitor:
+    image: buildguard-monitor:pi
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "8110:8080"
+    mem_limit: 128m
+
+  admin:
+    image: buildguard-admin:pi
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "8111:8080"
+    mem_limit: 128m
+
+volumes:
+  db-data:
+  minio-data:
