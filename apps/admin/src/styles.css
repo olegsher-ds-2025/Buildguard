@@ -97,3 +97,16 @@ button[disabled] { opacity: .55; cursor: default; }
 
 .page-loading, .page-error { padding: 3rem; text-align: center; color: var(--muted); }
 .page-error { color: var(--danger); }
+
+.filters { display: flex; align-items: flex-end; gap: .75rem; flex-wrap: wrap; }
+.filters label { display: flex; flex-direction: column; gap: .3rem; font-size: .8rem; color: var(--muted); }
+.filters .spacer { flex: 1; }
+.filters select, td select, td textarea {
+  font: inherit; font-size: .8rem; padding: .3rem .4rem; border-radius: 7px; border: 1px solid var(--border);
+  background: var(--bg); color: var(--fg);
+}
+.lead-contact { display: flex; flex-direction: column; gap: .15rem; }
+.lead-contact a { text-align: end; color: var(--accent); }
+.lead-message { max-width: 18rem; white-space: pre-wrap; }
+.lead-notes { display: flex; flex-direction: column; gap: .3rem; align-items: flex-start; }
+.lead-notes textarea { min-width: 12rem; resize: vertical; }
