@@ -56,6 +56,9 @@ import type {
   InspectionSummary,
   InstantiateHoldPointsRequest,
   InviteMemberRequest,
+  LeadKind,
+  LeadStatus,
+  LeadSummary,
   LoginRequest,
   LoginResponse,
   MeResponse,
@@ -89,6 +92,7 @@ import type {
   UpdateChecklistItemRequest,
   UpdateChecklistTemplateRequest,
   UpdateContractorProfileRequest,
+  UpdateLeadRequest,
   UserDirectoryEntry,
   WorkCategorySummary,
 } from "@buildguard/shared-types";
@@ -117,6 +121,14 @@ export interface ApiClientOptions {
   baseUrl: string;
   /** Returns the current access token, if any. Kept as a callback so callers can read from their own auth store. */
   getAccessToken?: () => string | null;
+}
+
+function leadQuery(filter: { kind?: LeadKind; status?: LeadStatus }): string {
+  const params = new URLSearchParams();
+  if (filter.kind) params.set("kind", filter.kind);
+  if (filter.status) params.set("status", filter.status);
+  const query = params.toString();
+  return query ? `?${query}` : "";
 }
 
 /**
@@ -221,6 +233,12 @@ export function createApiClient({ baseUrl, getAccessToken, onUnauthorized }: Api
     adminListClients: () => request<ClientSummary[]>("/admin/clients"),
     adminListProjects: () => request<AdminProjectSummary[]>("/admin/projects"),
     adminListAuditLog: () => request<AuditEntrySummary[]>("/admin/audit-log"),
+    adminListLeads: (filter: { kind?: LeadKind; status?: LeadStatus } = {}) =>
+      request<LeadSummary[]>(`/admin/leads${leadQuery(filter)}`),
+    adminUpdateLead: (leadId: string, body: UpdateLeadRequest) =>
+      request<LeadSummary>(`/admin/leads/${leadId}`, { method: "PATCH", body: JSON.stringify(body) }),
+    adminDownloadLeadsCsv: (filter: { kind?: LeadKind; status?: LeadStatus } = {}) =>
+      download(`/admin/leads.csv${leadQuery(filter)}`),
     listMembers: (projectId: string) => request<ProjectMemberSummary[]>(`/projects/${projectId}/members`),
     inviteMember: (projectId: string, body: InviteMemberRequest) =>
       request<ProjectMemberSummary>(`/projects/${projectId}/members`, {

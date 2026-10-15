@@ -1174,3 +1174,81 @@ export interface ConfirmQuoteUploadRequest {
   contentType: string;
   supplierName?: string;
 }
+
+// --- Leads (landing page) ---
+
+export type LeadKind = "register" | "contact";
+export type LeadStatus = "new" | "contacted" | "qualified" | "converted" | "closed" | "spam";
+
+export const LEAD_STATUS_LABELS: Record<LeadStatus, string> = {
+  new: "חדש",
+  contacted: "נוצר קשר",
+  qualified: "מתאים",
+  converted: "הומר ללקוח",
+  closed: "סגור",
+  spam: "ספאם",
+};
+
+export const LEAD_KIND_LABELS: Record<LeadKind, string> = {
+  register: "הרשמה",
+  contact: "פנייה",
+};
+
+/** Allowed values of the register form's `role` field. */
+export const LEAD_ROLE_LABELS: Record<string, string> = {
+  inspector: "מפקח / מהנדס",
+  owner_builder: "בונה פרטי",
+  contractor: "קבלן",
+  project_manager: "מנהל פרויקט",
+  viewer: "צפייה בלבד (עו״ד, שמאי)",
+  other: "אחר",
+};
+
+/** Allowed values of the register form's `projectStage` field. */
+export const LEAD_STAGE_LABELS: Record<string, string> = {
+  planning: "תכנון",
+  permit: "היתר",
+  foundation: "יסודות",
+  structure: "שלד",
+  finishing: "גמרים",
+  handover: "מסירה",
+};
+
+/** Allowed values of the contact form's `topic` field. */
+export const LEAD_TOPIC_LABELS: Record<string, string> = {
+  general: "שאלה כללית",
+  demo: "תיאום הדגמה",
+  pilot: "פיילוט",
+  other: "אחר",
+};
+
+export interface LeadSummary {
+  id: string;
+  kind: LeadKind;
+  status: LeadStatus;
+  name: string;
+  phone: string | null;
+  email: string | null;
+  role: string | null;
+  projectCount: number | null;
+  projectStage: string | null;
+  region: string | null;
+  company: string | null;
+  topic: string | null;
+  message: string | null;
+  marketingOptIn: boolean;
+  referrer: string | null;
+  utmSource: string | null;
+  utmMedium: string | null;
+  utmCampaign: string | null;
+  utmTerm: string | null;
+  utmContent: string | null;
+  staffNotes: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UpdateLeadRequest {
+  status?: LeadStatus;
+  staffNotes?: string;
+}

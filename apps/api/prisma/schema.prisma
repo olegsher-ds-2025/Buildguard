@@ -1431,3 +1431,61 @@ model Quote {
   @@index([comparisonId])
   @@map("quotes")
 }
+
+// ---------------------------------------------------------------------------
+// Marketing leads (public landing page forms)
+// ---------------------------------------------------------------------------
+
+enum LeadKind {
+  register
+  contact
+
+  @@map("lead_kind")
+}
+
+enum LeadStatus {
+  new
+  contacted
+  qualified
+  converted
+  closed
+  spam
+
+  @@map("lead_status")
+}
+
+// Submitted from the unauthenticated landing page. Deliberately no IP or
+// user-agent column: retention is enforced by LeadsRetention, and the less
+// personal data stored the less there is to purge.
+model Lead {
+  id             String     @id @default(uuid())
+  kind           LeadKind
+  status         LeadStatus @default(new)
+  name           String
+  // E.164 (+972...). Optional only for contact leads that left an email.
+  phone          String?
+  // Stored lower-cased; the 24 h dedupe matches on it.
+  email          String?
+  role           String?
+  projectCount   Int?       @map("project_count")
+  projectStage   String?    @map("project_stage")
+  region         String?
+  company        String?
+  topic          String?
+  message        String?
+  marketingOptIn Boolean    @default(false) @map("marketing_opt_in")
+  // Host only: a full referrer URL can carry other sites' query strings.
+  referrer       String?
+  utmSource      String?    @map("utm_source")
+  utmMedium      String?    @map("utm_medium")
+  utmCampaign    String?    @map("utm_campaign")
+  utmTerm        String?    @map("utm_term")
+  utmContent     String?    @map("utm_content")
+  staffNotes     String?    @map("staff_notes")
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updated_at")
+
+  @@index([createdAt])
+  @@index([email, kind, createdAt])
+  @@map("leads")
+}

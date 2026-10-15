@@ -25,6 +25,7 @@ import { NotificationsModule } from "./modules/notifications/notifications.modul
 import { HoldPointsModule } from "./modules/hold-points/hold-points.module";
 import { IdempotencyModule } from "./modules/idempotency/idempotency.module";
 import { InspectionsModule } from "./modules/inspections/inspections.module";
+import { LeadsModule } from "./modules/leads/leads.module";
 
 /**
  * Root module. Domain modules (identity, projects, finance, documents,
@@ -60,6 +61,7 @@ import { InspectionsModule } from "./modules/inspections/inspections.module";
     InspectionsModule,
     PhotosModule,
     IdempotencyModule,
+    LeadsModule,
   ],
 })
 export class AppModule {}
