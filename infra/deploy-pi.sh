@@ -5,6 +5,7 @@
 #   infra/deploy-pi.sh                 # build + ship + up
 #   PI_HOST=10.0.0.100 infra/deploy-pi.sh
 #   SKIP_BUILD=1 infra/deploy-pi.sh    # ship and restart the images already built locally
+#   ONLY=landing infra/deploy-pi.sh    # build, ship and restart just the landing page
 set -euo pipefail
 
 PI_HOST="${PI_HOST:-10.0.0.100}"
@@ -15,6 +16,10 @@ SSH="ssh -o BatchMode=yes ${PI_USER}@${PI_HOST}"
 PUBLIC_URL="${PUBLIC_URL:-https://buildguard.sher.biz}"
 FILES_URL="${FILES_URL:-https://bg-files.sher.biz}"
 API_URL="${PUBLIC_URL}/api/v1"
+# Landing page hostname -> :8114. Its origin is what the API accepts on the public lead forms.
+LANDING_URL="${LANDING_URL:-https://yesod.sher.biz}"
+BUILD_SHA="$(git rev-parse --short HEAD 2>/dev/null || date +%s)"
+ONLY="${ONLY:-}"
 cd "$(dirname "$0")/.."
 
 build() { # name dockerfile [build-args...]
@@ -24,14 +29,25 @@ build() { # name dockerfile [build-args...]
 }
 
 if [[ -z "${SKIP_BUILD:-}" ]]; then
-  build buildguard-api infra/docker/api.Dockerfile
-  build buildguard-monitor infra/docker/web.Dockerfile --build-arg APP_NAME=monitor --build-arg "VITE_API_BASE_URL=${API_URL}"
-  build buildguard-admin infra/docker/web.Dockerfile --build-arg APP_NAME=admin --build-arg "VITE_API_BASE_URL=${API_URL}"
+  if [[ -z "${ONLY}" ]]; then
+    build buildguard-api infra/docker/api.Dockerfile
+    build buildguard-monitor infra/docker/web.Dockerfile --build-arg APP_NAME=monitor --build-arg "VITE_API_BASE_URL=${API_URL}"
+    build buildguard-admin infra/docker/web.Dockerfile --build-arg APP_NAME=admin --build-arg "VITE_API_BASE_URL=${API_URL}"
+  fi
+  if [[ -z "${ONLY}" || "${ONLY}" == landing ]]; then
+    build buildguard-landing infra/docker/landing.Dockerfile --build-arg "BUILD_SHA=${BUILD_SHA}"
+  fi
+fi
+
+if [[ "${ONLY}" == landing ]]; then
+  IMAGES=(buildguard-landing:pi)
+else
+  IMAGES=(buildguard-api:pi buildguard-monitor:pi buildguard-admin:pi buildguard-landing:pi)
 fi
 
 echo ">> shipping images to ${PI_HOST}"
 ${SSH} "mkdir -p '${PI_DIR}'"
-docker save buildguard-api:pi buildguard-monitor:pi buildguard-admin:pi | gzip | ${SSH} 'gunzip | docker load'
+docker save "${IMAGES[@]}" | gzip | ${SSH} 'gunzip | docker load'
 scp -q infra/docker-compose.pi.yml "${PI_USER}@${PI_HOST}:${PI_DIR}/docker-compose.yml"
 scp -q infra/create-bucket.js "${PI_USER}@${PI_HOST}:${PI_DIR}/create-bucket.js"
 
@@ -47,11 +63,16 @@ ${SSH} "cd '${PI_DIR}' && if [ ! -f .env ]; then
   } > .env
   echo 'generated .env'
 fi
-sed -i '/^S3_PUBLIC_ENDPOINT=/d;/^CORS_ORIGINS=/d' .env
+sed -i '/^S3_PUBLIC_ENDPOINT=/d;/^CORS_ORIGINS=/d;/^LEADS_ALLOWED_ORIGINS=/d' .env
 echo S3_PUBLIC_ENDPOINT=${FILES_URL} >> .env
-echo CORS_ORIGINS=${PUBLIC_URL},http://${PI_HOST}:8110,http://${PI_HOST}:8111 >> .env"
+echo CORS_ORIGINS=${PUBLIC_URL},http://${PI_HOST}:8110,http://${PI_HOST}:8111 >> .env
+echo LEADS_ALLOWED_ORIGINS=${LANDING_URL},http://${PI_HOST}:8114 >> .env"
 
 echo ">> starting the stack"
-${SSH} "cd '${PI_DIR}' && docker compose up -d --remove-orphans && docker compose ps"
+if [[ "${ONLY}" == landing ]]; then
+  ${SSH} "cd '${PI_DIR}' && docker compose up -d landing && docker compose ps landing"
+else
+  ${SSH} "cd '${PI_DIR}' && docker compose up -d --remove-orphans && docker compose ps"
+fi
 echo
-echo "monitor: ${PUBLIC_URL}   admin: http://${PI_HOST}:8111   api: ${API_URL}/health"
+echo "monitor: ${PUBLIC_URL}   admin: http://${PI_HOST}:8111   api: ${API_URL}/health   landing: ${LANDING_URL}"

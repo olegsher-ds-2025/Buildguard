@@ -122,6 +122,14 @@ services:
     ports:
       - "5174:8080"
 
+  # Landing page on http://localhost:8114. Its /api/v1/leads/* forms are proxied to the api service.
+  landing:
+    build:
+      context: ..
+      dockerfile: infra/docker/landing.Dockerfile
+    ports:
+      - "8114:8080"
+
 volumes:
   db-data:
   minio-data:

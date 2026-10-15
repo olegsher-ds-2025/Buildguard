@@ -18,7 +18,11 @@ This is an npm-workspaces monorepo:
   [Supervision engine](#supervision-engine).
 - `apps/admin` — internal ops console for BuildGuard staff: contractor verification queue,
   clients/projects/users directories, audit log, tenders/contracts oversight, review disputes.
-  Separate login realm from `monitor` (distinct JWT audience), same backend.
+  Separate login realm from `monitor` (distinct JWT audience), same backend. Also hosts the
+  pilot-waitlist leads list ("לידים": status, notes, CSV export).
+- `apps/landing` — Hebrew RTL marketing page ("יסוד by BuildGuard"): static HTML/CSS/JS with no build
+  step and no `package.json`, served by nginx. Its registration and contact forms post to the API's
+  public `leads` module — see [Landing page](#landing-page).
 - `packages/shared-types` — TS types/enums shared between the API and both frontends.
 - `packages/api-client` — typed fetch client + TanStack Query wiring, used by both frontends.
 - `infra/` — `docker-compose.yml` and the Dockerfiles it builds.
@@ -72,6 +76,7 @@ Optional configuration (all unset by default):
 | `http://10.0.0.100:8111` | admin |
 | `http://10.0.0.100:8112/api/v1/health` | API |
 | `http://10.0.0.100:8113` | object storage (browsers use it for presigned URLs) |
+| `http://10.0.0.100:8114` | landing page |
 
 The demo runs behind Nginx Proxy Manager on the Pi, which terminates TLS (so the PWA and offline mode work):
 
@@ -86,6 +91,33 @@ frontends and `S3_PUBLIC_ENDPOINT`/`CORS_ORIGINS` in the Pi's `.env`. The plain-
 The seeded demo accounts below exist there too, with known passwords. Change them before sharing the URL.
 MinIO no longer publishes images on Docker Hub, so the Pi stack uses `cgr.dev/chainguard/minio`
 (the dev `docker-compose.yml` still references `minio/minio` and needs the same swap on a fresh machine).
+
+### Landing page
+
+The Hebrew landing page (`apps/landing`, static files) is its own container, `buildguard-landing`, on port 8114. It
+lives on a separate hostname so the installed PWA at `buildguard.sher.biz` (service worker scope `/`) is untouched.
+Its nginx proxies only `POST /api/v1/leads/register` and `/contact` to the api (5 requests/min per client, resolved
+per request, so the page stays up while the api is down); every other `/api/` path returns 404.
+
+| Public name | Forwards to |
+|---|---|
+| `yesod.sher.biz` ([specify] final hostname) | `10.0.0.100:8114` |
+
+Add a DNS A record to `81.199.124.218`, then an NPM Proxy Host to `http://10.0.0.100:8114` (LAN IP), with Let's Encrypt,
+Force SSL and HTTP/2. Enable HSTS only after checking it works, without includeSubDomains. Until the legal texts are
+reviewed, restrict the host with an NPM access list. nginx takes the client IP from `X-Forwarded-For` (private source
+ranges only), which NPM sends by default.
+
+`LANDING_URL` (default `https://yesod.sher.biz`) is written to the Pi's `.env` as `LEADS_ALLOWED_ORIGINS`, the Origin
+allow-list for the lead forms. `LEADS_WEBHOOK_URL` (optional, ntfy-compatible, no PII in the payload) is read from the
+Pi's `.env` too. `LEADS_DAILY_CAP` (default 200) is an API-side limit on stored leads per rolling 24 h; it is not set
+in the Pi compose file.
+
+Leads are stored in Postgres (`leads` table, no IP addresses) and reviewed in the admin console. Spam handling: a
+honeypot field and a minimum fill time (both answer 201 and store nothing), a 24 h duplicate check, and the nginx rate
+limit. A retention job runs daily at 04:00: spam is deleted after 7 days, contact leads after 12 months, unconverted
+registrations after 24 months. These periods are placeholders until a lawyer reviews them. `ONLY=landing infra/deploy-pi.sh` rebuilds and restarts just this container. Locally,
+`docker compose -f infra/docker-compose.yml up landing` serves it on `http://localhost:8114`.
 
 Day-to-day use of the supervision features is in [docs/user-guide.md](docs/user-guide.md).
 
@@ -168,8 +200,9 @@ browser enforces CORS).
 
 Deliberate scope cuts, tracked here rather than silently dropped:
 
-- **No self-serve signup, invite emails, or password reset.** Accounts are created via the
-  seed script. Inviting a team member in Monitor requires them to already have an account —
+- **No self-serve signup, invite emails, or password reset.** The landing page registers a pilot
+  waitlist lead only; staff create the account by hand. Lead notifications are a webhook with no
+  personal data, not email. Accounts are created via the seed script. Inviting a team member in Monitor requires them to already have an account —
   inviting an unregistered email fails clearly (404) rather than doing nothing.
 - **No refresh-token rotation.** A single 12h access token, no silent renewal.
 - **No Postgres row-level security.** The design doc calls RLS a "second safety net" over
