@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /thanks.html
+Disallow: /api/
+
+Sitemap: https://yesod.sher.biz/sitemap.xml

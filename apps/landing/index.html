@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>יסוד – פיקוח בנייה דיגיטלי לפי תקנים ישראליים</title>
+<meta name="description" content="יסוד של BuildGuard: רשימות בדיקה לפי שלבי בנייה, נקודות עצירה שמחברות לתשלום, ליקויים עם תיעוד לפני ואחרי, ודוחות PDF בעברית. עובד גם בלי קליטה. הצטרפו לפיילוט.">
+<meta name="theme-color" content="#F1EEE8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#17141A" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://yesod.sher.biz/">
+<link rel="alternate" hreflang="he" href="https://yesod.sher.biz/">
+<link rel="alternate" hreflang="x-default" href="https://yesod.sher.biz/">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="he_IL">
+<meta property="og:site_name" content="יסוד – by BuildGuard">
+<meta property="og:title" content="יסוד – כל שלב בבנייה נבדק, מתועד ומאושר">
+<meta property="og:description" content="פיקוח בנייה דיגיטלי בעברית: רשימות בדיקה, נקודות עצירה, ליקויים ודוחות. גם בלי קליטה.">
+<meta property="og:url" content="https://yesod.sher.biz/">
+<meta property="og:image" content="https://yesod.sher.biz/assets/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="assets/fonts/plex-hebrew-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/karantina-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/site.css?v=__V__">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"Organization","@id":"https://yesod.sher.biz/#org","name":"יסוד","alternateName":"BuildGuard","url":"https://yesod.sher.biz/","logo":"https://yesod.sher.biz/assets/img/logo.svg","inLanguage":"he"},
+{"@type":"SoftwareApplication","@id":"https://yesod.sher.biz/#app","name":"יסוד","applicationCategory":"BusinessApplication","operatingSystem":"Web","inLanguage":"he","description":"מערכת פיקוח בנייה בעברית: רשימות בדיקה לפי שלבים, נקודות עצירה, ליקויים, בדיקות מעבדה ודוחות PDF. עובדת גם בלי קליטה.","url":"https://yesod.sher.biz/","publisher":{"@id":"https://yesod.sher.biz/#org"}},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"כמה זה עולה?","acceptedAnswer":{"@type":"Answer","text":"אין כרגע מחירון מפורסם. הפיילוט פתוח למספר מצומצם של משתתפים, ותנאיו נמסרים בשיחה לפני שמתחילים."}},
+{"@type":"Question","name":"האם המערכת עובדת בלי קליטה?","acceptedAnswer":{"@type":"Answer","text":"כן. תוצאות בדיקה ותמונות נשמרות במכשיר ומסתנכרנות לפי הסדר כשהחיבור חוזר, בלי כפילויות."}},
+{"@type":"Question","name":"האם יסוד מחליפה מהנדס או מפקח?","acceptedAnswer":{"@type":"Answer","text":"לא. המערכת מתעדת ומסייעת, והאחריות המקצועית נשארת אצל בעלי המקצוע. ספי הבדיקה בתבניות דורשים אישור מהנדס לפני שמפעילים אותם."}},
+{"@type":"Question","name":"מי רואה את הנתונים שלי?","acceptedAnswer":{"@type":"Answer","text":"הגישה מוגדרת לפי תפקיד. קבלן רואה רק את הפרויקטים והליקויים המשויכים אליו, ותפקיד צפייה בלבד אינו יכול לערוך."}},
+{"@type":"Question","name":"אפשר להוציא את המידע מהמערכת?","acceptedAnswer":{"@type":"Answer","text":"כן. אפשר להפיק דוחות PDF בעברית וקובץ ZIP של תיק מבנה עם המסמכים והתמונות של הפרויקט."}},
+{"@type":"Question","name":"מה זה השוואת הצעות מחיר בבטא?","acceptedAnswer":{"@type":"Answer","text":"הצעות מחיר שהועלו כקובץ או כתמונה נקראות אוטומטית, מסומנות לפי כללים קבועים ומושוות לדרישות השלב. זו גרסת בטא שנועדה לסייע בלבד, וההחלטה נשארת אצלכם."}},
+{"@type":"Question","name":"על אילו תקנים הרשימות מסתמכות?","acceptedAnswer":{"@type":"Answer","text":"התבניות מפנות לת״י 466, ת״י 158, ת״י 579, ת״י 1205 ולתקן 1068. ההפניות נועדו לתיעוד ואינן תחליף לעיון בנוסח התקן העדכני."}},
+{"@type":"Question","name":"איך מצטרפים לפיילוט?","acceptedAnswer":{"@type":"Answer","text":"ממלאים את טופס ההרשמה. אנחנו חוזרים אליכם בטלפון, מבררים את הצורך, ופותחים חשבון ידנית."}}
+]}]}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">דלגו לתוכן</a>
+<svg class="vh" width="0" height="0" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+<symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M19 12H5m7-7-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-next" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-off" viewBox="0 0 24 24"><path d="m2 2 20 20M8.5 16.5a5 5 0 0 1 7 0M5 12.9a10 10 0 0 1 5-2.7M19 12.9a10 10 0 0 0-2.4-1.7M2 8.8a15 15 0 0 1 4.2-2.6M12 20h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3zM12 9v4m0 4h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2M9 2h6v4H9zM9 14l2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><path d="M5 11h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-cam" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3zM12 10a3 3 0 1 0 0 6 3 3 0 0 0 0-6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 6v6l4 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-flask" viewBox="0 0 24 24"><path d="M10 2v7.3L4.5 19a2 2 0 0 0 1.7 3h11.6a2 2 0 0 0 1.7-3L14 9.3V2M8.5 2h7M7 15h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-stop" viewBox="0 0 24 24"><path d="M7.9 2h8.2L22 7.9v8.2L16.1 22H7.9L2 16.1V7.9zM12 8v4m0 4h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5zM4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3v18M5 21h14M5 7h14M5 7l-3 8a3 3 0 0 0 6 0zM19 7l-3 8a3 3 0 0 0 6 0z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</defs></svg>
+
+<header class="site-head" id="top">
+  <div class="wrap head-in">
+    <a class="logo" href="#top" aria-label="יסוד – by BuildGuard, לראש הדף">
+      <img src="assets/img/logo.svg" width="34" height="34" alt="">
+      <span><strong>יסוד</strong> <small>by BuildGuard</small></span>
+    </a>
+    <nav class="nav" aria-label="ראשי">
+      <ul>
+        <li><a href="#how">איך זה עובד</a></li>
+        <li><a href="#services">שירותים</a></li>
+        <li><a href="#features">יכולות</a></li>
+        <li><a href="#pilot">פיילוט</a></li>
+        <li><a href="#about">אודות</a></li>
+        <li><a href="#faq">שאלות</a></li>
+      </ul>
+    </nav>
+    <a class="login" href="https://buildguard.sher.biz/">כניסה למערכת</a>
+    <a class="btn sm head-cta" href="#register">הצטרפו לפיילוט</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="פתיחת תפריט" data-menu-open>
+      <svg aria-hidden="true"><use href="#i-menu"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="תפריט" data-menu>
+  <div class="mm-top">
+    <strong>יסוד</strong>
+    <button class="menu-btn" type="button" aria-label="סגירת תפריט" data-menu-close><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+  </div>
+  <nav aria-label="תפריט נייד">
+    <a href="#how">איך זה עובד</a>
+    <a href="#services">שירותים</a>
+    <a href="#features">יכולות</a>
+    <a href="#pilot">פיילוט</a>
+    <a href="#about">אודות</a>
+    <a href="#contact">צור קשר</a>
+    <a href="#faq">שאלות נפוצות</a>
+    <a href="https://buildguard.sher.biz/">כניסה למערכת</a>
+    <a href="https://wa.me/[specify]" rel="noopener">WhatsApp</a>
+  </nav>
+  <a class="btn" href="#register">הצטרפו לפיילוט</a>
+</div>
+
+<main id="main">
+
+<!-- 1 hero -->
+<section class="hero" aria-labelledby="h-hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">YESOD · BY BUILDGUARD</p>
+      <h1 id="h-hero">כל שלב בבנייה – <span>נבדק, מתועד ומאושר.</span> גם בלי קליטה.</h1>
+      <p class="lead">יסוד היא מערכת פיקוח בעברית למפקחים, לבונים ולקבלנים: רשימות בדיקה לפי שלבים, נקודות עצירה שמחברות לתשלום, וליקויים שנסגרים רק עם צילום אחרי.</p>
+      <div class="cta-row">
+        <a class="btn" href="#register">הצטרפו לפיילוט <svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn ghost" href="#contact" data-topic="demo">תיאום הדגמה</a>
+      </div>
+      <p class="hero-note">הפיילוט פתוח למספר מצומצם של משתתפים. ללא התחייבות בשלב ההרשמה.</p>
+    </div>
+    <svg class="hero-art" viewBox="0 0 520 430" role="img" aria-label="שלד בניין בן שלוש קומות עם סימוני מדידה בוורוד, וטלפון שמציג נקודת עצירה פתוחה">
+      <g stroke-dasharray="0">
+        <path class="frame-fill" d="M260 230 390 305 260 380 130 305Z"/>
+        <path class="frame-line" d="M130 305v12l130 75 130-75v-12M260 380v12"/>
+        <path class="frame-line" d="M130 305V235M260 380V310M390 305V235"/>
+        <path class="frame-fill" d="M260 160 390 235 260 310 130 235Z"/>
+        <path class="frame-line" d="M130 235v12l130 75 130-75v-12"/>
+        <path class="frame-line" d="M130 235V165M260 310V240M390 235V165"/>
+        <path class="frame-fill" d="M260 90 390 165 260 240 130 165Z"/>
+        <path class="frame-line" d="M130 165v12l130 75 130-75v-12"/>
+        <path class="frame-line" d="M130 165V95M260 240V170M390 165V95"/>
+        <path class="frame-fill top" d="M260 20 390 95 260 170 130 95Z"/>
+        <path class="frame-line" d="M130 95v12l130 75 130-75v-12"/>
+      </g>
+      <path class="mark draw" d="M118 320l24 24M142 320l-24 24" />
+      <path class="mark draw d2" d="M248 396l24 24M272 396l-24 24"/>
+      <path class="mark draw d3" d="M378 320l24 24M402 320l-24 24"/>
+      <path class="mark" d="M130 305 260 380 390 305" stroke-dasharray="8 8"/>
+      <text class="svg-txt" x="30" y="300">+0.00</text>
+      <text class="svg-txt" x="30" y="230">+3.00</text>
+      <text class="svg-txt" x="30" y="160">+6.00</text>
+      <g transform="translate(340 190)">
+        <rect class="svg-surface" x="0" y="0" width="150" height="228" rx="16"/>
+        <rect x="52" y="8" width="46" height="5" rx="2.5" class="svg-ink" opacity=".25"/>
+        <text x="75" y="42" text-anchor="middle" class="svg-ink" font-size="13" font-weight="600">קומה 2 · יציקה</text>
+        <rect x="14" y="56" width="122" height="26" rx="4" fill="none" stroke="#8A857D"/>
+        <text x="75" y="74" text-anchor="middle" class="svg-ink" font-size="12">זיון עמודים</text>
+        <rect x="14" y="90" width="122" height="26" rx="4" fill="none" stroke="#8A857D"/>
+        <text x="75" y="108" text-anchor="middle" class="svg-ink" font-size="12">תבניות</text>
+        <rect x="14" y="124" width="122" height="26" rx="4" fill="none" stroke="#8A857D"/>
+        <text x="75" y="142" text-anchor="middle" class="svg-ink" font-size="12">צנרת</text>
+        <rect class="svg-pill" x="14" y="170" width="122" height="34" rx="17"/>
+        <text class="svg-pill-t" x="75" y="192" text-anchor="middle">נקודת עצירה פתוחה</text>
+      </g>
+    </svg>
+  </div>
+</section>
+<hr class="dash" aria-hidden="true">
+
+<!-- 2 problem -->
+<section id="problem" aria-labelledby="h-problem">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">01 / הבעיה</p>
+      <h2 id="h-problem">מה שלא תועד, לא קרה</h2>
+      <p>הבעיות המשמעותיות באתר מתגלות אחרי הכיסוי, אחרי התשלום או אחרי המסירה. ארבעה מצבים מוכרים:</p>
+    </div>
+    <div class="cards">
+      <article class="card reveal"><svg class="ico" aria-hidden="true"><use href="#i-camera"/></svg><h3>תמונות בוואטסאפ</h3><p>ממצאים מתפזרים בין קבוצות ושיחות. כשצריך להוכיח מה נבדק ומתי, אין איפה לחפש.</p></article>
+      <article class="card reveal"><svg class="ico" aria-hidden="true"><use href="#i-stop"/></svg><h3>תשלום לפני אישור</h3><p>שלב מתקדם לתשלום בלי שהבדיקה נסגרה. אחר כך כבר קשה לעצור, לחזור או לדרוש תיקון.</p></article>
+      <article class="card reveal"><svg class="ico" aria-hidden="true"><use href="#i-alert"/></svg><h3>ליקוי "טופל" בלי הוכחה</h3><p>ליקוי מסומן כסגור בשיחה, ובמסירה מגלים שהוא עדיין שם.</p></article>
+      <article class="card reveal"><svg class="ico" aria-hidden="true"><use href="#i-off"/></svg><h3>אין קליטה בשטח</h3><p>במרתף, בחדר מדרגות או בשטח פתוח אפליקציה שתלויה ברשת פשוט לא עובדת.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- 3 how -->
+<section id="how" class="alt" aria-labelledby="h-how">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">02 / איך זה עובד</p>
+      <h2 id="h-how">מסמנים נקודה, בודקים, סוגרים</h2>
+    </div>
+    <ol class="steps">
+      <li class="step reveal"><span class="flag">STEP 1</span><h3>בוחרים תבנית שלב</h3><p>המפקח משכפל תבנית מ-15 תבניות השלבים ומתאים אותה לפרויקט.</p></li>
+      <li class="step reveal"><span class="flag">STEP 2</span><h3>בודקים בשטח</h3><p>כל סעיף מסומן תקין, לא תקין או לא רלוונטי, עם תמונות מתויגות.</p></li>
+      <li class="step reveal"><span class="flag">STEP 3</span><h3>ליקוי נפתח לבד</h3><p>סעיף שנכשל פותח ליקוי. הוא נסגר רק עם תמונה של "אחרי" ואימות.</p></li>
+      <li class="step reveal"><span class="flag">STEP 4</span><h3>נקודת עצירה נסגרת, השלב מאושר</h3><p>רק אחרי שנקודות העצירה נסגרו אפשר לאשר שלב ולשחרר את התשלום שלו.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- 4 services -->
+<section id="services" aria-labelledby="h-serv">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">03 / שירותים לפי תפקיד</p>
+      <h2 id="h-serv">מי אתם בפרויקט?</h2>
+      <p>כל תפקיד רואה ועושה רק את מה שמיועד לו.</p>
+    </div>
+    <div class="personas" data-personas>
+      <h3 class="persona-h"><button class="p-btn" type="button" aria-expanded="true" aria-controls="pp-1" id="pb-1"><span>מפקחים ומהנדסים<small>הערוץ המרכזי למערכת</small></span><svg class="chev" aria-hidden="true"><use href="#i-chev"/></svg></button></h3>
+      <div class="p-panel" id="pp-1" role="region" aria-labelledby="pb-1">
+        <p><strong>פחות ניירת, יותר ראיות.</strong></p>
+        <ul>
+          <li>משכפלים תבנית שלב ועורכים את העותק שלכם.</li>
+          <li>מסמנים כל סעיף בשטח, וליקויים נפתחים אוטומטית.</li>
+          <li>מפיקים דוח בדיקה בעברית כקובץ PDF.</li>
+          <li>ספי הבדיקה בתבנית פעילים רק אחרי שאישרתם אותם.</li>
+        </ul>
+      </div>
+      <h3 class="persona-h"><button class="p-btn" type="button" aria-expanded="false" aria-controls="pp-2" id="pb-2"><span>בונים פרטיים<small>בנייה עצמית ובתים פרטיים</small></span><svg class="chev" aria-hidden="true"><use href="#i-chev"/></svg></button></h3>
+      <div class="p-panel" id="pp-2" role="region" aria-labelledby="pb-2">
+        <p><strong>רואים איפה הפרויקט עומד לפני שמשלמים.</strong></p>
+        <ul>
+          <li>סטטוס כל שלב, כולל נקודות עצירה פתוחות.</li>
+          <li>שלב עם נקודת עצירה פתוחה לא ניתן לאישור ולתשלום.</li>
+          <li>עקיפה אפשרית רק לבעל הפרויקט, ומתועדת עם סיבה.</li>
+          <li>בסוף מקבלים תיק מבנה עם המסמכים והתמונות.</li>
+        </ul>
+      </div>
+      <h3 class="persona-h"><button class="p-btn" type="button" aria-expanded="false" aria-controls="pp-3" id="pb-3"><span>קבלנים<small>רואים רק את שלהם</small></span><svg class="chev" aria-hidden="true"><use href="#i-chev"/></svg></button></h3>
+      <div class="p-panel" id="pp-3" role="region" aria-labelledby="pb-3">
+        <p><strong>רשימה ברורה של מה צריך לתקן.</strong></p>
+        <ul>
+          <li>רואים רק את הפרויקטים והליקויים המשויכים אליכם.</li>
+          <li>סוגרים ליקוי עם צילום "אחרי", מהשטח.</li>
+          <li>יודעים מראש אילו נקודות עצירה מחכות לשלב הבא.</li>
+        </ul>
+      </div>
+      <h3 class="persona-h"><button class="p-btn" type="button" aria-expanded="false" aria-controls="pp-4" id="pb-4"><span>מנהלי פרויקטים<small>תמונת מצב אחת</small></span><svg class="chev" aria-hidden="true"><use href="#i-chev"/></svg></button></h3>
+      <div class="p-panel" id="pp-4" role="region" aria-labelledby="pb-4">
+        <p><strong>כל מה שפתוח, במקום אחד.</strong></p>
+        <ul>
+          <li>יומן עבודה יומי שננעל אחרי חתימה.</li>
+          <li>טיימרים לבדיקות מעבדה ולהסרת תבניות, עם התראות.</li>
+          <li>מעקב אחרי דרישות טופס 4.</li>
+        </ul>
+      </div>
+      <h3 class="persona-h"><button class="p-btn" type="button" aria-expanded="false" aria-controls="pp-5" id="pb-5"><span>גורמים בצפייה בלבד<small>עורכי דין, שמאים, מלווים</small></span><svg class="chev" aria-hidden="true"><use href="#i-chev"/></svg></button></h3>
+      <div class="p-panel" id="pp-5" role="region" aria-labelledby="pb-5">
+        <p><strong>היסטוריה מתועדת, בלי יכולת לשנות אותה.</strong></p>
+        <ul>
+          <li>גישה לדוחות, לתמונות ולהיסטוריית הליקויים.</li>
+          <li>תפקיד צפייה בלבד, בלי הרשאות עריכה.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 features -->
+<section id="features" class="alt" aria-labelledby="h-feat">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">04 / יכולות</p>
+      <h2 id="h-feat">מה יש בפנים</h2>
+    </div>
+    <div class="feat">
+      <article class="card reveal"><svg class="ico" aria-hidden="true"><use href="#i-list"/></svg><h3>רשימות בדיקה לפי שלב</h3><p>15 תבניות שלב, עם סעיפים לפני, במהלך ואחרי, תקנים רלוונטיים, נקודות עצירה וליקויים נפוצים.</p>
+        <div class="vig"><div class="rows"><div class="row ok"><span>זיון עמודים</span><b>✓</b></div><div class="row err"><span>כיסוי בטון</span><b>✗</b></div><div class="row"><span>הערות מפקח</span><b><bdi>n.a</bdi></b></div></div></div></article>
+      <article class="card reveal"><svg class="ico" aria-hidden="true"><use href="#i-alert"/></svg><h3>מחזור חיי ליקוי</h3><p>ליקוי נפתח אוטומטית מסעיף שנכשל. סימון "תוקן" דורש צילום "אחרי", ורק אז אפשר לאמת.</p>
+        <div class="vig"><div class="chain"><span class="pill err">נפתח</span><svg class="a" aria-hidden="true"><use href="#i-arrow"/></svg><span class="pill">בטיפול</span><svg class="a" aria-hidden="true"><use href="#i-arrow"/></svg><span class="pill on">תוקן + תמונה</span><svg class="a" aria-hidden="true"><use href="#i-arrow"/></svg><span class="pill ok">אומת</span></div></div></article>
+      <article class="card reveal"><svg class="ico" aria-hidden="true"><use href="#i-stop"/></svg><h3>נקודות עצירה ושער תשלום</h3><p>נקודת עצירה פתוחה חוסמת אישור שלב ושחרור תשלום. סגירה דורשת חתימה ומסמך או תמונה. עקיפה רק לבעל הפרויקט, עם סיבה מתועדת.</p>
+        <div class="vig"><div class="rows"><div class="row hold"><span>בדיקת זיון לפני יציקה</span><b>פתוחה</b></div><div class="row"><span>אישור שלב ותשלום</span><b>נעול</b></div></div></div></article>
+      <article class="card reveal"><svg class="ico" aria-hidden="true"><use href="#i-flask"/></svg><h3>בדיקות מעבדה וטיימרים</h3><p>תוצאות בטון ב-<bdi>7</bdi> וב-<bdi>28</bdi> ימים, כללי הסרת תבניות, וטיימרים של <bdi>24</bdi> שעות ללחץ ו-<bdi>72</bdi> שעות להצפה, עם התראות. ספים כמותיים פעילים רק אחרי אישור מהנדס.</p></article>
+      <article class="card reveal"><svg class="ico" aria-hidden="true"><use href="#i-cam"/></svg><h3>תמונות מתויגות</h3><p>סימון בחצים, עיגולים וטקסט, מיקום GPS אופציונלי, ואכיפה של צילום לפני כיסוי.</p></article>
+      <article class="card reveal"><svg class="ico" aria-hidden="true"><use href="#i-book"/></svg><h3>יומן עבודה</h3><p>יומן יומי שננעל, כך שלא ניתן לשנות אותו בדיעבד.</p></article>
+      <article class="card reveal"><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg><h3>מוכנות לטופס 4</h3><p>מעקב אחרי הדרישות לאורך הפרויקט, כדי שלא יתגלו חוסרים בשבוע האחרון.</p></article>
+      <article class="card reveal"><svg class="ico" aria-hidden="true"><use href="#i-file"/></svg><h3>דוחות ותיק מבנה</h3><p>דוח יומן ודוח בדיקה כקובצי PDF בעברית מימין לשמאל, וקובץ ZIP של תיק מבנה למסירה.</p></article>
+      <article class="card reveal"><svg class="ico" aria-hidden="true"><use href="#i-scale"/></svg><h3>השוואת הצעות מחיר <span class="badge">בטא</span></h3><p>הצעה שהועלתה כקובץ או כתמונה נקראת אוטומטית, מסומנת לפי כללי סיכון קבועים ומושווית לדרישות השלב. כלי עזר בלבד. ההחלטה שלכם.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- 6 offline -->
+<section id="offline" aria-labelledby="h-off">
+  <div class="wrap off">
+    <div class="reveal">
+      <p class="eyebrow">05 / בלי קליטה</p>
+      <h2 id="h-off">הבדיקה לא מחכה לרשת</h2>
+      <p class="lead">תוצאות בדיקה ותמונות נשמרות במכשיר, ומועלות לפי הסדר כשהחיבור חוזר. כל פעולה נשלחת פעם אחת בלבד, גם אם החיבור נותק באמצע.</p>
+      <ul>
+        <li>אפשר להתקין במסך הבית של הטלפון.</li>
+        <li>התור גלוי, ורואים מה עוד ממתין לסנכרון.</li>
+        <li>עובד ללא כל הרחבה או תוכנה נוספת.</li>
+      </ul>
+    </div>
+    <div class="sync reveal" data-sync role="group" aria-label="הדגמה: סנכרון אחרי חזרת החיבור">
+      <span class="chip"><i aria-hidden="true"></i><span class="off-t">אין חיבור · 3 פעולות בתור</span><span class="on-t">מחובר · הכול סונכרן</span></span>
+      <div class="q-item"><span>בדיקה: זיון עמודים</span><span class="mono">1</span></div>
+      <div class="q-item"><span>תמונה: כיסוי בטון</span><span class="mono">2</span></div>
+      <div class="q-item"><span>ליקוי חדש</span><span class="mono">3</span></div>
+      <button class="btn ghost sm" type="button" data-sync-toggle aria-pressed="false">הדגמה: החיבור חוזר</button>
+    </div>
+  </div>
+</section>
+
+<!-- 7 trust -->
+<section id="trust" class="alt" aria-labelledby="h-trust">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">06 / אמון ותקנים</p>
+      <h2 id="h-trust">מבוסס על תקנים, בלי לספק הבטחות מעבר</h2>
+      <p>תבניות הבדיקה מפנות לתקנים הישראליים הבאים. ההפניות נועדו לתיעוד ואינן תחליף לעיון בנוסח התקן העדכני.</p>
+    </div>
+    <div class="trust reveal">
+      <div class="std"><strong>ת״י <bdi class="ltr">466</bdi></strong><span>מופיע בתבניות הבדיקה</span></div>
+      <div class="std"><strong>ת״י <bdi class="ltr">158</bdi></strong><span>מופיע בתבניות הבדיקה</span></div>
+      <div class="std"><strong>ת״י <bdi class="ltr">579</bdi></strong><span>מופיע בתבניות הבדיקה</span></div>
+      <div class="std"><strong>ת״י <bdi class="ltr">1205</bdi></strong><span>מופיע בתבניות הבדיקה</span></div>
+      <div class="std"><strong>תקן <bdi class="ltr">1068</bdi></strong><span>מופיע בתבניות הבדיקה</span></div>
+    </div>
+    <div class="disclaimer reveal">
+      <h3>הבהרה חשובה</h3>
+      <p>יסוד היא כלי תיעוד ובקרה. היא אינה מחליפה מהנדס, מפקח או בודק מוסמך, ואינה מהווה אישור הנדסי או משפטי. ספי בדיקה כמותיים (למשל בטון והסרת תבניות) נלקחו מרשימות הבדיקה ולא מנוסח התקן, ופעילים רק לאחר שמהנדס אישר אותם. תוצאות הכלים האוטומטיים, כולל השוואת הצעות המחיר בבטא, הן כלי עזר.</p>
+    </div>
+    <div class="soon reveal">
+      <strong>בקרוב</strong>
+      <span class="pill">אישור חשבונות מול שלבים</span>
+      <span class="pill">עורך תבניות מערכת</span>
+      <span class="hero-note">בתכנון, ללא תאריך.</span>
+    </div>
+  </div>
+</section>
+
+<!-- 8 pilot -->
+<section id="pilot" aria-labelledby="h-pilot">
+  <div class="wrap">
+    <div class="pilot reveal">
+      <div>
+        <p class="eyebrow">07 / פיילוט</p>
+        <h2 id="h-pilot">מצטרפים לפיילוט</h2>
+        <p class="lead">אנחנו עובדים עם מספר מצומצם של משתתפים, כדי ללמוד מה באמת עוזר בשטח.</p>
+        <div class="cta-row"><a class="btn" href="#register">להרשמה <svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+      </div>
+      <ul>
+        <li>ממלאים טופס קצר, ואנחנו חוזרים אליכם בטלפון.</li>
+        <li>החשבון נפתח ידנית אחרי שיחה.</li>
+        <li>תנאי הפיילוט נמסרים לפני שמתחילים. אין מחירון מפורסם.</li>
+        <li>המטרה: בדיקה ראשונה תוך 7 ימים מפתיחת החשבון.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 9 about -->
+<section id="about" class="alt" aria-labelledby="h-about">
+  <div class="wrap about">
+    <div class="reveal">
+      <p class="eyebrow">08 / אודות</p>
+      <h2 id="h-about">מי עומד מאחורי יסוד</h2>
+      <p class="narrow">יסוד היא מהדורת הפיקוח העברית של BuildGuard. [specify: סיפור החברה והמוטיבציה, 2–3 משפטים]</p>
+      <p class="narrow">הנתונים שלכם שייכים לכם: דוחות PDF ותיק מבנה בפורמט ZIP זמינים להפקה בכל שלב.</p>
+      <dl class="facts">
+        <div><dt>ישות משפטית:</dt><dd>[specify: שם החברה/העוסק]</dd></div>
+        <div><dt>מספר חברה / ע.מ.:</dt><dd>[specify: מספר]</dd></div>
+        <div><dt>כתובת:</dt><dd>[specify: כתובת]</dd></div>
+      </dl>
+    </div>
+    <div class="team reveal">
+      <div class="person"><span class="mono-av" aria-hidden="true">?</span><div><strong>[specify: שם]</strong><p>[specify: תפקיד ורקע מקצועי]</p></div></div>
+      <div class="person"><span class="mono-av" aria-hidden="true">?</span><div><strong>[specify: שם]</strong><p>[specify: תפקיד ורקע מקצועי]</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 register -->
+<section id="register" aria-labelledby="h-reg">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">09 / הרשמה</p>
+      <h2 id="h-reg">הצטרפות לפיילוט</h2>
+      <p>שדות המסומנים ב-<span class="req" aria-hidden="true">*</span> הם חובה.</p>
+    </div>
+    <div class="form-box reveal" data-form-box>
+      <div class="summary" tabindex="-1" role="alert" hidden data-summary></div>
+      <div class="status" tabindex="-1" hidden data-status></div>
+      <div class="status ok" tabindex="-1" hidden data-success role="status">
+        <h3>תודה, קיבלנו את הפנייה</h3>
+        <p>נחזור אליכם בטלפון. אם דחוף, אפשר גם <a href="https://wa.me/[specify]" rel="noopener">לכתוב בוואטסאפ</a>.</p>
+      </div>
+      <form id="register-form" method="post" action="/api/v1/leads/register" novalidate data-endpoint="/api/v1/leads/register" data-kind="register">
+        <div class="form-grid two">
+          <div class="field"><label for="r-name">שם מלא <span class="req">*</span></label><input id="r-name" name="name" type="text" autocomplete="name" required maxlength="120"><p class="err-msg" id="r-name-e"></p></div>
+          <div class="field"><label for="r-phone">טלפון נייד <span class="req">*</span></label><input id="r-phone" name="phone" type="tel" inputmode="tel" dir="ltr" autocomplete="tel" required maxlength="20" placeholder="050-0000000"><p class="err-msg" id="r-phone-e"></p></div>
+          <div class="field"><label for="r-email">דוא״ל <span class="req">*</span></label><input id="r-email" name="email" type="email" dir="ltr" autocomplete="email" required maxlength="160"><p class="err-msg" id="r-email-e"></p></div>
+          <div class="field"><label for="r-role">התפקיד שלכם <span class="req">*</span></label>
+            <select id="r-role" name="role" required><option value="">בחרו…</option><option value="inspector">מפקח / מהנדס</option><option value="owner_builder">בונה פרטי</option><option value="contractor">קבלן</option><option value="project_manager">מנהל פרויקט</option><option value="viewer">צפייה בלבד (עו״ד, שמאי…)</option><option value="other">אחר</option></select><p class="err-msg" id="r-role-e"></p></div>
+          <div class="field"><label for="r-count">מספר פרויקטים פעילים</label><input id="r-count" name="projectCount" type="number" min="0" max="1000" inputmode="numeric"><p class="err-msg" id="r-count-e"></p></div>
+          <div class="field"><label for="r-stage">שלב עיקרי</label>
+            <select id="r-stage" name="projectStage"><option value="">לא ידוע</option><option value="planning">תכנון</option><option value="permit">היתרים</option><option value="foundation">יסודות</option><option value="structure">שלד</option><option value="finishing">גמרים</option><option value="handover">מסירה</option></select></div>
+          <div class="field"><label for="r-region">אזור</label><input id="r-region" name="region" type="text" maxlength="80"></div>
+          <div class="field"><label for="r-company">חברה / משרד</label><input id="r-company" name="company" type="text" autocomplete="organization" maxlength="120"></div>
+          <div class="field full"><label for="r-msg">הערות</label><textarea id="r-msg" name="message" maxlength="2000"></textarea><p class="err-msg" id="r-msg-e"></p></div>
+          <div class="hp" aria-hidden="true"><label for="r-web">אל תמלאו שדה זה</label><input id="r-web" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+          <input type="hidden" name="t0" value="">
+          <div class="field full check"><input id="r-priv" name="privacyConsent" type="checkbox" value="true" data-label="מדיניות הפרטיות" required><div><label for="r-priv">קראתי ואני מסכים/ה ל<a href="privacy.html">מדיניות הפרטיות</a> <span class="req">*</span></label><p class="err-msg" id="r-priv-e"></p></div></div>
+          <div class="field full check"><input id="r-mkt" name="marketingOptIn" type="checkbox" value="true"><label for="r-mkt">אשמח לקבל עדכונים והודעות שיווקיות מיסוד (אפשר לבטל בכל עת)</label></div>
+          <p class="notice full">הפרטים ישמשו ליצירת קשר בנוגע לפיילוט בלבד. פרטים נוספים ב<a href="privacy.html">מדיניות הפרטיות</a>.</p>
+          <div class="full sub-row"><button class="btn" type="submit" data-submit>שליחה</button></div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- 11 contact -->
+<section id="contact" class="alt" aria-labelledby="h-contact">
+  <div class="wrap contact-grid">
+    <div class="reveal">
+      <p class="eyebrow">10 / צור קשר</p>
+      <h2 id="h-contact">שאלה? הדגמה?</h2>
+      <p class="lead">כתבו לנו ונחזור אליכם.</p>
+      <ul class="channels">
+        <li><b>טלפון</b><span class="ltr">[specify: טלפון]</span></li>
+        <li><b>WhatsApp</b><a href="https://wa.me/[specify]" rel="noopener">[specify: מספר WhatsApp]</a></li>
+        <li><b>דוא״ל</b><span class="ltr">[specify: דוא״ל]</span></li>
+        <li><b>זמן מענה</b>[specify: זמן מענה]</li>
+      </ul>
+    </div>
+    <div class="form-box reveal" data-form-box>
+      <div class="summary" tabindex="-1" role="alert" hidden data-summary></div>
+      <div class="status" tabindex="-1" hidden data-status></div>
+      <div class="status ok" tabindex="-1" hidden data-success role="status">
+        <h3>ההודעה נשלחה</h3>
+        <p>תודה. נחזור אליכם בהקדם.</p>
+      </div>
+      <form id="contact-form" method="post" action="/api/v1/leads/contact" novalidate data-endpoint="/api/v1/leads/contact" data-kind="contact">
+        <div class="form-grid two">
+          <div class="field"><label for="c-name">שם <span class="req">*</span></label><input id="c-name" name="name" type="text" autocomplete="name" required maxlength="120"><p class="err-msg" id="c-name-e"></p></div>
+          <div class="field"><label for="c-topic">נושא</label><select id="c-topic" name="topic"><option value="general">שאלה כללית</option><option value="demo">תיאום הדגמה</option><option value="pilot">פיילוט</option><option value="other">אחר</option></select></div>
+          <div class="field"><label for="c-phone">טלפון</label><input id="c-phone" name="phone" type="tel" inputmode="tel" dir="ltr" autocomplete="tel" maxlength="20"><p class="err-msg" id="c-phone-e"></p></div>
+          <div class="field"><label for="c-email">דוא״ל</label><input id="c-email" name="email" type="email" dir="ltr" autocomplete="email" maxlength="160"><p class="err-msg" id="c-email-e"></p></div>
+          <p class="hint full notice">יש למלא טלפון או דוא״ל, לפחות אחד מהם.</p>
+          <div class="field full"><label for="c-msg">הודעה <span class="req">*</span></label><textarea id="c-msg" name="message" required minlength="10" maxlength="2000"></textarea><p class="hint">בין 10 ל-2000 תווים.</p><p class="err-msg" id="c-msg-e"></p></div>
+          <div class="hp" aria-hidden="true"><label for="c-web">אל תמלאו שדה זה</label><input id="c-web" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+          <input type="hidden" name="t0" value="">
+          <div class="field full check"><input id="c-priv" name="privacyConsent" type="checkbox" value="true" data-label="מדיניות הפרטיות" required><div><label for="c-priv">קראתי ואני מסכים/ה ל<a href="privacy.html">מדיניות הפרטיות</a> <span class="req">*</span></label><p class="err-msg" id="c-priv-e"></p></div></div>
+          <div class="full sub-row"><button class="btn" type="submit" data-submit>שליחה</button></div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- 12 faq -->
+<section id="faq" aria-labelledby="h-faq">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">11 / שאלות נפוצות</p>
+      <h2 id="h-faq">שאלות ותשובות</h2>
+    </div>
+    <div class="faq reveal">
+      <details><summary>כמה זה עולה?</summary><div class="ans">אין כרגע מחירון מפורסם. הפיילוט פתוח למספר מצומצם של משתתפים, ותנאיו נמסרים בשיחה לפני שמתחילים.</div></details>
+      <details><summary>האם המערכת עובדת בלי קליטה?</summary><div class="ans">כן. תוצאות בדיקה ותמונות נשמרות במכשיר ומסתנכרנות לפי הסדר כשהחיבור חוזר, בלי כפילויות.</div></details>
+      <details><summary>האם יסוד מחליפה מהנדס או מפקח?</summary><div class="ans">לא. המערכת מתעדת ומסייעת, והאחריות המקצועית נשארת אצל בעלי המקצוע. ספי הבדיקה בתבניות דורשים אישור מהנדס לפני שמפעילים אותם.</div></details>
+      <details><summary>מי רואה את הנתונים שלי?</summary><div class="ans">הגישה מוגדרת לפי תפקיד. קבלן רואה רק את הפרויקטים והליקויים המשויכים אליו, ותפקיד צפייה בלבד אינו יכול לערוך.</div></details>
+      <details><summary>אפשר להוציא את המידע מהמערכת?</summary><div class="ans">כן. אפשר להפיק דוחות PDF בעברית וקובץ ZIP של תיק מבנה עם המסמכים והתמונות של הפרויקט.</div></details>
+      <details><summary>מה זה השוואת הצעות מחיר בבטא?</summary><div class="ans">הצעות מחיר שהועלו כקובץ או כתמונה נקראות אוטומטית, מסומנות לפי כללים קבועים ומושוות לדרישות השלב. זו גרסת בטא שנועדה לסייע בלבד, וההחלטה נשארת אצלכם.</div></details>
+      <details><summary>על אילו תקנים הרשימות מסתמכות?</summary><div class="ans">התבניות מפנות לת״י 466, ת״י 158, ת״י 579, ת״י 1205 ולתקן 1068. ההפניות נועדו לתיעוד ואינן תחליף לעיון בנוסח התקן העדכני.</div></details>
+      <details><summary>איך מצטרפים לפיילוט?</summary><div class="ans">ממלאים את <a href="#register">טופס ההרשמה</a>. אנחנו חוזרים אליכם בטלפון, מבררים את הצורך, ופותחים חשבון ידנית.</div></details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div><p class="brand">יסוד</p><p>by BuildGuard</p><p class="ltr">[specify: דוא״ל]</p></div>
+      <div><h2>ניווט</h2><ul><li><a href="#how">איך זה עובד</a></li><li><a href="#features">יכולות</a></li><li><a href="#pilot">פיילוט</a></li><li><a href="#faq">שאלות נפוצות</a></li></ul></div>
+      <div><h2>מידע</h2><ul><li><a href="privacy.html">מדיניות פרטיות</a></li><li><a href="terms.html">תנאי שימוש</a></li><li><a href="accessibility.html">הצהרת נגישות</a></li></ul></div>
+      <div><h2>קשר</h2><ul><li><a href="https://buildguard.sher.biz/">כניסה למערכת</a></li><li><a href="https://wa.me/[specify]" rel="noopener">WhatsApp</a></li><li><a href="#contact">צור קשר</a></li></ul></div>
+    </div>
+    <p class="small">© <span class="ltr">2026</span> יסוד · BuildGuard. [specify: שם הישות המשפטית]. כל הזכויות שמורות.</p>
+  </div>
+</footer>
+<script src="assets/site.js?v=__V__" defer></script>
+</body>
+</html>
