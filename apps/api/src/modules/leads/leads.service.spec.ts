@@ -36,6 +36,7 @@ function makeService(opts: { env?: Record<string, string>; duplicate?: boolean; 
       findFirst: jest.fn().mockResolvedValue(opts.duplicate ? { id: "dup" } : null),
       count: jest.fn().mockResolvedValue(opts.countToday ?? 0),
       create: jest.fn().mockResolvedValue({}),
+      findMany: jest.fn().mockResolvedValue([]),
       findUnique: jest.fn().mockResolvedValue(opts.lead ?? null),
       update: jest.fn().mockImplementation(({ data }) => Promise.resolve({ ...opts.lead, ...data, updatedAt: new Date() })),
     },
@@ -98,6 +99,64 @@ describe("LeadsService.submit", () => {
       utmSource: "facebook",
       utmCampaign: "pilot",
     });
+  });
+
+  it("stores the audience-specific fields from an owner and a contractor form", async () => {
+    const { service, prisma } = makeService();
+    await service.submit(
+      "register",
+      register({
+        role: "owner_builder",
+        audience: "owner",
+        landingPath: "/owners/",
+        projectKind: "renovation",
+        budgetRange: "250k_1m",
+        needContractors: true,
+      }),
+      ORIGIN,
+    );
+    await service.submit(
+      "register",
+      register({
+        email: "amir@example.com",
+        role: "contractor",
+        audience: "contractor",
+        landingPath: "/contractors/",
+        trades: ["electrical", "plumbing"],
+        teamSize: "2_5",
+      }),
+      ORIGIN,
+    );
+
+    const [owner, contractor] = (prisma.lead.create as jest.Mock).mock.calls.map((c) => c[0].data);
+    expect(owner).toMatchObject({ audience: "owner", landingPath: "/owners/", projectKind: "renovation", budgetRange: "250k_1m", needContractors: true, trades: [] });
+    expect(contractor).toMatchObject({ audience: "contractor", landingPath: "/contractors/", trades: ["electrical", "plumbing"], teamSize: "2_5" });
+  });
+
+  it("reads no-JS form values for trades and the yes/no radio", async () => {
+    const { service, prisma } = makeService();
+    await service.submit("register", register({ trades: "electrical", needContractors: "no", t0: "" }), ORIGIN);
+    expect((prisma.lead.create as jest.Mock).mock.calls[0][0].data).toMatchObject({ trades: ["electrical"], needContractors: false });
+  });
+
+  it("rejects unknown audience, trade and a landingPath that is not a bare path", async () => {
+    const { service } = makeService();
+    const errors = await validationErrors(
+      service.submit("register", register({ audience: "admin", trades: ["welding"], landingPath: "https://evil.example/x?a=1" }), ORIGIN),
+    );
+    expect(errors).toEqual({ audience: "invalid", trades: "invalid", landingPath: "invalid" });
+  });
+
+  it("tags the contact form with its audience too", async () => {
+    const { service, prisma } = makeService();
+    await service.submit("contact", contact({ audience: "other", landingPath: "/" }), ORIGIN);
+    expect((prisma.lead.create as jest.Mock).mock.calls[0][0].data).toMatchObject({ audience: "other", landingPath: "/" });
+  });
+
+  it("filters the list by audience", async () => {
+    const { service, prisma } = makeService();
+    await service.list({ audience: "contractor" });
+    expect((prisma.lead.findMany as jest.Mock).mock.calls[0][0].where).toMatchObject({ audience: "contractor" });
   });
 
   it("accepts a no-JS urlencoded post: strings, empty optionals and an empty t0", async () => {

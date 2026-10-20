@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Builds arm64 images on this machine, ships them to the Raspberry Pi over SSH and (re)starts the stack there.
-# Nothing is compiled on the Pi. Safe to re-run: it updates images and restarts only what changed.
+# Builds images for the target host's architecture (arm64 on the Pi, amd64 on the x86 box that took over 10.0.0.100),
+# ships them over SSH and (re)starts the stack there. Nothing is compiled on the target. Safe to re-run: it updates images and restarts only what changed.
 #
 #   infra/deploy-pi.sh                 # build + ship + up
 #   PI_HOST=10.0.0.100 infra/deploy-pi.sh
@@ -22,10 +22,15 @@ BUILD_SHA="$(git rev-parse --short HEAD 2>/dev/null || date +%s)"
 ONLY="${ONLY:-}"
 cd "$(dirname "$0")/.."
 
+case "$(${SSH} uname -m)" in
+  x86_64) PLATFORM=linux/amd64 ;;
+  *) PLATFORM=linux/arm64 ;;
+esac
+
 build() { # name dockerfile [build-args...]
   local name="$1" file="$2"; shift 2
-  echo ">> building ${name} (linux/arm64, emulated — the first build is slow)"
-  docker buildx build --platform linux/arm64 --load -f "${file}" -t "${name}:pi" "$@" .
+  echo ">> building ${name} (${PLATFORM}; arm64 on an x86 machine is emulated and slow)"
+  docker buildx build --platform "${PLATFORM}" --load -f "${file}" -t "${name}:pi" "$@" .
 }
 
 if [[ -z "${SKIP_BUILD:-}" ]]; then

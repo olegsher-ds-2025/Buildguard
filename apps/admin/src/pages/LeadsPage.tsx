@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  LEAD_AUDIENCE_LABELS,
+  LEAD_BUDGET_LABELS,
   LEAD_KIND_LABELS,
+  LEAD_PROJECT_KIND_LABELS,
   LEAD_ROLE_LABELS,
   LEAD_STAGE_LABELS,
   LEAD_STATUS_LABELS,
+  LEAD_TEAM_SIZE_LABELS,
   LEAD_TOPIC_LABELS,
+  LEAD_TRADE_LABELS,
   type LeadKind,
   type LeadStatus,
   type LeadSummary,
@@ -14,6 +19,7 @@ import { api } from "../api";
 
 const STATUSES = Object.keys(LEAD_STATUS_LABELS) as LeadStatus[];
 const KINDS = Object.keys(LEAD_KIND_LABELS) as LeadKind[];
+const AUDIENCES = Object.keys(LEAD_AUDIENCE_LABELS);
 
 function details(lead: LeadSummary): string {
   const parts =
@@ -22,6 +28,11 @@ function details(lead: LeadSummary): string {
           lead.role && LEAD_ROLE_LABELS[lead.role],
           lead.projectCount !== null && `${lead.projectCount} פרויקטים`,
           lead.projectStage && `שלב: ${LEAD_STAGE_LABELS[lead.projectStage]}`,
+          lead.projectKind && LEAD_PROJECT_KIND_LABELS[lead.projectKind],
+          lead.budgetRange && `תקציב: ${LEAD_BUDGET_LABELS[lead.budgetRange]}`,
+          lead.needContractors !== null && (lead.needContractors ? "מחפש קבלן" : "לא מחפש קבלן"),
+          lead.trades.length > 0 && lead.trades.map((t) => LEAD_TRADE_LABELS[t]).join(", "),
+          lead.teamSize && LEAD_TEAM_SIZE_LABELS[lead.teamSize],
           lead.region,
           lead.company,
         ]
@@ -33,8 +44,9 @@ export function LeadsPage() {
   const queryClient = useQueryClient();
   const [kind, setKind] = useState<LeadKind | "">("");
   const [status, setStatus] = useState<LeadStatus | "">("");
+  const [audience, setAudience] = useState("");
   const [notes, setNotes] = useState<Record<string, string>>({});
-  const filter = { kind: kind || undefined, status: status || undefined };
+  const filter = { kind: kind || undefined, status: status || undefined, audience: audience || undefined };
 
   const leads = useQuery({ queryKey: ["admin", "leads", filter], queryFn: () => api.adminListLeads(filter) });
 
@@ -87,6 +99,17 @@ export function LeadsPage() {
             ))}
           </select>
         </label>
+        <label>
+          קהל
+          <select value={audience} onChange={(e) => setAudience(e.target.value)}>
+            <option value="">הכול</option>
+            {AUDIENCES.map((a) => (
+              <option key={a} value={a}>
+                {LEAD_AUDIENCE_LABELS[a]}
+              </option>
+            ))}
+          </select>
+        </label>
         <div className="spacer" />
         <button onClick={() => exportCsv.mutate()} disabled={exportCsv.isPending}>
           ייצוא CSV
@@ -109,6 +132,7 @@ export function LeadsPage() {
                 <tr>
                   <th>התקבל</th>
                   <th>סוג</th>
+                  <th>קהל</th>
                   <th>שם</th>
                   <th>פרטי קשר</th>
                   <th>פרטים</th>
@@ -124,6 +148,7 @@ export function LeadsPage() {
                     <tr key={l.id}>
                       <td>{new Date(l.createdAt).toLocaleString("he-IL", { dateStyle: "short", timeStyle: "short" })}</td>
                       <td>{LEAD_KIND_LABELS[l.kind]}</td>
+                      <td>{(l.audience && LEAD_AUDIENCE_LABELS[l.audience]) || "—"}</td>
                       <td>{l.name}</td>
                       <td>
                         <div className="lead-contact">

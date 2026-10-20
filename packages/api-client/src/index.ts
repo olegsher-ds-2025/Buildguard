@@ -123,10 +123,11 @@ export interface ApiClientOptions {
   getAccessToken?: () => string | null;
 }
 
-function leadQuery(filter: { kind?: LeadKind; status?: LeadStatus }): string {
+function leadQuery(filter: { kind?: LeadKind; status?: LeadStatus; audience?: string }): string {
   const params = new URLSearchParams();
   if (filter.kind) params.set("kind", filter.kind);
   if (filter.status) params.set("status", filter.status);
+  if (filter.audience) params.set("audience", filter.audience);
   const query = params.toString();
   return query ? `?${query}` : "";
 }
@@ -233,11 +234,11 @@ export function createApiClient({ baseUrl, getAccessToken, onUnauthorized }: Api
     adminListClients: () => request<ClientSummary[]>("/admin/clients"),
     adminListProjects: () => request<AdminProjectSummary[]>("/admin/projects"),
     adminListAuditLog: () => request<AuditEntrySummary[]>("/admin/audit-log"),
-    adminListLeads: (filter: { kind?: LeadKind; status?: LeadStatus } = {}) =>
+    adminListLeads: (filter: { kind?: LeadKind; status?: LeadStatus; audience?: string } = {}) =>
       request<LeadSummary[]>(`/admin/leads${leadQuery(filter)}`),
     adminUpdateLead: (leadId: string, body: UpdateLeadRequest) =>
       request<LeadSummary>(`/admin/leads/${leadId}`, { method: "PATCH", body: JSON.stringify(body) }),
-    adminDownloadLeadsCsv: (filter: { kind?: LeadKind; status?: LeadStatus } = {}) =>
+    adminDownloadLeadsCsv: (filter: { kind?: LeadKind; status?: LeadStatus; audience?: string } = {}) =>
       download(`/admin/leads.csv${leadQuery(filter)}`),
     listMembers: (projectId: string) => request<ProjectMemberSummary[]>(`/projects/${projectId}/members`),
     inviteMember: (projectId: string, body: InviteMemberRequest) =>

@@ -94,6 +94,13 @@ MinIO no longer publishes images on Docker Hub, so the Pi stack uses `cgr.dev/ch
 
 ### Landing page
 
+Three pages share `assets/site.css` and `assets/site.js`: `/` is a hub that sends visitors to `/owners/` (home owners:
+new build, extension, renovation) or `/contractors/` (tenders, verified profile, payment milestones). The two audience
+pages carry the registration forms; the hub keeps the generic contact form. Each form posts hidden `audience`
+(`owner`, `contractor`, `other`) and `landingPath` fields next to `role`, plus audience-specific optional fields
+(`projectKind`, `budgetRange`, `needContractors`, `trades`, `teamSize`). The admin leads page filters and exports by
+audience. The pages are plain HTML with no build step; the CSP forbids inline `style=` attributes, so use classes.
+
 The Hebrew landing page (`apps/landing`, static files) is its own container, `buildguard-landing`, on port 8114. It
 lives on a separate hostname so the installed PWA at `buildguard.sher.biz` (service worker scope `/`) is untouched.
 Its nginx proxies only `POST /api/v1/leads/register` and `/contact` to the api (5 requests/min per client, resolved

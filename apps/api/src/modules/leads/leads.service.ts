@@ -11,6 +11,7 @@ import { plainToInstance } from "class-transformer";
 import { validate, type ValidationError } from "class-validator";
 import type { Lead, Prisma } from "@prisma/client";
 import {
+  LEAD_AUDIENCE_LABELS,
   LEAD_KIND_LABELS,
   LEAD_ROLE_LABELS,
   LEAD_TOPIC_LABELS,
@@ -42,6 +43,13 @@ const CSV_COLUMNS: (keyof LeadSummary)[] = [
   "topic",
   "message",
   "marketingOptIn",
+  "audience",
+  "landingPath",
+  "projectKind",
+  "budgetRange",
+  "needContractors",
+  "trades",
+  "teamSize",
   "referrer",
   "utmSource",
   "utmMedium",
@@ -87,7 +95,7 @@ export class LeadsService {
 
   async list(query: ListLeadsQueryDto): Promise<LeadSummary[]> {
     const leads = await this.prisma.lead.findMany({
-      where: { kind: query.kind, status: query.status },
+      where: { kind: query.kind, status: query.status, audience: query.audience },
       orderBy: { createdAt: "desc" },
       take: MAX_LIST,
     });
@@ -122,7 +130,7 @@ export class LeadsService {
 
   async csv(query: ListLeadsQueryDto): Promise<Buffer> {
     const leads = await this.prisma.lead.findMany({
-      where: { kind: query.kind, status: query.status },
+      where: { kind: query.kind, status: query.status, audience: query.audience },
       orderBy: { createdAt: "desc" },
     });
     const rows = [CSV_COLUMNS, ...leads.map(toSummary).map((l) => CSV_COLUMNS.map((c) => l[c]))];
@@ -206,6 +214,8 @@ function toLeadData(kind: LeadKind, dto: RegisterLeadDto | ContactLeadDto): Pris
     name: dto.name,
     phone: dto.phone,
     email: dto.email,
+    audience: dto.audience,
+    landingPath: dto.landingPath,
     referrer: dto.referrer,
     utmSource: dto.utm?.source,
     utmMedium: dto.utm?.medium,
@@ -223,6 +233,11 @@ function toLeadData(kind: LeadKind, dto: RegisterLeadDto | ContactLeadDto): Pris
       company: dto.company,
       message: dto.message,
       marketingOptIn: dto.marketingOptIn === true,
+      projectKind: dto.projectKind,
+      budgetRange: dto.budgetRange,
+      needContractors: dto.needContractors,
+      trades: dto.trades ?? [],
+      teamSize: dto.teamSize,
     };
   }
   return { ...common, topic: dto.topic, message: dto.message };
@@ -232,7 +247,11 @@ function toLeadData(kind: LeadKind, dto: RegisterLeadDto | ContactLeadDto): Pris
 function notificationText(kind: LeadKind, dto: RegisterLeadDto | ContactLeadDto): string {
   const parts =
     dto instanceof RegisterLeadDto
-      ? [LEAD_ROLE_LABELS[dto.role], dto.projectCount !== undefined && projectCountLabel(dto.projectCount)]
+      ? [
+          dto.audience && LEAD_AUDIENCE_LABELS[dto.audience],
+          LEAD_ROLE_LABELS[dto.role],
+          dto.projectCount !== undefined && projectCountLabel(dto.projectCount),
+        ]
       : [dto.topic && LEAD_TOPIC_LABELS[dto.topic]];
   return [`ליד חדש: ${LEAD_KIND_LABELS[kind]}`, ...parts.filter(Boolean)].join(" · ");
 }
@@ -257,6 +276,13 @@ function toSummary(lead: Lead): LeadSummary {
     topic: lead.topic,
     message: lead.message,
     marketingOptIn: lead.marketingOptIn,
+    audience: lead.audience,
+    landingPath: lead.landingPath,
+    projectKind: lead.projectKind,
+    budgetRange: lead.budgetRange,
+    needContractors: lead.needContractors,
+    trades: lead.trades,
+    teamSize: lead.teamSize,
     referrer: lead.referrer,
     utmSource: lead.utmSource,
     utmMedium: lead.utmMedium,

@@ -40,6 +40,7 @@
 
   /* personas: tabs on desktop, accordion on mobile (same disclosure markup) */
   var btns = $$(".p-btn");
+  if (btns.length) {
   var wide = window.matchMedia("(min-width:900px)");
   function openPersona(btn, toggle) {
     var willOpen = toggle && !wide.matches ? btn.getAttribute("aria-expanded") !== "true" : true;
@@ -51,6 +52,7 @@
   }
   btns.forEach(function (b) { b.addEventListener("click", function () { openPersona(b, true); }); });
   openPersona(btns[0], false);
+  }
 
   /* reveal on scroll */
   var rev = $$(".reveal");
@@ -63,7 +65,7 @@
 
   /* offline demo */
   var sync = $("[data-sync]"), syncBtn = $("[data-sync-toggle]");
-  syncBtn.addEventListener("click", function () {
+  if (sync && syncBtn) syncBtn.addEventListener("click", function () {
     var on = sync.classList.toggle("online");
     syncBtn.setAttribute("aria-pressed", String(on));
     syncBtn.textContent = on ? "הדגמה: ניתוק החיבור" : "הדגמה: החיבור חוזר";
@@ -71,14 +73,23 @@
 
   /* contact topic presets */
   var topicSel = $("#c-topic");
-  function setTopic(t) { if (t && topicSel.querySelector('option[value="' + t + '"]')) topicSel.value = t; }
+  function setTopic(t) { if (t && topicSel && topicSel.querySelector('option[value="' + t + '"]')) topicSel.value = t; }
   $$("[data-topic]").forEach(function (a) { a.addEventListener("click", function () { setTopic(a.dataset.topic); }); });
   function fromHash() {
     var m = /^#contact\?topic=([\w-]+)/.exec(location.hash);
-    if (m) { setTopic(m[1]); $("#contact").scrollIntoView(); }
+    if (m && $("#contact")) { setTopic(m[1]); $("#contact").scrollIntoView(); }
   }
   fromHash();
   window.addEventListener("hashchange", fromHash);
+
+  /* sticky mobile CTA: shown until the form is on screen */
+  var mcta = $(".m-cta"), formAnchor = $("#register");
+  if (mcta && formAnchor && "IntersectionObserver" in window) {
+    d.body.classList.add("has-mcta");
+    new IntersectionObserver(function (es) {
+      mcta.classList.toggle("show", !es[0].isIntersecting && es[0].boundingClientRect.top < 0);
+    }).observe(formAnchor);
+  }
 
   /* forms */
   var MSG = {
@@ -222,7 +233,9 @@
       var body = { t0: T0, referrer: d.referrer.slice(0, 300), utm: utm() };
       $$("input,select,textarea", f).forEach(function (x) {
         if (!x.name || x.name === "t0") return;
-        if (x.type === "checkbox") body[x.name] = x.checked;
+        if (x.type === "radio") { if (x.checked) body[x.name] = x.value; }
+        else if (x.type === "checkbox" && "multi" in x.dataset) { body[x.name] = body[x.name] || []; if (x.checked) body[x.name].push(x.value); }
+        else if (x.type === "checkbox") body[x.name] = x.checked;
         else if (x.name === "projectCount") { if (x.value) body[x.name] = Number(x.value); }
         else if (x.name === "website") body[x.name] = x.value;
         else if (x.value.trim()) body[x.name] = x.value.trim();

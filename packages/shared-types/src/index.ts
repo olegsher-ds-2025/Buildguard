@@ -1214,6 +1214,50 @@ export const LEAD_STAGE_LABELS: Record<string, string> = {
   handover: "מסירה",
 };
 
+/** Which landing page a lead came from; set by the page, not chosen by the visitor. */
+export const LEAD_AUDIENCE_LABELS: Record<string, string> = {
+  owner: "בעל בית",
+  contractor: "קבלן",
+  other: "אחר",
+};
+
+/** Allowed values of the owner form's `projectKind` field. */
+export const LEAD_PROJECT_KIND_LABELS: Record<string, string> = {
+  new_build: "בנייה חדשה",
+  extension: "תוספת בנייה",
+  renovation: "שיפוץ",
+  other: "אחר",
+};
+
+/** Allowed values of the owner form's `budgetRange` field. */
+export const LEAD_BUDGET_LABELS: Record<string, string> = {
+  under_250k: "עד 250 אלף ₪",
+  "250k_1m": "250 אלף עד מיליון ₪",
+  "1m_3m": "1 עד 3 מיליון ₪",
+  over_3m: "מעל 3 מיליון ₪",
+  unknown: "עוד לא ידוע",
+};
+
+/** Allowed values of the contractor form's `trades` field. */
+export const LEAD_TRADE_LABELS: Record<string, string> = {
+  general_contractor: "קבלן ראשי",
+  excavation: "עבודות עפר",
+  structure_concrete: "שלד ובטון",
+  roofing: "גגות ואיטום",
+  plumbing: "אינסטלציה",
+  electrical: "חשמל",
+  finishing: "גמרים",
+  other: "אחר",
+};
+
+/** Allowed values of the contractor form's `teamSize` field. */
+export const LEAD_TEAM_SIZE_LABELS: Record<string, string> = {
+  solo: "עצמאי",
+  "2_5": "2–5 עובדים",
+  "6_20": "6–20 עובדים",
+  over_20: "מעל 20 עובדים",
+};
+
 /** Allowed values of the contact form's `topic` field. */
 export const LEAD_TOPIC_LABELS: Record<string, string> = {
   general: "שאלה כללית",
@@ -1237,6 +1281,13 @@ export interface LeadSummary {
   topic: string | null;
   message: string | null;
   marketingOptIn: boolean;
+  audience: string | null;
+  landingPath: string | null;
+  projectKind: string | null;
+  budgetRange: string | null;
+  needContractors: boolean | null;
+  trades: string[];
+  teamSize: string | null;
   referrer: string | null;
   utmSource: string | null;
   utmMedium: string | null;
